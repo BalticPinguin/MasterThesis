@@ -1,0 +1,106 @@
+%\documentclass[12pt,a4paper]{report}
+\documentclass[12pt,a4paper,oneside]{book}
+%\documentclass[12pt,twoside,bind,ams,a4paper]{hepthesis}
+\usepackage[german, english]{babel}
+\usepackage{amsmath} 
+\usepackage{mathtools} 
+\usepackage{amssymb} 
+\usepackage{upgreek}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{wrapfig}
+\usepackage{capt-of}
+%\usepackage{natbib}   % Paket fuer Literaturverzeichnis nach DIN
+%\setcitestyle{square} % Literaturzitate in eckige Klammern setzen
+\usepackage[font=small]{caption}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage[backend=biber, hyperref=true, url=false, isbn=false, style=numeric-comp,
+            block=none, maxbibnames=3, sorting=none]{biblatex}
+\usepackage[left=28mm, right=21mm, top=21mm, bottom=21mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage{color}
+\usepackage{lscape}
+\usepackage{bm}
+\usepackage{bbold}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{titlesec, blindtext, color}
+\definecolor{gray75}{gray}{0.75}
+\newcommand{\hsp}{\hspace{20pt}}
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter\hsp\textcolor{gray75}{$|$}\hsp}{0pt}{\Huge\bfseries}
+\addbibresource{main.bib}
+\author{Tobias M\"ohle}
+\date{\today }
+%\title{(In)Finite Element Method for representing free electrons in Molecular potentials and its application in 
+%Photoelectron spectroscopy}
+%\title{Finite Element Method for Predicting Photoelectron Spectra of Complex Molecules in a Wide Range of Kinetic Energies}
+\title{Finite Element Approach to Photoemission of Complex Molecules}
+\linespread{1.1}
+\begin{document}
+\indent
+\pagestyle{plain}
+\parindent6mm
+%\setlength\parindent{6mm}
+\setlength{\parskip}{0mm}
+\renewcommand{\vec}{\bm}
+\newcommand{\mat}[1]{\mathbb{#1}}
+\newcommand{\prog}[1]{\texttt{#1}}
+\widowpenalty=1000000 %avoid hurenkind    ->
+\clubpenalty=1000000 %avoid Schusterjunge ->
+%\setlength{\parskip}{3ex plus 2ex minus 2ex}
+\frontmatter
+\maketitle
+%\pagenumbering{roman}
+\tableofcontents
+\newpage
+\input{notation}
+\mainmatter
+\chapter{Introduction} % introduction
+\input{intro}
+
+\chapter{The Calculation of Photoelectron spectra}
+\input{calcPES}
+
+\chapter{Description of Free Particles} 
+\input{freePart}
+
+\chapter{Finite Element Methods}
+\input{fem}
+
+%\chapter{Our Procedure}
+\chapter{Computational Details}
+\input{procedure}
+
+\chapter{Results}
+\input{results}
+
+\chapter{Resumee}
+ - is it worth the effort?
+ - What energy-range is achievable?
+ - Which effects are still missing?
+
+ - How to proceed with it?
+
+\small{
+\printbibliography
+}
+
+\appendix
+
+\chapter{Appendix}
+%\input{appendix_do}
+%\section{Finite elements}
+%\input{appendix_fem}
+%-- general rules:\\
+%   -> dependence of intensity on $E_kin$ (\cite{Gao_wopperer} for num. study) 
+%     Is there some? \\
+%
+%\input{appGEHP}
+
+\input{appTriangul}
+
+%\printindex
+\backmatter
+\end{document}
