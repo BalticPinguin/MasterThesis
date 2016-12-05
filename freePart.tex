@@ -211,18 +211,18 @@ with the condition for the boundary domain $\partial \Gamma$ which is assumed to
     %\lim_{\vec{r}\longrightarrow \infty} \Psi(\vec{r})=0
     \Psi(\vec{r})=0  \qquad \vec{r} \in \partial \Gamma.
 \end{equation}
-Thereby the first term in equation (\ref{eq:SEstrong}) corresponds to the kinetic energy and $V(\vec{r})$ is a potential that is not further specified at this point.
+The first term in equation (\ref{eq:SEstrong}) corresponds to the kinetic energy and $V(\vec{r})$ is a potential that is not further specified at this point.
 The unknowns of this equation are the wave function $\Psi(\vec{r})$ and respective energy $E$.
-To bring equation (\ref{eq:SEstrong}) into the weak form, it is first multiplied by a test function $\Phi(\vec{r})$ which fulfils the same boundary conditions and needs to be differentiable.
+To bring equation (\ref{eq:SEstrong}) into the weak form, it is first multiplied by the complex conjugate of a test function $\Phi(\vec{r})$ which fulfils the same boundary conditions and needs to be differentiable.
 In the second step, one integrates over the whole space of interest resulting in
 \begin{align}
-\int d \vec{r} & \left( - \frac 12 \left(\nabla^2\Phi(\vec{r})\right)\Psi(\vec{r})
-               + V(r) \Phi(\vec{r}) \Psi(\vec{r})\right) = E \int d \vec{r} \Phi(\vec{r}) \Psi(\vec{r}).
+\int d \vec{r} & \left( - \frac 12 \left(\nabla^2\Phi^*(\vec{r})\right)\Psi(\vec{r})
+               + V(r) \Phi^*(\vec{r}) \Psi(\vec{r})\right) = E \int d \vec{r} \Phi^*(\vec{r}) \Psi(\vec{r}).
 \end{align}
-Thereby the kinetic energy term can be symmetrised using Green's first identity $\int_\Gamma (\nabla^2\Psi)\Phi d\vec{r}=\int_{\partial \Gamma} (\nabla\Psi)\Phi ds -\int_\Gamma (\nabla\Psi)(\nabla\Phi)$ to obtain the final expression
+Thereby the kinetic energy term can be symmetrised using Green's first identity $\int_\Gamma (\nabla^2\Psi)\Phi^* d\vec{r}=\int_{\partial \Gamma} (\nabla\Psi)\Phi^* ds -\int_\Gamma (\nabla\Psi)(\nabla\Phi^*)$ to obtain the final expression
 \begin{align}\label{eq:SEweak}
-\int d \vec{r} & \left(  \frac 12 \left(\nabla\Phi(\vec{r})\right) \left(\nabla\Psi(\vec{r})\right) 
-               + V(r) \Phi(\vec{r}) \Psi(\vec{r})\right) = E \int d \vec{r} \Phi(\vec{r}) \Psi(\vec{r})\\
+\int d \vec{r} & \left(  \frac 12 \left(\nabla\Phi^*(\vec{r})\right) \left(\nabla\Psi(\vec{r})\right) 
+               + V(r) \Phi^*(\vec{r}) \Psi(\vec{r})\right) = E \int d \vec{r} \Phi^*(\vec{r}) \Psi(\vec{r})\\
    % &\lim_{\vec{r}\longrightarrow \infty} \Phi(\vec{r})=0.\qquad
    % \lim_{\vec{r}\longrightarrow \infty} \Psi(\vec{r})=0.
     &\Phi(\vec{r})=0\quad
@@ -230,8 +230,12 @@ Thereby the kinetic energy term can be symmetrised using Green's first identity 
 \end{align}
 which is denoted as the weak form of the SE.
 A function $\Psi(\vec{r})$ is considered as a solution of (\ref{eq:SEweak}) if the equation holds for any test function $\Phi(\vec{r})$.
-Thereby for any function solving (\ref{eq:SEstrong}) the equation (\ref{eq:SEweak}) is still valid but the space of solutions of the weak form is larger since only first derivatives need to be defined.
-In addition, a solution of (\ref{eq:SEweak}) is defined only up to a cardinal number of zero; hence changing the values of a given solution $\Psi(\vec{r})$ along a finite number of planes in three dimensions yields a function that still solves (\ref{eq:SEweak}).
+Since usually only real-valued bases functions are used, in the literature the complex conjugation is omitted.
+From a mathematical point of view, since $\Phi(\vec{r})$ is an arbitrary function, complex conjugation does not change anything here but it will be shown later that it is more reasonable from a physical point of view if the weak formulation is defined as given in equation (\ref{eq:SEweak}).
+
+The weak formulation (\ref{eq:SEweak}) has two main differences compared to the strong formulation (\ref{eq:SEstrong}).
+The first is that any solution of (\ref{eq:SEstrong}) solves (\ref{eq:SEweak}) while the space of solutions of the weak form is larger since only first derivatives need to be defined, which lead to the terms weak and strong respectively.
+In addition, a weak solution is defined only up to a cardinal number of zero; hence changing the values of a given solution $\Psi(\vec{r})$ along a finite number of planes in three dimensions yields a function that still solves (\ref{eq:SEweak}).
 These properties play an important role here since they allow \textit{e.g.} for piecewise linear ansatz functions as they are commonly used in the FEM scheme which do not have a second derivative and whose first derivative is undefined on areas with a cardinal number of zero.
 
 To obtain the finite element formulation, one does not work on the whole space of differentiable and quadratically integrable functions defined on $\Gamma$ but restricts the space to subspace spanned by a finite set of test functions for both $\Psi(\vec{r})$ and $\Phi(\vec{r})$, leading to the Petrov-Galerkin scheme.
@@ -304,55 +308,46 @@ More advanced methods based on the above-mentioned schemes are available as well
 
 \section{Wavelets}
 \label{ch:wavelet}
-The wavelet method was developed only in the 1980s \cite{waveletLA} and combines the advantages of the Fourier method and FEM by decomposing objects into features of different scales and being a local method at the same time \cite{waveletLA, dahlke, FdFeWavelet}.
-Even though it posesses very advantagous features, it is not very well-known untill today and not widely used in most subjects of science.
+The wavelet method was developed in the 1980s \cite{waveletLA} and combines the advantages of the Fourier method and FEM by decomposing objects into features of different scales but using a local basis \cite{waveletLA, dahlke, FdFeWavelet}.
+Even though wavelets posess very advantagous features, they are not very well-established untill today.
 The most prominent and widely distributed application of Wavelets is compression of data as used for example in the jpeg2000 standard \cite{iso15444}.
 
 %A wavelet is a basis of the function space $L_p(\mathbb{R}^d)$ of functions $\phi(\vec{r})$ for which $\int \phi(\vec{r})^p d\vec{r}<\infty$ which has the form
-A wavelet thereby denotes a basis of the function space $L_p(\mathbb{R}^d)$ \textit{i.e.} the space of functions $\phi(\vec{r})$ for which $\int \phi(\vec{r})^p d\vec{r}<\infty$. 
-The wavelet basis is defined via a finite set of orthonormal functions $\varphi_i(\vec{r})$, denoted as mother wavelets, by
+In general, a wavelet is a basis of the function space $L_p(\mathbb{R}^d)$ \textit{i.e.}, the space of functions $\phi(\vec{r})$ for which $\int \phi(\vec{r})^p d\vec{r}<\infty$ where $\vec{r}\in\mathbb{R}^d$.
+A particular wavelet is defined by a finite set of orthonormal mother wavelets $\varphi_i(\vec{r})$ for which
 \begin{equation} \label{eq:waveBasis}
 \varphi_{i,j,\vec{\alpha}}(\vec{r})=m^{\frac{j}{2}} \varphi_i(\mat{M}^j\vec{r}-\vec{\alpha})
 \end{equation}
-where $\mat{M}$ is an expanding scaling matrix (\textit{i.e.} all eigen values have modulus larger than one), $m=|det(\mat{M})|$ and $j\in \mathbb{Z}\, \vec{\alpha}\in \mathbb{Z}^d$ are running indices.
-The condition for (\ref{eq:waveBasis}) to be a wavelet basis is that these functionst span $L_p(\mathbb{R}^d)$ \cite{dahlke}.
-In practice, this very general definition is often restricted by additional requirements such as orthogonality of $\varphi_{i,j,\vec{\alpha}}(\vec{r})$ with respect to $j$ and $\vec{\alpha}$.
-For brevity, in the following only the space $L_2(\mathbb{R})$ with $\mat{M}=2$ is considered which corresponds to the initial definition of the wavelet basis \cite{Tasche}.
-The most prominent and by far simplest example of a wavelet is the so-called Haar-wavelet wich hase one mother waveletof the form
-\begin{equation}
-\varphi(x)=\begin{cases} 1 &0\leq x < \frac 12 \\ -1 & \frac 12 \leq x <1 \\ 0 & \text{else}\end{cases}
-\end{equation}
-for which (\ref{eq:waveBasis}) is a orthonormal basis with a compact support.
-In practice wavelets often are constructed via a scaling function $\chi(\vec{r})$ which need to fulfill the two-scale relation
-\begin{equation}
-\chi(x)=\sum_{k\in\mathbb{Z}} h_{1-k} \chi(2x-k)
-\end{equation}
-with $||\chi||_{L_2}=1$, leading to a unique definition via the coefficients $h_{1-k}$. 
-From scaling function a wavelet is defined as
-\begin{equation}
-\varphi(x)=\sum_k (-1)^{k+1} h_{1-k} \chi(2x-k)
-\end{equation}
-which is denoted as the \textcolor{red}{look the name up} relation.
-The above-mentioned Haar-wavelet than is defined by the coefficients $h_0=1$ and $h_1=-1$.
-Another orthogonal wavelet with compact support is the Dauberchies-wavelet defined by the coefficients $h_0=h_1=\frac {1+\sqrt{3}}{4}$ and $h_2=h_3=\frac{1-\sqrt{3}}{4}$ which results in a mother-wavelet of the form
-\begin{equation}
-\varphi(x)=\frac{1+\sqrt{3}}{4}\chi(2x-1) - \frac{1+\sqrt{3}}{4} \chi(2x)
-          +\frac{1-\sqrt{3}}{4}\chi(2x+1) - \frac{1-\sqrt{3}}{4} \chi(2x+2)
-\end{equation}
-\begin{figure}
-   \begin{subfigure}{0.48\textwidth}
-   \includegraphics[width=\textwidth]{Figures/dauberchiesSF}
-   \end{subfigure}
-   \begin{subfigure}{0.48\textwidth}
-   \includegraphics[width=\textwidth]{Figures/dauberchiesWave}
-   \end{subfigure}
-   \label{fig:wavelets}
-   \caption{Dauberchies wavelet (b) and the respective scaling function (a).}
-\end{figure}
-which already cannot be written in a closed form.
-Both wavelets mentioned above are not smooth functions but still posess good properties for practical applications.
-Further it is important to note that the explicit evaluation of the functions is not needed for most applications but one rather handles with the coefficients $h_k$ instead.
-More smooth wavelet can be obtained at the expense of a non-compact support but they usually decay fast and hence still can be considered as being localised.
-%Thereby, a hierarchical set of orthogonal functions is used that describe each features of a given size, making this method suitable for compression, analysis similar to the Fourier method and solving PDEs.\\
+with the expanding scaling matrix $\mat{M}$ (\textit{i.e.} all eigen values have modulus larger than one), $m=|det(\mat{M})|$ and the running indices $j\in \mathbb{Z}\, \vec{\alpha}\in \mathbb{Z}^d$ span $L_p(\mathbb{R}^d)$ \cite{dahlke}.
+%The condition for (\ref{eq:waveBasis}) to be a wavelet basis is that these functionst span $L_p(\mathbb{R}^d)$.
+In practice, this very general definition is often restricted by additional requirements such as orthogonality of $\varphi_{i,j,\vec{\alpha}}(\vec{r})$ and only one mother-wavelet $\varphi(\vec{r})=\varphi_i(\vec{r})$ is used.
+For brevity, in the following only the space $L_2(\mathbb{R})$ with $\mat{M}=2$ is considered which corresponds to the initial definition of wavelets \cite{Tasche}.
+The most prominent representatives are the Haar-wavelet and Daubechies wavelets which are orthogonal functions with finite support as depicted in Figure \ref{fig:wavelets}.
+%The most prominent and by far simplest example of a wavelet is the so-called Haar-wavelet wich hase one mother wavelet of the form
+%\begin{equation} \label{eq:haar}
+%\varphi(x)=\begin{cases} 1 &0\leq x < \frac 12 \\ -1 & \frac 12 \leq x <1 \\ 0 & \text{else}\end{cases}
+%\end{equation}
+%for which (\ref{eq:waveBasis}) is a orthonormal basis with compact support.
 
-Besides their broad use in data compression and analysis, they provide a good basis to solve partial differential equations and are found to have similar numerical properties to FEM \textcolor{green}{sources}\cite{FdFeWavelet}.
+Another set of orthogonal wavelets with compact support are the Daubechies wavelets that are a series with increasing smoothness and support.
+The Haar-wavelet, shown in Figure \ref{fig:wavelets} on the left, can be seen as the first order Daubechies-wavelet.
+In contrast to most other bases, here no smootheness properties are required but are helpfull of course since the functions to be represented usually are smooth \cite{daubechies}.
+\begin{figure}
+   \begin{subfigure}{0.32\textwidth}
+   \includegraphics[width=\textwidth]{Figures/Daubechies1}
+   \end{subfigure}
+   \begin{subfigure}{0.32\textwidth}
+   \includegraphics[width=\textwidth]{Figures/Daubechies2}
+   \end{subfigure}
+   \begin{subfigure}{0.32\textwidth}
+   \includegraphics[width=\textwidth]{Figures/Daubechies7}
+   \end{subfigure}
+   \caption{Daubechies wavelets of the orders 1, 2 and 7 (from left to right) \cite{daubechies}.}
+   \label{fig:wavelets}
+\end{figure}
+
+Besides their broad use in data compression and analysis, wavelet bases also provide a handy tool to solve partial differential equations and are found to have similar numerical properties as the FEM \cite{FdFeWavelet}.
+When applying a wavelet basis to solve a partial differential equation, the weak form (\ref{eq:SEweak}) is used, leading to a similar description as in the FEM scheme \cite{dahlke}.
+However, not all wavelets provide a valid basis for partial derivatives since, for example, the Haar-wavelet has a constant derivative of zero and the Daubechies-wavelet $2$ (shown in Figure \ref{fig:wavelets}) is only semi-differentiable at some points \cite{WaveletChem}.
+At the same time hand the generality of the wavelet formulation allows to use problem-specific bases that are \textit{e.g.} especially adapted to certain pseudo-differential operators, increasing the convergence properties \cite{dahlke}.
+Finding such optimised bases in a systematic way is under current research but one can expect that they could obtain numerically stable, fast and accurate partial derivative solvers \cite{dahlke,kunoth}.

@@ -8,6 +8,9 @@ In the final section, the computation of Dyson orbitals will be sketched and it 
 The formalism as it was described in \ref{ch:do} can be used with any quantum chemical method that is able to calculate ground and excited state wave functions and respective energies.
 Since density functional theory (DFT) and its time dependent counterpart TDDFT have shown to be accurate and numerically cheap methods, we use these methods here.
 
+In this work the calculations are done using a locally modified version of the program package \prog{NWChem} \cite{nwchem} where a more verbose output enables the reconstruction of all molecular orbitals and thus the computation of the DOs.
+
+\subsection{Ground State Density}
 It is based on the Hohenberg-Kohn theorem \cite{HohenbergKohn} which states that the ground-state electron density determines the potential in the SE uniquely and with this also the wave-function.
 Thus, the electron density contains all information about a given system.
 Since it does not point to a way how to determine the electron density without knowing the wave-function, usually the Kohn-Sham scheme \cite{KohnSham} is used where the electrons are described non-interacting particles in a respective pseudo-potential that is made such that the electron density of these Kohn-Sham orbitals corresponds to the real electron density.
@@ -22,13 +25,34 @@ V_\text{eff}(\vec{r})=V_\text{ext}(\vec{r})+ \int \frac{\rho(\vec{r}')}{|\vec{r}
 can be separated into the external potential $V_\text{ext}(\vec{r})$ which consists of the attractive nuclear electrostatic potential.
 The second term is the electrostatic interaction of the electrons. 
 With these contributions, this formalism is on the level of theory of the Hartree-theory, missing the exchange and correlation.
-The respective contributions are put in $V_\text{xc}(\vec{r})$ together with the error in kinetic energy due to the fact that the single-electron functions of the Kohn-Sham scheme differ from the real electrons and thus have an other kinetic energy as well \cite{Holthausen}.
-About the latter not much is known except that it is non-local, that means its value at $r$ depends on the electron densities at all other places as well.
-The main callenge in DFT is to find an appropriate approximation to this functional.
+The respective contributions are approximated by $V_\text{xc}(\vec{r})$ together with the error in kinetic energy to accound for the fact that the single-electron functions of the Kohn-Sham scheme differ from the real electrons and thus have an other kinetic energy as well \cite{Holthausen}.
 
-\textcolor{red}{Add something how to get excited-state properties?}
+Assuming that the Kohn-Sham orbitals coincide with the physical orbitals, which is known to be not the case, the exchange potential acts on an orbital $\Psi_i(\vec{r})$ as
+\begin{equation}
+V_{x;j}(\vec{r})\Psi_i(\vec{r}) =\int \Psi_j^\dagger(\vec{r}')\frac{1}{\left|\vec{r}-\vec{r'}\right|} \Psi_i(\vec{r}') d\vec{r}' \Psi_j(\vec{r})
+\end{equation}
+and thus is non-local \cite{Holthausen}, the ``exact'' exchange energy thus corresponds the term $E_{x}=\sum_{i<j}\int \Psi_i^\dagger(\vec{r}) V_{x;j}(\vec{r}) \Psi_i(\vec{r}) d\vec{r}$  respectively.
+In DFT usually the exchange energy is approximated as a local functional of the density and its derivative, leading to the so-called local density approximation and gradient corrected functionals.
+The Becke \cite{blyp} exchange-functional used in this work has the form
+\begin{equation} \label{eq:blypXC}
+E_x=\frac 32 \left(\frac{3}{4\pi}\right)^\frac 13 \sum_\sigma \int \rho_\sigma(\vec{r})^\frac 43 d^3\vec{r} 
+-\beta \sum_\sigma \int \rho(\vec{r})^\frac 43 \frac{x_\sigma(\vec{r})^2}{1+6\beta x_\sigma \text{sinh}^{-1}( x_\sigma (\vec{r}))} d^3\vec{r}
+\end{equation}
+where $\sigma$ denotes the spin polarisations and $x_\sigma(\vec{r})=\frac{|\nabla \rho_\sigma(\vec{r})|}{\rho_\sigma^\frac 43}$, the first term is corresponds to the local density approximation and the second one is a semi-empirical gradient correction which is constructed such that the asymtotic behaviour of the exchange energy and electron density
+\begin{align}
+  \lim_{r\rightarrow\infty} E_x^\sigma(\vec{r}) & =-\frac{1}{|\vec{r}|} \\
+  \lim_{r\rightarrow\infty} \rho(\vec{r}) & =e^{-a_\sigma |\vec{r}|}
+\end{align}
+with $a_\sigma$ is a constant related to the ionisation potential of the system under study \cite{blyp}.
+The prefactor of the gradient correction, $\beta$, was determined by fitting to several atomic noble-gas systems and is set to be $\beta=0.0042$ in atomic units \cite{blyp}.
 
-In this work the calculations are done using a locally modified version of the program package \prog{NWChem} \cite{nwchem} where a more verbose output enables the reconstruction of all molecular orbitals and thus the computation of the DOs.
+Finally, the correlation energy is defined as the difference between the sum of the previously discussed terms and the correct energy.
+The correlation potential is defined as the functional derivative of the correlation energy respectively $V_c(\vec{r})=\frac{\partial E_c[\rho]}{\partial\rho(\vec{r})}$.
+In the case of the
+The LYP-correlation energy functional is based on the Colle-Salvetti formula which estimates the correlation energy in the Hartree-Fock approach and introduces two parameters that are set by fitting to experimental data \cite{lyp}.
+
+\subsection{Excited State Properties}
+
 
 \subsection{OTRSH-scheme}
 One main issue concerned with the DFT-formalism is that the approximate exchange functional decays exponentially instead of $\frac 1r$ and $\frac{1}{r^4}$ for the exchange and correlation terms respectively.

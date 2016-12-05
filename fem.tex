@@ -25,7 +25,7 @@ In section \ref{ch:introFEM} the basics of the FEM were described and the genera
 Here this is taken as starting point and a closer look at the computation of the matrix elements as well as solving strategies for the large sparse generalised eigen problems are taken.
 
 The generalised eigenproblem as given in equation (\ref{eq:SEmat}) consists of three matrices.
-Since the ansatz functions $\varphi_i(\vec{r})$ have only a small support, most of the matrix elements are zero. 
+Since the ansatz functions (shape functions) $\varphi_i(\vec{r})$ have only a small support, most of the matrix elements are zero. 
 However, in two and three dimensions no distinct band structure is achievable and the matrices are irreducible.
 Thereby matrix elements are zero when the elements involved are not neighboured.
 The computation of the non-zero matrix elements involve an integration as \textit{e.g.} the overlap integral $\mat{M}_{i,j}=\int d \vec{r} \varphi_i(\vec{r}) \varphi_j(\vec{r})$ of ansatz functions,.
@@ -39,7 +39,7 @@ After assembling the matrices the eigenpair $(e_i, \vec{c}_i)$ of the system
 \end{equation}
 need to be found where $e_i$ should be closest to the analytic value of the kinetic energy of the photoelectron.
 Since matrix eigenvalue equations with several thousands of dimensions occur in many fields, numerous schemes have been developed to solve them efficiently \cite{davidson,arnoldi, gpusolver,krylov}, a selection of them is described in section \ref{ch:ghep}.
-Despite the numerical complexity due to the high dimensionality of this problem (several thousands of ansatz functions) the second problem is due to the fact that the eigenenergies $e_i$ are expected to be close to each other since the corresponding analytical problem has a continuous spectrum in this range.
+Despite the numerical complexity due to the high dimensionality of this problem (several thousands of basis functions) the second problem is due to the fact that the eigenenergies $e_i$ are expected to be close to each other since the corresponding analytical problem has a continuous spectrum in this range.
 It is well known in numerics that this leads to instabilities especially for the eigen vectors, making a regularisation of the problem (described in section \ref{ch:regular}) indispensable.
 
 \section{Element Types and Mesh Types}
@@ -55,11 +55,13 @@ The second strategy is called $p$-FEM.
 In the $p$-FEM scheme the order $p$ of the test functions in increased, resulting in smother and more flexible solutions.
 This scheme requires a large set of functions to be implemented but is known to yield good results if the function is smooth \textcolor{green}{source}.
 While standard FEM usually have only $p=1,2$, there are certain special-purpose schemes that go beyond this.
+\textcolor{red}{Besides these different strategies, finite element types also vary in their degrees of freedom. While ... elements are integrated by evaluating certain inner or boarder points, in ... elements also first or even second derivatives are evaluated \cite{PSbook}.}
+\textcolor{blue}{Moreover, one distinguishes conforming and the more general non-conforming meshes. In case of the latter, more general structures are supported as \textit{e.g.} hanging nodes which occur when ... as shown in Figure \ref{fig:HexBenz} \cite{PSbook}.}
 The setup of the mesh is, as mentioned above already, critical to the quality of the solution and hence of special importance.
 Moreover, it is technically non trivial to set up a close packing of volume elements with the desired properties in a systematic way.
 There are different element types available, each with their techniques for set up.
 Although in principle any element shape can be chosen, in three dimensions only tetrahedral (simplex), prism- and pyramid-shaped as well as hexahedral elements commonly are used.
-By choosing the element shape and the polynomial order, also the type of ansatz functions is defined.
+By choosing the element shape and the polynomial order, also the type of shape functions is defined.
 %When using hexahedral elements the ansatz functions usually are of the type $\varphi(\vec{r})=x^ky^lz^m$ where $p=k+l+m$ is the element order.
 
 When considering meshes to describe molecular properties it is clear that the element size should be smaller in the vicinity of the nuclei while it may be broader at larger distances.
@@ -131,7 +133,7 @@ A cut through a mesh obtained by this procedure is shown in Figure \ref{fig:Adap
 Boundary conditions have not been addressed in this thesis so far for any of the methods but play an important role for the properties of the solution.
 Hence there is a large number of boundary conditions.
 The simplest case applicable here are Dirichlet-boundaries, requiring the wave function to vanish at the boundaries of the finite element box.
-In the FEM this condition can be applied especially simple by setting the coefficients of the outermost ansatz functions to zero.
+In the FEM this condition can be applied especially simple by setting the coefficients of the outermost shape functions to zero.
 
 Due to the large extend of the free particle, these boundaries however are unphysical if they are not applied at distances that are several times larger than the wavelength.
 However, considering a particle with $0.1\,$eV kinetic energy, its wavelength is $~4.4\,$Angstroms and the box would need to have a diameter of several tens of Angstroms which is not feasible any more while kinetic energies in the $m$eV-range would lead to even worse scenarios.
@@ -161,6 +163,7 @@ The idea of damping down a function and making sure no reflections are scattered
 
 \begin{itemize}
    \item Also read zotero: (In)FEM AbsorbBoundariesVS\_InfFE
+   \item transparent bc!? \cite{HelmhPrec}
 \end{itemize}
 
 \subsection{Mode-matching Schemes}
@@ -174,7 +177,7 @@ These equations are coupled by the conditions
 \Psi_1=\Psi_2  \qquad \nabla \Psi_1 \vec{n}=\Psi_2 \vec{n}
 \end{equation}
 to ensure continuity of the solution and the gradient normal to the boundary \cite{AstleyMM}.
-Thereby, the asymptotic behaviour of the outer function is ensured by taking ansatz functions that individually fulfil the condition and the boundaries enter the weak formulation since the application of Greens' theorem leads to an extra term.
+Thereby, the asymptotic behaviour of the outer function is ensured by taking basis functions that individually fulfil the condition and the boundaries enter the weak formulation since the application of Greens' theorem leads to an extra term.
 
 The mode-matching scheme can be considered as a generalisation of the R-matrix approach in a finite element formulation.
 
@@ -194,14 +197,14 @@ The general idea of the infinite elements is that the solution of the radial Hel
 where $k=|\vec{k}|$ is the absolut value of the momentum of the particle and the prefactors thus correspond to different angular momenta of the outgoing electron.
 In the complete limit moreover, any function fulfilling the Sommerfeld radiation condition \cite{sommerfeldCond} can be represented.
 
-To use this asymptotic information, in the infinite element region a layer of elements is set onto the outer surface of the finite element region in which the ansatz functions are of the form (\ref{eq:infAnsatz}).
+To use this asymptotic information, in the infinite element region a layer of elements is set onto the outer surface of the finite element region in which the shape functions are of the form (\ref{eq:infAnsatz}).
 To fulfill the continuity conditions, the front-face of these elements coincides with the outer face of the respective finite element. while their radial faces have ray-like edges with a common centre in the middle of the finite element region.
 
 Since the first formulation of infinite elements, several different schemes were developed with increasing convergence characteristics.
 For brevity here only the wave-envelop formulation or Astley-Leis elements will be presented.
 An overwiev about different formulations is given in the references \cite{dreyer} and \cite{Astley}.
 The main break-through of them is not to use the Galerkin-scheme where the ansatz- and test-functions come from the same space but to chose them of different structure.
-While the ansatz functions are of the form
+While the shape functions are of the form
 \begin{equation}
  \Psi(\vec{r}) = \varphi(\vec{r}) e^{ik \mu(r)},
 \end{equation}
@@ -210,11 +213,11 @@ the test functions are of the shape
  \Phi(\vec{r}) = D(r)\varphi(\vec{r}) e^{-ik\mu(r)}
 \end{equation}
 where in three dimensions $D(r)=\frac{1}{r^2}$ \cite{astley2}.
-With this choise of respective ansatz functions the Hamiltonian (\ref{eq:FEMmatrix}) is not symmetric anymore but still hermitian.
+With this choise of respective basis functions the Hamiltonian (\ref{eq:FEMmatrix}) is not symmetric anymore but still hermitian.
 
 The functions $\varphi(\vec{r})$ are furthermore chosen to follow the product ansatz $\varphi(\vec{r})=f(r)\varphi_2(\vec{r})$ where $\varphi_2(\vec{r})$ is an ansatz-function of a two-dimensional finite element corresponding to the inner face and  for $f(r)$ Jacobi-polynomial turned out te be most stable \cite{dreyer_improved}.
 
-This choise of ansatz functions has the advantage that the oscillating terms do not enter the matrix elements and due to the factor $D(r)$ the matrix elements are finite even though $\Psi(\vec{r})$ is not square-integrable.
+This choise of basis functions has the advantage that the oscillating terms do not enter the matrix elements and due to the factor $D(r)$ the matrix elements are finite even though $\Psi(\vec{r})$ is not square-integrable.
 Even though the oscillating term $e^{ikr}$ cancels out, the Hamiltonian is energy dependent and thus the generalised eigenvalue problem (\ref{eq:SEmat}) formulated in chapter \ref{ch:introFEM} changes to
 \begin{equation} \label{eq:SEinf}
 \mat{A}\vec{c} +ik \mat{B}\vec{c}- k^2 \mat{C}\vec{c} =0 
@@ -285,7 +288,7 @@ One way to circumvent the instabilities in the original problem (\ref{eq:Gep}) i
 Therefore equation (\ref{eq:SEmat2}) is rewritten as $\left(\frac 12 \mat{A}+\mat{V} - \varepsilon \mat{M}\right)\vec{c}_i = 0$ where $\varepsilon$ is the target energy.
 Since this will have most likely no unambiguous solution, one minimises the residuum
 \begin{equation}
-\text{min}_{||\vec{x}||=1}\left\{\left||\left(\frac 12 \mat{A}+\mat{V}-E\mat{M}\right)\vec{x} \right|| \right\}.
+\text{min}_{||\vec{x}||=1}\left\{\left|\left|\left(\frac 12 \mat{A}+\mat{V}-E\mat{M}\right)\vec{x} \right|\right| \right\}.
 \end{equation}
 Using the $L_2$-norm, this is the same as finding the smallest eigenvalue of
 \begin{equation}
@@ -302,6 +305,8 @@ which is a usual eigenvalue problem \cite{H2pDeCleva} and $\lambda$ with smalles
 
 Nonetheless, the latter formulation is only an approximation as the comparison of (\ref{eq:Gep}) and (\ref{eq:SEmin}) shows, the latter approximates the mass matrix$\mat{M}$ as unity $\mat{1}$.
 Furthermore, equation (\ref{eq:SEmin}) still is expected to have a very dense spectrum and $\lambda$ is an interior eigenvalue so the initial problem is not expected to be solved in this approach.
+
+\textcolor{red}{matrix preconditioners: Many different types developed \cite{Helmke2010}; most of them are effective only on a small class of problems as \textit{e.g.} especially well-suited for matrices originating from FEM-problems \cite{PrecFem, PrecFem2} and can be even specialised to a FEM structure \cite{MultPrec,MultPrec2} or for a particular physical problem \cite{HelmhPrec}. Often their performance moreover depends on the solver to be used later \cite{PrecKr}.}
 
 Instead of the reformulation, here a regularisation of the problem used, applying the spectral transformation shift and invert.
 Starting thit the problem: $\mat{A}\vec{x}=\lambda\mat{B}\vec{x}$ where the eigenvalues closest to the target energy $\varepsilon$ are of interest, the spectrum can be shifted to a target energy of $0$ by
