@@ -52,7 +52,29 @@ In the case of the
 The LYP-correlation energy functional is based on the Colle-Salvetti formula which estimates the correlation energy in the Hartree-Fock approach and introduces two parameters that are set by fitting to experimental data \cite{lyp}.
 
 \subsection{Excited State Properties}
-
+The DFT is not only a well-established method to obtain ground-state properties of many different kinds of systems, but it has also a time-dependent counterpart, formally based on the Runge-Gro\ss theorem \cite{RungeGross}.
+Commonly, when referring to time-dependent DFT (TDDFT), the linear-response TDDFT is meant \cite{dreuw}.
+It constitutes a first order perturbation expansion and can be used to obtain the enegies and occupations of excited states using the so-called Casida-equation \cite{casida}
+\begin{equation} \label{eq:casida}
+\begin{bmatrix} \mat{A} & \mat{B} \\ \mat{B}^\dagger & \mat{A}^\dagger\end{bmatrix}
+\begin{bmatrix} \vec{X} \\ \vec{Y} \end{bmatrix} =
+\omega \begin{bmatrix} \mat{1} & \mat{0} \\ \mat{0} & -\mat{1}\end{bmatrix}
+\begin{bmatrix} \vec{X} \\ \vec{Y} \end{bmatrix}
+\end{equation}
+where 
+\begin{align}
+\mat{A}_{ia,jb}& =\delta_{ij}\delta_{ab}(\varepsilon_a-\varepsilon_i)+ 
+\int \int d\vec{r} d\vec{r}'\left( \Psi_i(\vec{r}) \Psi_a(\vec{r})  \Psi_j(\vec{r}') \Psi_b(\vec{r}') 
+\Psi_i(\vec{r}) \Psi_j(\vec{r}) \Psi_a(\vec{r}') \Psi_b(\vec{r}') \frac{1}{|\vec{r}-\vec{r}'|}  \right) ,\\
+\mat{B}_{ia,jb}& = \int \int d\vec{r} d\vec{r}'\left( \Psi_i(\vec{r}) \Psi_a(\vec{r})  \Psi_b(\vec{r}') \Psi_j(\vec{r}') 
+\Psi_i(\vec{r}) \Psi_b(\vec{r})  \Psi_a(\vec{r}') \Psi_j(\vec{r}') \frac{1}{|\vec{r}-\vec{r}'|}  \right) 
+\end{align}
+and $\mat{1}$ is the unity matrix.
+The indices $i,j$ and $a,b$ denote occupied and virtual orbitals with binding energy $\varepsilon_i, \varepsilon_a$ respectively \cite{dreuw}.
+The Casida equation (\ref{eq:casida}) is an non-hermitian eigenvalue problem whose eigenvalues $\omega$ correspond to the transition energies and the eigenvectors denote the transition coefficients.
+The lower half of the eigen vector, denoted as $\vec{Y}$, corresponds to negative excitation energies $\varepsilon_i$ and can be assigned to de-excitations from virtual orbitals which makes no physical sense if the reference state is a ground state \cite{dreuw}.
+Since the matrix $\mat{B}$ contains usually only small elements, it is often set to zero.
+This is called Tamm-Dancoff approximation and reduces the original equation to a hermitian equation of half dimensionality \cite{casida}.
 
 \subsection{OTRSH-scheme}
 One main issue concerned with the DFT-formalism is that the approximate exchange functional decays exponentially instead of $\frac 1r$ and $\frac{1}{r^4}$ for the exchange and correlation terms respectively.
@@ -69,7 +91,8 @@ Besides taking the standard parameters, an ab-initio scheme to chose them is the
    J(\alpha_\text{opt},\omega_\text{opt})=min_{\alpha, \omega} \left\{ |E_N(\alpha,\omega)-E_{N-1}(\alpha,\omega)-\varepsilon_\text{HOMO}| \right\}
 \end{equation}
 is minimised, making sure that Koopman's theorem is fulfilled \cite{Bokareva}.
-Besides similar functionals which account for the electron affinities or ionisation potentials of lower-lying orbitals, the optimisation according to stability or \textcolor{blue}{the most-straight line of partial charges} can be chosen as equivalent ab-initio criteria.
+Besides similar functionals which account for the electron affinities or ionisation potentials of lower-lying orbitals, the optimisation can be done according to stability or derivative discontinuity.
+\textcolor{blue}{the most-straight line of partial charges} can be chosen as equivalent ab-initio criteria.
 \textcolor{red}{More details on these schemes? Not mention them at all?}
 
 For this optimization procedure the Gaussian package \prog{G09} \cite{g09} is used with the 6-31G(d) \cite{6-31g,6-31gd} basis set and the functional LC-BLYP \cite{lcblyp}. 

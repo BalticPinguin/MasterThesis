@@ -192,32 +192,49 @@ Considering an unbound domain as, \textit{e.g.} the problem of the outgoing elec
 The infinite element approach was developed in the 1980-ths for acoustical caluculations and is specificly designed for the Helmholtz equation and can be understood as a advancement of the BEM that is speciallised for the Helmholtz equation.
 The general idea of the infinite elements is that the solution of the radial Helmholtz equation in spherical symmetry is well-known to be of the form
 \begin{equation} \label{eq:infAnsatz}
- \Psi(\vec{r}) = \left(\frac ar +\frac{b}{r^2} + \hdots \right) e^{ikr}
+ \Psi(r) = \left(\frac ar +\frac{b}{r^2} + \hdots \right) e^{ikr}
 \end{equation}
 where $k=|\vec{k}|$ is the absolut value of the momentum of the particle and the prefactors thus correspond to different angular momenta of the outgoing electron.
-In the complete limit moreover, any function fulfilling the Sommerfeld radiation condition \cite{sommerfeldCond} can be represented.
+In the complete limit any function fulfilling the Sommerfeld radiation condition \cite{sommerfeldCond} can be represented.
 
 To use this asymptotic information, in the infinite element region a layer of elements is set onto the outer surface of the finite element region in which the shape functions are of the form (\ref{eq:infAnsatz}).
 To fulfill the continuity conditions, the front-face of these elements coincides with the outer face of the respective finite element. while their radial faces have ray-like edges with a common centre in the middle of the finite element region.
 
-Since the first formulation of infinite elements, several different schemes were developed with increasing convergence characteristics.
-For brevity here only the wave-envelop formulation or Astley-Leis elements will be presented.
-An overwiev about different formulations is given in the references \cite{dreyer} and \cite{Astley}.
-The main break-through of them is not to use the Galerkin-scheme where the ansatz- and test-functions come from the same space but to chose them of different structure.
-While the shape functions are of the form
-\begin{equation}
- \Psi(\vec{r}) = \varphi(\vec{r}) e^{ik \mu(r)},
+Over the decades several formulations of infinite elements were developed which each make an ansatz for the solution of the form
+\begin{equation} \label{eq:Infansatz}
+ \Psi(\vec{r}) = \varphi(\vec{r}) e^{ik(r-r_0)},
 \end{equation}
-the test functions are of the shape
+where $\varphi(\vec{r})=f(r)\varphi_2(\vec{r})$ is a product of a transversal shape function $\varphi_2(\vec{r)}$ which is orthogonal to the radial direction $r$.
+The function $f(r)$ is a multipole expansion \textit{i.e.} a polynomial in $\frac{r_0}{r}$ where Jacobi-polynomials turned out te be most stable \cite{dreyer_improved}.
+The differences in the formulations are introduced by the test functions applied \cite{Astley}.
+%An overwiev about different formulations is given in the references \cite{dreyer} and \cite{Astley}.
+
+\subsubsection{Burnett Elements}
+In the original Burnett formulation, the test functions are given in the form
+\begin{equation} \label{eq:ALelem}
+ \Phi(\vec{r}) = \varphi(\vec{r}) e^{-ik(r-r_0)}.
+\end{equation}
+In the literature, usually the sign in the exponent is changed due to the use of an other convention in the notation of the weak formulation \ref{eq:SEweak}.
+Important is, however, that in the equation later on the test and ansatz functions enter both with same oscillatory factor, introducing oscillations with $e^{2ik(r-r_0)}$ in the Hamiltonian.
+These oscillations make the Hamiltonian non-hermitian and introduce a strong dependence on the energy $E=\frac{k^2}{2}$.
+Moreover it was found that this formulation can lead to numerical instabilities \cite{Astley} and a wrong asymptotic behaviour.
+
+\subsubsection{Conjugate Burnett Elements}
+To get rid of the oscillatory terms, a modification of the test functions applied was introduced such that, in the notation used within this thesis, the test functions coincide with the space of ansatz functions, having the form
 \begin{equation}
+ \Phi(\vec{r}) = \varphi(\vec{r}) e^{ik(r-r_0)}.
+\end{equation}
+An important disadvantage of this formulation is, however, that in this formulation integrals with infinite contribution arise.
+
+\subsubsection{Asley-Leis Formulation}
+To regularise the matrix elements, an additional damping is needed.
+Since the ansatz function (\ref{eq:Infansatz}) should not be changed for physical reasons, Astley suggested to chose test functions of the shape
+\begin{equation} \label{eq:ALelem}
  \Phi(\vec{r}) = D(r)\varphi(\vec{r}) e^{-ik\mu(r)}
 \end{equation}
 where in three dimensions $D(r)=\frac{1}{r^2}$ \cite{astley2}.
-With this choise of respective basis functions the Hamiltonian (\ref{eq:FEMmatrix}) is not symmetric anymore but still hermitian.
+This choise of basis functions is done at the expense that the Hamiltonian (\ref{eq:FEMmatrix}) is not hermitian.
 
-The functions $\varphi(\vec{r})$ are furthermore chosen to follow the product ansatz $\varphi(\vec{r})=f(r)\varphi_2(\vec{r})$ where $\varphi_2(\vec{r})$ is an ansatz-function of a two-dimensional finite element corresponding to the inner face and  for $f(r)$ Jacobi-polynomial turned out te be most stable \cite{dreyer_improved}.
-
-This choise of basis functions has the advantage that the oscillating terms do not enter the matrix elements and due to the factor $D(r)$ the matrix elements are finite even though $\Psi(\vec{r})$ is not square-integrable.
 Even though the oscillating term $e^{ikr}$ cancels out, the Hamiltonian is energy dependent and thus the generalised eigenvalue problem (\ref{eq:SEmat}) formulated in chapter \ref{ch:introFEM} changes to
 \begin{equation} \label{eq:SEinf}
 \mat{A}\vec{c} +ik \mat{B}\vec{c}- k^2 \mat{C}\vec{c} =0 
@@ -236,6 +253,71 @@ where the relation $E=\frac 12 k^2$ is used \cite{dreyer}.
 This reformulation though lead to a quadratic eigenvalue problem instead of the generalised eigenvalue problem from before.
 However, assuming that the difference between the eigenvalues of (\ref{eq:SEinf}) and the target energy of the outgoing electron is small, the quadratic eigenvalue problem can be approximated by the generalised eigenvalue problem (\ref{eq:SEmat}) by setting $k$ to the respective target momentum in the Hamiltonian.
 However, this approximation, which is applied here for simplicity, needs to be verified.
+
+The nonhermiticity of this Hamiltonian is, however, an important drawback of this formulation.
+The introduced imaginary part of the eigenvalue can be considered as a broadening of the line width and thus as a lifetime as well as an uncertainty of the energy.
+However, this is not very meaningfull since the ansatz is done in praticular in such a way that the wave function is not changed in an unphysical sense.
+To understand the respective results, here a symmetrised ansatz is suggested in the following.
+
+\subsubsection{Further Formulations}
+Besides those formulations mentioned above, further infinite element formulations are used \cite{dreyer}.
+For example, a formulation to the Burnett-elements using a quadratic decay was applied to the harmonic oscillator \cite{bettessHarmonic} and DFT calculations \cite{sobaMolecule} successfully.
+However, the application of infinite elements to FEFs is to my knowledge a novelty in this work.
+
+Since the Astley-Leis elements suffer from the non-symmetry of the space of ansatz- and test-functions whereas the conjugate Burnett formulation has problems due to infinitely large matrix elements, here a symmetric but damped ansatz of the form
+\begin{align} \label{eq:ALsymm}
+\Psi(\vec{r}) &= D(r)\varphi(\vec{r}) e^{ik\mu(r)} \\
+\Phi(\vec{r}) &= D(r)\varphi(\vec{r}) e^{ik\mu(r)}
+\end{align}
+is suggested where $\varphi(\vec{r})$ is of the form as before but $D(\vec{r})=\frac{1}{r^p}$ with $p>0$ ensures that the matrix elements are finite-valued.
+Here, the values $p=1$ and $p=\frac 12$ will be considered.
+
+\subsubsection{Comparison of Formulations}
+While the unconjugated Burnett-formulation was not very successfull, the conjugated formulations might both be interesting to compare for a quantum mechanical problem.
+Since the conjugated Burnett elements lead to infinitely large matrix elements, here the Astley-Leis elements (\ref{eq:ALelem}) will be compared with a symmetrised form where the shape functions are of the form
+\begin{equation} 
+ \Phi(\vec{r}) = \sqrt{D(r)}\varphi(\vec{r}) e^{-ik\mu(r)}
+\end{equation}
+for both, the test- and ansatz functions.
+Using this formulation, only the kinetic energy expression changes to
+\begin{multline}
+\int \left(\nabla \Phi_i(\vec{r})\right)\left(\nabla \Psi_j(\vec{r})\right) d\vec{r}
+=\int \frac 14 \frac{D'(\vec{r})D'(\vec{r})}{D(\vec{r})} \varphi_i(\vec{r})\varphi_j(\vec{r})
++ \frac 12 D'(\vec{r}) \left( \varphi_i(\vec{r})\varphi_j'(\vec{r}) +\varphi_i'(\vec{r})\varphi_j(\vec{r})\right) \\
++ D \left( \varphi_i'(\vec{r})\varphi_j'(\vec{r})+ik\mu'(r) (\varphi_i(\vec{r})\varphi_j'(\vec{r}) - \varphi_i'(\vec{r})\varphi_j(\vec{r}))
+     - (ik \mu'(r))^2\varphi_i(\vec{r})\varphi_j(\vec{r})\right) d\vec{r}.
+\end{multline}
+\textcolor{red}{Discussion of spectrum:
+\begin{itemize}
+   \item What is the meaning of imaginary eigen-values? How to interprete results?
+   \item Should one sort the `initial' energies to make it comparable to `symmetrised'?
+   \item Which conclusions to draw from this study?
+\end{itemize}}
+\begin{wrapfigure}{r}{0.5\textwidth}
+\includegraphics[width=0.5\textwidth]{Figures/IFem_form_spectra}
+\caption{The first 50 eigenvalues obtained with the original Astley-Leis formulation (imaginary part not shown) and with the symmetrised form (\ref{eq:ALsymm}).}
+\label{fig:IFEMform_spect}
+\end{wrapfigure}
+\textcolor{blue}{Discussion of Spherical Waves:
+\begin{itemize}
+   \item In both cases: very strong mixing of quantum numbers
+   \item Is the difference in nature more different than that obtained from slightly
+         differing parameters?
+   \item The symmetrised form indeed seems to damp the $s$- and $p$-waves out.
+   \item Can one understand these expansions/differences in terms of damping for large $r$?
+   \item Which conclusions can be drawn from this study?
+\end{itemize}}
+\begin{figure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Figures/Ifem_form_init}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Figures/Ifem_form_symm}
+\end{subfigure}
+\caption{Decomposition of the first 31 solutions into spherical waves with anular momenta up to $l=7$.
+Left: Astley-Leis-formulation, right: symmetrised form.}
+\label{fig:IFEMform_project}
+\end{figure}
 
 \section{Solving Large Eigenvalue Problems}
 In finite element applications such as those being proposed in this work, matrix equations with hundreds up to hundredthousands of dimensions need to be solved.
