@@ -1,3 +1,4 @@
+\label{ch:proced}
 After describing different approaches to compute PESs in chapter \ref{ch:calcPES} and pointing out why the DO formalism combined with a finite element method for the computation of the photoelectron function is well-suited for our needs, in this chapter the protocol as being used to obtain the PESs is be presented.
 
 In the first section the computation of the wave functions of initial (unionised) and final (ionised) states will be described.
@@ -145,33 +146,22 @@ r_i=\frac{il}{\left( \frac Ni \right)^p \left(\frac{Nl}{r_\text{max}}-1\right) +
 is suggested where two degrees of freedom $l$ and $p\geq 1$ are given and the condition $N<\frac{r_\text{max}}{l}$ needs to be fulfilled to prevent the singularity.
 %Thereby it is important to mention that in this scheme (in contrast to the above one) the (asymptotic for $r\rightarrow \infty$) maximum distance between two spheres is $l$ and hence could be physically chosen to $l\approx \frac \lambda 2$.
 
-While the distribution of spheres follows, at least on a qualitative level, a clear scheme since it should always resemble the local kinetic energy, the distribution on the surface of each sphere is not that clear.
-Qualitatively it is preferable to chose a regular grid but this more challenging.
-Since the ... grid, which is known from the ... is clearly a bad choice due to its high density close to the poles, in geological applications often so-called geodesic grids are chosen.
+While the distribution of spheres follows, at least on a qualitative level, a clear scheme since it should always resemble the local kinetic energy, the distribution of points on the surface of each sphere more complicated.
+Here, a regular distribution is a good choise, but on the non-linear topology of the sphere, regularity is in general more challenging.
+While so-called geodesic grids are popular in earth sciences \cite{geodesic1,geodesic2,geodes_charge}, their construction allows only for exponentially growing mesh-sizes.
+Another common approach is to use quadrature points of integration rules of a given order which lead to Lebedev-grids \cite{lebedev,lebedev2} and spherical t-designs \cite{t-design1, t-design2} that are found more often in quantum chemical contexts \cite{LebQC1,LebQC2,lebDFT,lebDFT2} and will be used in this thesis.
+Further methods involve the search of extrem such as minimisation of the Riesz s-energy, and other geometric properties \cite{fliegeMaier,womersley,wom2,wom3} or a set of qualitatively lower but computationally much easier schemes such as the spherical fibonacci mapping \cite{fibonacci,fibonacci2}.
 
-\textcolor{red}{
-Some explanations are given here:\\ %https://www.maths.unsw.edu.au/about/distributing-points-sphere
-- Lebedev-grid -> try to get spherical harmonics with highest L accurate.\\
--If also required: all weights should be equal: spherical t-designs. \\
-Leads directly to the question of uniform distribution.-> not directly by algorithms\\
-- other approach: close packings \\
-- energy minimisation: Consider nodes as interacting particles -> minimise E for some model potential.\\
-see} \textcolor{blue}{http://people.maths.ox.ac.uk/beentjes/Essays/QuadratureSphere.pdf}.
-\textcolor{green}{
-- crude but fast algorithms
 Since in finite element theory the sphere neither needs to be really round nor is there any global functional defined on it,
 the complicated distributions described above may be not even needed. 
-An other approach therefore is to use an algorithm that gives just a more or less uniform distribution.}
+An other approach therefore is to use an algorithm that gives just a more or less uniform distribution.
 
-Approach used for climate models: so-called geodesic grids: subdivision of polyhedra, projected onto the sphere\cite{geodesic1, geodesic2}, see also
+%Some explanations are given here:\\ %https://www.maths.unsw.edu.au/about/distributing-points-sphere
+%Approach used for climate models: so-called geodesic grids: subdivision of polyhedra, projected onto the sphere\cite{geodesic1, geodesic2}, see also
 %http://kiwi.atmos.colostate.edu/BUGS/geodesic/
 %http://kiwi.atmos.colostate.edu/BUGS/pdf/ZM-grid.pdf
 %http://kiwi.atmos.colostate.edu/BUGS/pdf/conservation.pdf
 %http://kiwi.atmos.colostate.edu/BUGS/pdf/ccsr.pdf
-for further information.
-
-The point sets I took are from here: %http://web.maths.unsw.edu.au/~rsw/Sphere
-\cite{womersley,fliegeMaier}.
 
 The above mentioned techniques show the large variety of different approaches and it is not very clear which one will meet our needs best.
 Moreover, here the problem is not only two dimensional but the whole sphere (not only its surface) needs to be subdivided. 
@@ -208,10 +198,14 @@ Finally, after putting the points together as described above, they are connecte
 Here additional points may be introduced to guarantee well-shaped elements (\texttt{i.e.} no sharp peaks).
 
 One scheme suggested by Son and Chu \cite{Son_Chu0}:
-\[ r_i=\frac{il}{N-i+\frac{lN}{r_\text{max}}} \qquad i=1,\hdots ,N \]
+\begin{equation}
+r_i=\frac{il}{N-i+\frac{lN}{r_\text{max}}} \qquad i=1,\hdots ,N 
+\end{equation}
 where $l$ is a parameter to chose.
 Own scheme:
-\[ r_i=\frac{il}{\left( \frac Ni \right)^p \left(\frac{Nl}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N \]
+\begin{equation} \label{eq:tm_map}
+r_i=\frac{il}{\left( \frac Ni \right)^p \left(\frac{Nl}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N 
+\end{equation}
 where $l$ and $p\leq 1$ are parameters to chose. Thereby it is important to mention that in this scheme (in contrast to the above one) the (asymptotic for $r\rightarrow \infty$) maximum distance between two spheres is $l$ and hence could be physically chosen to $l\approx \frac \lambda 2$.
 
 The second scheme has a divergence around $Nl=r_\text{max}$. 

@@ -1,74 +1,58 @@
-Showing PES:
- - benzene
- - near-threshold PES
- - Find systems where PES is known for different photon energies
+In the previous chapters, many different methods that can be used to compute PESs numerically are described and in chapter \ref{ch:proced} the method used within this work is described in more detail.
+In this chapter some results are shown and explained.
 
-There is a paper\cite{vibPES} with vibronically resolved PES from experiment.\\
-PES of N2 with 'angular resolution' (latter not directly) \cite{PESN2}.
+Since the method developed in this work combines several techniques that have not been used together so far and several conceptual questions need to be clarified before computing actual PESs, is section \ref{ch:resBench} several benchmarking and test calculations are performed, testing the dependence of the solution on numerical parameters and the formulation of the infinite elements. 
+For simplicity, these calculations were performed using a Lithium atom as test system.
 
-purine and pyrimidine: comparison to Green's function methods via the \cite{PottsHolland}-paper.
+In section \ref{ch:resLI} further results for atomic Lithium are presented, showing several conceptual ... .
 
-For AlO$^-$ there is a paper with 2 spectra with one and two transitions each, having vibrational
-structure\cite{AlO}.
-
-Atomic Systems have some experimental data as well: For Xe and Kr the spectra at photon energies of 150$\,$eV are shown in reference \cite{KrXe}.
-
-A combined theoretical and experimental study on CH$_2$F$_2$ is in ref. \cite{ch2f2}. Here, theory is quite bad and experiment is also angular resolved, thus may be interesting.
+%There is a paper\cite{vibPES} with vibronically resolved PES from experiment.\\
+%PES of N2 with 'angular resolution' (latter not directly) \cite{PESN2}.
+%purine and pyrimidine: comparison to Green's function methods via the \cite{PottsHolland}-paper.
+%For AlO$^-$ there is a paper with 2 spectra with one and two transitions each, having vibrational
+%structure\cite{AlO}.
+%Atomic Systems have some experimental data as well: For Xe and Kr the spectra at photon energies of 150$\,$eV are shown in reference \cite{KrXe}.
+%A combined theoretical and experimental study on CH$_2$F$_2$ is in ref. \cite{ch2f2}. Here, theory is quite bad and experiment is also angular resolved, thus may be interesting.
 
 \section{Benchmarks and Tests on the Formalism}
 \label{ch:resBench}
+Several questions and conceptual problems have been posed in the previous chapters which require some investigation to get an understanding of the properties of the numerical setup described so far.
+Among these questions is the formulation of infinite elements, discussed in section \ref{ch:InfEl} of which the most important ones are studied in section \ref{ch:bmFormul}.
+
+Another important question concerns the scheme to be used for the setup of the mesh: In section \ref{sec:grid} the properties of obtained FEFs depending on the grid-parameters are studied.
 
 \subsection{Comparison of Formulations}
-While the unconjugated Burnett-formulation was not very successfull, the conjugated formulations of Burnett and Astley-Leis might both be interesting to compare for a quantum mechanical problem.
-Since the conjugated Burnett elements lead to infinitely large matrix elements, here the Astley-Leis elements (\ref{eq:ALelem}) will be compared with a symmetrised form where the shape functions are of the form
-\begin{equation} 
- \Phi(\vec{r}) = \sqrt{D(r)}\varphi(\vec{r}) e^{-ik\mu(r)}
-\end{equation}
-for both, the test- and ansatz functions.
-Using this formulation, only the kinetic energy expression changes to
-\begin{multline}
-\int \left(\nabla \Phi_i(\vec{r})\right)\left(\nabla \Psi_j(\vec{r})\right) d\vec{r}
-=\int \frac 14 \frac{D'(\vec{r})D'(\vec{r})}{D(\vec{r})} \varphi_i(\vec{r})\varphi_j(\vec{r})
-+ \frac 12 D'(\vec{r}) \left( \varphi_i(\vec{r})\varphi_j'(\vec{r}) +\varphi_i'(\vec{r})\varphi_j(\vec{r})\right) \\
-+ D \left( \varphi_i'(\vec{r})\varphi_j'(\vec{r})+ik\mu'(r) (\varphi_i(\vec{r})\varphi_j'(\vec{r}) - \varphi_i'(\vec{r})\varphi_j(\vec{r}))
-     - (ik \mu'(r))^2\varphi_i(\vec{r})\varphi_j(\vec{r})\right) d\vec{r}.
-\end{multline}
-\textcolor{red}{Discussion of spectrum:
-\begin{itemize}
-   \item What is the meaning of imaginary eigen-values? How to interprete results?
-   \item Should one sort the `initial' energies to make it comparable to `symmetrised'?
-   \item Which conclusions to draw from this study?
-\end{itemize}}
+\label{ch:bmFormul}
+While the unconjugated Burnett-formulation was not very successfull, the conjugated formulations of Burnett and Astley-Leis both have interesting features to use for quantum mechanical problems.
+Since the conjugated Burnett elements lead to infinitely large matrix elements, here the Astley-Leis elements (\ref{eq:ALelem}) are compared with the symmetrised form (\ref{eq:ALsymm}) using different powers $p$.
+Moreover, to study the influence of the damping function in the Astley-Leis formulation (\ref{eq:ALelem}) in more detail, also a test function space similar to eq. (\ref{eq:ALelem}) but using the squared damping function $D(r)^2$ instead of $D(r)$.
+
+The 50 real solutions whose energy is closest to the target value of $15.44\,$eV ($0.5675\,E_h$) obtained with the original Astley-Leis formulations with the damping function taken to the powers $p=1,2$ as well as the symmetrised formulation (\ref{eq:ALsymm}) suggested in this thesis with powers $p<0.5$ are shown in Figure \ref{fig:IFEMform_spect}.
+For the unsymmetric formulations only the real part is shown which is assigned to the physical energy of the respective state.
 \begin{wrapfigure}{r}{0.5\textwidth}
 \includegraphics[width=0.5\textwidth]{Figures/IFem_form_spectra}
 \caption{The first 50 eigenvalues obtained with the original Astley-Leis formulation (imaginary part not shown) and with the symmetrised form (\ref{eq:ALsymm}).}
 \label{fig:IFEMform_spect}
 \end{wrapfigure}
-\textcolor{blue}{Discussion of Spherical Waves:
+The results shown in Figure \ref{fig:IFEMform_spect} show clearly that the obtained density of states decreases with the power $p$ and converges for $p\approx \frac 18$ for the given parameters (the radial mapping scheme (\ref{eq:tm_map}) is used with $N=25$, $l=0.5$, $p=2.5$ and $r_\text{max}=7\,$bohr.).
+
+The dependence of the obtained spectrum of the Hamiltoninan on the power of the damping function shows that, at least for FEFs, the asymtotic behaviour is crucial for the properties of thp wave function. 
+Moreover, even for small powers $p\approx 10^{-4}$, no numerical instabilities are observable so that there is some freedom in this parameter and it does not need to be optimised for different systems individually.
+The observations made on the convergence-properties using the spectrum in Figure \ref{Fig:IFEMform_spect} are supported by the projections of the solutions on spherical waves of which some are shown in Figure \ref{Fig:IFEMform_project}.
 \begin{itemize}
-   \item In both cases: very strong mixing of quantum numbers
    \item Is the difference in nature more different than that obtained from slightly
          differing parameters?
-   \item The symmetrised form indeed seems to damp the $s$- and $p$-waves out.
-   \item Can one understand these expansions/differences in terms of damping for large $r$?
    \item Which conclusions can be drawn from this study?
-\end{itemize}}
+\end{itemize}
 \begin{figure}
-\begin{subfigure}{0.5\textwidth}
-\includegraphics[width=\textwidth]{Figures/Ifem_form_init}
-\end{subfigure}
-\begin{subfigure}{0.5\textwidth}
-\includegraphics[width=\textwidth]{Figures/Ifem_form_symm}
-\end{subfigure}
-\caption{Decomposition of the first 31 solutions into spherical waves with anular momenta up to $l=7$.
-Left: Astley-Leis-formulation, right: symmetrised form.}
+\includegraphics[width=\textwidth]{Figures/Ifem_forms}
+\caption{Decomposition of the first 30 solutions into spherical waves with anular momenta up to $l=7$.
+Left: Astley-Leis-formulation ($p=1$), middle: symmetrised form ($p=0.5$) right: symmetrised form ($p=10^{-4}$).}
 \label{fig:IFEMform_project}
 \end{figure}
 
-Investigation of the spectrum as a function of the power $p$ for the symmetric and non-symmetric formulation of the Hamiltonian.
-\begin{figure}
-\caption{Figure to be placed}
-\end{figure}
+As shown in the Figure \ref{fig:IFEMform_project}, the nature of the states obtained is in all cases strongly mixed in the quantum number $l$ with significant contributions even for $l>7$.
+However, the relative contributions of the angular momenta critically depends on the power $p$, making a reasonable choise of this parameter important.
 
 \subsection{Numerical Convergence}
 Tested on Lithium with a sphere with $r_\text{max}=2.8$
@@ -114,14 +98,20 @@ The lower pannel shows the decomposition of the solutions into spherical waves f
 \end{figure}
 
 \section{atomic Lithium}
+\label{ch:resLI}
 As the smallest system that has multiple electrons in its anionic state as well, Lithium is an important
 test object that has theoretical as well as experimental reference data available\cite{Li-R,Li-R1, LiNaRef1}.
 Experiment from Moore, cited in \cite{LiNaRef1}; original not found.
 Experiment 2 from \cite{LiSonntag}.
 
+%\begin{wrapfigure}{l}{0.7\textwidth}
+%\includegraphics[width=0.69\textwidth]{Figures/Lithium/Lithium_J0_2D_terrain_path_spline_cut}
+%\caption{The functional $J(\alpha,\omega)$ described in eqation (\ref{eq:J_ao}) for Lithium}
+%\label{fig:Lith-otrsh}
+%\end{wrapfigure}
 \begin{wrapfigure}{l}{0.7\textwidth}
-\includegraphics[width=0.69\textwidth]{Figures/Lithium/Lithium_J0_2D_terrain_path_spline_cut}
-\caption{The functional $J(\alpha,\omega)$ described in eqation (\ref{eq:J_ao}) for Lithium}
+\includegraphics[width=0.69\textwidth]{Figures/Lithium/Li_crossSect}
+\caption{Cross section of the Lithium atom as function of the photon energy \cite{LiCS}.}
 \label{fig:Lith-otrsh}
 \end{wrapfigure}
 

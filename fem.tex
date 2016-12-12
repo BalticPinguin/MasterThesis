@@ -188,6 +188,7 @@ But its main advantages come into play when being used with the FEM \cite{bem-fe
 Considering an unbound domain as, \textit{e.g.} the problem of the outgoing electron, the infinite domain $\Gamma$ can be divided into a finite region $\Gamma_i$ where the atoms electrostatic potential leads to ... and the remaining domain $\Gamma_o$ in which the time-independent SE reduces to the Helmholtz-problem whose fundamental solutions are well-known and thus the BEM is applicable \cite{bemCostabel, bettessBEM}.
 
 \subsection{Infinite Elements}
+\label{ch:InfEl}
 The infinite element approach was developed in the 1980-ths for acoustical caluculations and is specificly designed for the Helmholtz equation and can be understood as a advancement of the BEM that is speciallised for the Helmholtz equation.
 The general idea of the infinite elements is that the solution of the radial Helmholtz equation in spherical symmetry is well-known to be of the form
 \begin{equation} \label{eq:infAnsatz}
@@ -269,13 +270,13 @@ Since the Astley-Leis elements suffer from their non-symmetric space of ansatz- 
 \Phi(\vec{r}) &= D(r)^p\varphi(\vec{r}) e^{ik\mu(r)}
 \end{align}
 is suggested where $\varphi(\vec{r})$ is of the form as before but $D(\vec{r})=\frac{1}{r^2}$ with $p>0$ ensures that the matrix elements are finite-valued.
-The basis formulation (\eq{eq:ALsymm}) changes the mass and potential energy matrices only in a trivial way whereas the kinetic energy matrix, which is in the original Astley-Leis formulation non-hermitian, becomes now
+The basis formulation (\ref{eq:ALsymm}) changes the mass and potential energy matrices only in a trivial way whereas the kinetic energy matrix, which is in the original Astley-Leis formulation non-hermitian, becomes now
 \begin{multline}
 \int \left(\nabla \Phi^*_i(\vec{r})\right) \left(\nabla \Psi_j(\vec{r})\right) d\vec{r}=
-\int D^{2p}\left(
+\int D^{2p}\large(
 p^2 \frac{D'(r) D'(r)}{D^2(r)} +p \frac{D'(r)}{D(r)} \left(\varphi_i(\vec{r})\varphi'_j(\vec{r})+ \varphi'_i(\vec{r})\varphi_j(\vec{r}) \right)\\
 + \left(  \varphi'_i(\vec{r})\varphi'_j(\vec{r}) + ik\mu'(r) \left(\varphi_i(\vec{r})\varphi'_j(\vec{r})- \varphi'_i(\vec{r})\varphi_j(\vec{r})  \right) -(ik\mu'(r))^2 \varphi_i(\vec{r})\varphi_i(\vec{r}) \right)
-\right)d\vec{r} 
+\large)d\vec{r}  
 \end{multline}
 
 \section{Solving Large Eigenvalue Problems}
