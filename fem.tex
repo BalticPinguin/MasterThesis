@@ -21,10 +21,10 @@ This suggests that the FEM is a good tool for computations in the field of quant
 %\section{From Weak Form to a Matrix Equation}
 \section{Integration of Matrix Elements and Formulations of the Equation System}
 \label{ch:feInt}
-In section \ref{ch:introFEM} the basics of the FEM were described and the generalised eigen system shown in equation (\ref{eq:SEmat}) to solve the SE was derived.
+In section \ref{ch:introFEM} the basics of the FEM were described and the generalised eigen system shown in eq. (\ref{eq:SEmat}) to solve the SE was derived.
 Here this is taken as starting point and a closer look at the computation of the matrix elements as well as solving strategies for the large sparse generalised eigen problems are taken.
 
-The generalised eigenproblem as given in equation (\ref{eq:SEmat}) consists of three matrices.
+The generalised eigenproblem as given in eq. (\ref{eq:SEmat}) consists of three matrices.
 Since the ansatz functions (shape functions) $\varphi_i(\vec{r})$ have only a small support, most of the matrix elements are zero. 
 However, in two and three dimensions no distinct band structure is achievable and the matrices are irreducible.
 Thereby matrix elements are zero when the elements involved are not neighboured.
@@ -45,18 +45,21 @@ It is well known in numerics that this leads to instabilities especially for the
 \section{Element Types and Mesh Types}
 \label{ch:feAss}
 Among the FEM formulations several `flavours' were designed for different purposes.
-Given a certain equation to be solved in FEM there are in general two ways systematic ways to increase the accuracy.
-One way is to increase the number of elements witch is referred to as the $h$-FEM approach \cite{dreyer,}.
+Given a certain equation to be solved in FEM there are in general two systematic ways to increase the accuracy.
+The first way is to increase the number of elements witch is referred to as the $h$-FEM approach \cite{dreyer,}.
 The refinement of the mesh is in principle always possible but technically demanding since it is not known in which regions of a mesh are too coarse in general \cite{dreyer}.
-To overcome this some FEM implementations, such as that of \prog{Libmesh} \cite{libmesh} which is used here, provide an adaptive mesh refinement scheme iteratively refining the mesh using local error estimations \cite{libmesh}.
+To overcome this, some FEM implementations such as that of \prog{Libmesh} \cite{libmesh} which is used here, provide an adaptive mesh refinement scheme, iteratively refining the mesh using local error estimations and thus fully automatic \cite{libmesh}.
 But theses schemes are numerically demanding and hence can be only applied to benchmark systems.
 
 The second strategy is called $p$-FEM. 
-In the $p$-FEM scheme the order $p$ of the test functions in increased, resulting in smother and more flexible solutions.
-This scheme requires a large set of functions to be implemented but is known to yield good results if the function is smooth \textcolor{green}{source}.
-While standard FEM usually have only $p=1,2$, there are certain special-purpose schemes that go beyond this.
-\textcolor{red}{Besides these different strategies, finite element types also vary in their degrees of freedom. While ... elements are integrated by evaluating certain inner or boarder points, in ... elements also first or even second derivatives are evaluated \cite{PSbook}.}
-\textcolor{blue}{Moreover, one distinguishes conforming and the more general non-conforming meshes. In case of the latter, more general structures are supported as \textit{e.g.} hanging nodes which occur when ... as shown in Figure \ref{fig:HexBenz} \cite{PSbook}.}
+In the $p$-FEM scheme, the order $p$ of the test functions in increased, resulting in smother and more flexible solutions.
+This scheme requires a large set of functions to be implemented but is known to yield good results if the function is smooth \cite{p-fem}.
+While standard FEM-libraries usually have only $p=1,2$ implemented, others have high-order polynomials implemented \cite{hermes}.
+Combined schemes where the grid-size as well as the element order are adapted is referred to as $hp$-fem \cite{hp-fem}.
+
+Besides these different refinement strategies, finite element types also vary in their use of the degrees of freedom.
+While Lagrange elements are integrated by evaluating certain inner or boarder points, \textit{e.g.} in Argyris or Hsieh-Clough-Tocher elements also first or even second derivatives are evaluated \cite{femPraxis,femCiarlet}.
+Moreover, the arrangement of elements one distinguishes conforming and the more general non-conforming meshes \cite{nonconfFEM}. In case of the latter, more general structures are supported as \textit{e.g.} hanging nodes which occur when a vertex of one element is on the edge of an other as can be found in Figure \ref{fig:HexBenz} \cite{femCiarlet}.
 The setup of the mesh is, as mentioned above already, critical to the quality of the solution and hence of special importance.
 Moreover, it is technically non trivial to set up a close packing of volume elements with the desired properties in a systematic way.
 There are different element types available, each with their techniques for set up.
@@ -67,8 +70,8 @@ By choosing the element shape and the polynomial order, also the type of shape f
 When considering meshes to describe molecular properties it is clear that the element size should be smaller in the vicinity of the nuclei while it may be broader at larger distances.
 One way to create a hexahedral mesh with local refinement is to start with a coarse uniform lattice and subdivide the hexahedra where necessary as shown in Figure \ref{fig:HexBenz} for a benzene molecule.
 Another way is to setup small regular cubic grids around the nuclei and expand them radially in boxes of growing size as shown in Figure \ref{fig:HexDia}.
-These brick-shaped elements however have the disadvantages that the regular cube-like structures therein are not well-suited for atoms and molecules that rely rather on spherical shapes.
-Further hexahedral elements are known to give less accurate solutions than tetrahedra which are commonly used nowadays \textcolor{green}{cite}.
+These brick-shaped elements however have the disadvantages that the regular cube-like structures therein might be not well-suited for atoms and molecules that rely rather on spherical shapes.
+%Further hexahedral elements are known to give less accurate solutions than tetrahedra which are commonly used nowadays \textcolor{green}{cite}.
 
 %\begin{wrapfigure}{r}{\textwidth}
 %\includegraphics[width=\textwidth]{Figures/Elements3d-crop.pdf}
@@ -152,19 +155,15 @@ In this scheme, an artificial potential usually of the form
                                            0    & \text{else} \end{cases}
 \end{equation}
 is added where $\vec{r}_0$ is larger than the bound part of the system.
-Such a potential damps the wave function by reflecting only a small fraction of the wave back into the region of interest \textcolor{green}{sources}.
-However, studies with different shapes of these potentials show that it influences the wave function not only close to the boarders and a proper design of the parameters is....
+Such a potential damps the reflection of the wave function at the boarders and thus enhances the quality of states obtained on a finite region \cite{cap1, cap2}.
+However, studies with different shapes of these potentials show that it influences the wave function not only close to the boarders and a proper design of the parameters is non-trivial \cite{CAPfreshlook}.
 
-To minimise the error due to the CAP, the parameter $\eta$ can be chosen such that its dependency on the energy vanishes in first order, \textit{i,e.} $\eta\frac{dE}{d\eta}=0$ \cite{CAPccEOM}.
+To minimise the error due to the CAP, the parameter $\eta$ can be chosen such that its dependency on the energy vanishes in first order, \textit{i,e.} $\eta\frac{dE}{d\eta}=0$ \cite{CAPccEOM,CAPfreshlook}.
 Moreover, due to non-hermiticity the usual scalar product is not suitable when calculating overlap integrals any more.
-Too strong $\eta$ makes reflections, too weak $\eta$ lead to unstable resonances, making them strongly basis-set dependent \cite{CAPfreshlook}
+Too strong $\eta$ introcudes reflections, too weak $\eta$ lead to unstable resonances, making them strongly basis-set dependent \cite{CAPfreshlook}.
+Moreover, for Helmholtz problems, a dependence of the error on the frequency was observed \cite{babuska}.
 
-The idea of damping down a function and making sure no reflections are scattered back to the region of interest is common to further approaches as \textit{e.g.} absorbing boundary conditions \cite{Engquist}, perfectly matched layer schemes \cite{pmlBook,pml1, pml2} or certain variable transformations \cite{taoDVR}.
-
-\begin{itemize}
-   \item Also read zotero: (In)FEM AbsorbBoundariesVS\_InfFE
-   \item transparent bc!? \cite{HelmhPrec}
-\end{itemize}
+The idea of damping down a function and making sure no reflections are scattered back to the region of interest is common to further approaches as \textit{e.g.} absorbing boundary conditions \cite{Engquist}, transparent boundaries \cite{HelmhPrec}, perfectly matched layer schemes \cite{pmlBook,pml1, pml2} or certain variable transformations \cite{taoDVR}.
 
 \subsection{Mode-matching Schemes}
 Consider the solution in an inner and outer region as different variables following the equations
@@ -211,7 +210,7 @@ The differences in the formulations are introduced by the test functions applied
 
 \subsubsection{Burnett Elements}
 In the original Burnett formulation, the test functions are given in the form
-\begin{equation} \label{eq:ALelem}
+\begin{equation} \label{eq:BUelem}
  \Phi(\vec{r}) = \varphi(\vec{r}) e^{-ik(r-r_0)}.
 \end{equation}
 In the literature, usually the sign in the exponent is changed due to the use of an other convention in the notation of the weak formulation \ref{eq:SEweak}.
@@ -244,11 +243,11 @@ with
 \mat{A}_{i,j}& =\int \left(V(\vec{r}) D(r) \varphi_i(\vec{r}) \varphi_j(\vec{r}) 
                  -\frac 12 D'(r) \varphi_i(\vec{r})\varphi'_j(\vec{r})
                  +\frac 12 D(r) \varphi'_i(\vec{r})\varphi'_j(\vec{r}) \right) d\vec{r}\\
-\mat{B}_{i,j}&=\frac 12 \int\left( -\mu'(r)D' \varphi_i(\vec{r})\varphi_j(\vec{r})
-                + D(r) (\varphi'_i(\vec{r})\varphi_j(\vec{r}) -\varphi_i(\vec{r})\varphi'_j(\vec{r})) \right) d\vec{r} \\
+\mat{B}_{i,j}&=\frac 12 \int\left( -\mu'(r)D'(r) \varphi_i(\vec{r})\varphi_j(\vec{r})
+                + D(r) \left(\varphi'_i(\vec{r})\varphi_j(\vec{r}) -\varphi_i(\vec{r})\varphi'_j(\vec{r})\right) \right) d\vec{r} \\
 \mat{C}_{i,j}&= \frac 12 \int\left( (D(r) \mu'(r) \mu'(r) + 1) D(r) \varphi_i(\vec{r}) \varphi_j(\vec{r})\right) d\vec{r}
 \end{align}
-where the relation $E=\frac 12 k^2$ is used \cite{dreyer}.
+where the prime is used as short-form of the spacial derivative and the relation $E=\frac 12 k^2$ is used \cite{dreyer}.
 
 This reformulation though lead to a quadratic eigenvalue problem instead of the generalised eigenvalue problem from before.
 However, assuming that the difference between the eigenvalues of (\ref{eq:SEinf}) and the target energy of the outgoing electron is small, the quadratic eigenvalue problem can be approximated by the generalised eigenvalue problem (\ref{eq:SEmat}) by setting $k$ to the respective target momentum in the Hamiltonian.
@@ -259,18 +258,25 @@ The introduced imaginary part of the eigenvalue can be considered as a broadenin
 However, this is not very meaningfull since the ansatz is done in praticular in such a way that the wave function is not changed in an unphysical sense.
 To understand the respective results, here a symmetrised ansatz is suggested in the following.
 
-\subsubsection{Further Formulations}
+\subsubsection{Symmetrised Formulation}
 Besides those formulations mentioned above, further infinite element formulations are used \cite{dreyer}.
 For example, a formulation to the Burnett-elements using a quadratic decay was applied to the harmonic oscillator \cite{bettessHarmonic} and DFT calculations \cite{sobaMolecule} successfully.
 However, the application of infinite elements to FEFs is to my knowledge a novelty in this work.
 
-Since the Astley-Leis elements suffer from the non-symmetry of the space of ansatz- and test-functions whereas the conjugate Burnett formulation has problems due to infinitely large matrix elements, here a symmetric but damped ansatz of the form
+Since the Astley-Leis elements suffer from their non-symmetric space of ansatz- and test-functions whereas the conjugate Burnett formulation has problems due to infinitely large matrix elements, here a symmetric but damped ansatz of the form
 \begin{align} \label{eq:ALsymm}
-\Psi(\vec{r}) &= D(r)\varphi(\vec{r}) e^{ik\mu(r)} \\
-\Phi(\vec{r}) &= D(r)\varphi(\vec{r}) e^{ik\mu(r)}
+\Psi(\vec{r}) &= D(r)^p\varphi(\vec{r}) e^{ik\mu(r)} \\
+\Phi(\vec{r}) &= D(r)^p\varphi(\vec{r}) e^{ik\mu(r)}
 \end{align}
-is suggested where $\varphi(\vec{r})$ is of the form as before but $D(\vec{r})=\frac{1}{r^p}$ with $p>0$ ensures that the matrix elements are finite-valued.
-Here, the values $p=1$ and $p=\frac 12$ will be considered.
+is suggested where $\varphi(\vec{r})$ is of the form as before but $D(\vec{r})=\frac{1}{r^2}$ with $p>0$ ensures that the matrix elements are finite-valued.
+The basis formulation (\eq{eq:ALsymm}) changes the mass and potential energy matrices only in a trivial way whereas the kinetic energy matrix, which is in the original Astley-Leis formulation non-hermitian, becomes now
+\begin{multline}
+\int \left(\nabla \Phi^*_i(\vec{r})\right) \left(\nabla \Psi_j(\vec{r})\right) d\vec{r}=
+\int D^{2p}\left(
+p^2 \frac{D'(r) D'(r)}{D^2(r)} +p \frac{D'(r)}{D(r)} \left(\varphi_i(\vec{r})\varphi'_j(\vec{r})+ \varphi'_i(\vec{r})\varphi_j(\vec{r}) \right)\\
++ \left(  \varphi'_i(\vec{r})\varphi'_j(\vec{r}) + ik\mu'(r) \left(\varphi_i(\vec{r})\varphi'_j(\vec{r})- \varphi'_i(\vec{r})\varphi_j(\vec{r})  \right) -(ik\mu'(r))^2 \varphi_i(\vec{r})\varphi_i(\vec{r}) \right)
+\right)d\vec{r} 
+\end{multline}
 
 \section{Solving Large Eigenvalue Problems}
 In finite element applications such as those being proposed in this work, matrix equations with hundreds up to hundredthousands of dimensions need to be solved.
@@ -281,12 +287,12 @@ However, efficient strategies are only known for regular eigenvalue problems of 
 \begin{equation} \label{eq:eigenprob}
 \mat{A}\vec{x}=\lambda\vec{x}.
 \end{equation}
-Hence, the more general forms will be rewritten to become (\ref{eq:eigenprob}) as discussed in the subsections \ref{ch:quadEV} and \ref{ch:GenEV} respectively.
+Hence, the more general forms will be rewritten to become (\ref{eq:eigenprob}) as discussed in sections \ref{ch:GenEV} respectively.
 Moreover, since the state of interest is a free state, one needs to expect a high density of states for an appropriate mesh. 
 This, however, is a well-known problem in numerical methematics since almost degenerate eigenvalues are very sensitive to small perturbations and their respective eigenvectors even more.
-Though the subsection \ref{ch:regular} addresses these problems and a way for numerical stabilisation is sketched.
+Though section \ref{ch:regular} addresses these problems and a way for numerical stabilisation is sketched.
 
-Finally in the subsection \ref{ch:ghep} a few methos are presented showing how a small number of approximate eigenpairs can be obtained in a numerically efficient way from the usual eigenproblem (\ref{eq:eigenprob}).
+Finally in section \ref{ch:ghep} a few methos are presented showing how a small number of approximate eigenpairs can be obtained in a numerically efficient way from the usual eigenproblem (\ref{eq:eigenprob}).
 % general overview: http://www.sciencedirect.com/science/article/pii/S0377042700004131
 
 %How is this inversion done numerically?
@@ -316,58 +322,73 @@ A commonly used approach the Krylov subspace.
 \subsection{Stabilisation of Eigenproblems}
 \label{ch:regular}
 Independent of the efficiency and robustness of the eigensolver in use, seeking solutions of the SE for free particles means that eigenpairs are to be found whose energies are, if the numerical parameters are chosen well, very dense or even degenerate.
-Unfortunately, dense-lying eigenvalues lead to numerical difficulties; especially the eigenvectors are known to be unreliable in this case.
-In practice, this means that the iterative schemes do not converge anymore, requireing a reformulation of the mathematical probelm.
+Unfortunately, dense-lying eigenvalues lead to numerical difficulties and especially the eigenvectors are known to be unreliable in this case.
+In practice this means that the iterative schemes do not converge anymore, requireing a reformulation of the mathematical probelm.
 
 One way to circumvent the instabilities in the original problem (\ref{eq:Gep}) is to reformulate it as a minimisation problem \cite{H2pDeCleva}.
-Therefore equation (\ref{eq:SEmat2}) is rewritten as $\left(\frac 12 \mat{A}+\mat{V} - \varepsilon \mat{M}\right)\vec{c}_i = 0$ where $\varepsilon$ is the target energy.
+Therefore eq. (\ref{eq:SEmat2}) is rewritten as $\left(\frac 12 \mat{A}+\mat{V} - E \mat{M}\right)\vec{c}_i = 0$ where $E$ is the target energy.
 Since this will have most likely no unambiguous solution, one minimises the residuum
 \begin{equation}
 \text{min}_{||\vec{x}||=1}\left\{\left|\left|\left(\frac 12 \mat{A}+\mat{V}-E\mat{M}\right)\vec{x} \right|\right| \right\}.
 \end{equation}
-Using the $L_2$-norm, this is the same as finding the smallest eigenvalue of
-\begin{equation}
+Using the $L_2$-norm, this equivalent to finding the smallest eigenvalue of
+\begin{equation} \label{eq:SEmin}
 \left(\frac 12 \mat{A}+\mat{V}-E\mat{M}\right)^\dagger
 \left(\frac 12 \mat{A}+\mat{V}-E\mat{M}\right) \vec{x}_i = \theta \vec{x}_i
 \end{equation}
 where $\theta$ is a measure for the error in energy.
-To avoid the costly multiplication of two matrices, one can use  Hermiticity of the matrices and take compute the
-square root as
-\begin{equation} \label{eq:SEmin}
-\left(\frac 12 \mat{A}+\mat{V}-E\mat{M}\right)\vec{c}_i = \lambda \vec{c}_i
+%To avoid the costly multiplication of two matrices, one can use  Hermiticity of the matrices and take compute the
+%square root as
+%\begin{equation} \label{eq:SEmin}
+%\left(\frac 12 \mat{A}+\mat{V}-E\mat{M}\right)\vec{c}_i = \lambda \vec{c}_i
+%\end{equation}
+%which is a usual eigenvalue problem \cite{H2pDeCleva} and $\lambda$ with smallest absolute value is searched.
+%
+%Nonetheless, the latter formulation is only an approximation as the comparison of (\ref{eq:Gep}) and (\ref{eq:SEmin}) shows, the latter approximates the mass matrix$\mat{M}$ as unity $\mat{1}$.
+%Furthermore, eq. (\ref{eq:SEmin}) still is expected to have a very dense spectrum and $\lambda$ is an interior eigenvalue so the initial problem is not expected to be solved in this approach.
+
+Whereas eq (\ref{eq:SEmin}) is only an approximation to the original problem, it has the advantage that it is a quadratic expression.
+Similar schemes which are, in contrast to that mentioned above, only reformulations of the original problem are often referred to as spectral transformations \cite{slepcManual}.
+One example is the harmonic extraction, where the eigenvalues of original expression (\ref{eq:Gep}) are first shifted such that the target value is $0$, leading to the equation 
+\begin{equation} \label{eq:Shift}
+\left(\mat{A}-\tilde{\lambda}\mat{M}\right)\vec{x}=(\lambda-\tilde{\lambda})\vec{x}
 \end{equation}
-which is a usual eigenvalue problem \cite{H2pDeCleva} and $\lambda$ with smallest absolute value is searched.
-
-Nonetheless, the latter formulation is only an approximation as the comparison of (\ref{eq:Gep}) and (\ref{eq:SEmin}) shows, the latter approximates the mass matrix$\mat{M}$ as unity $\mat{1}$.
-Furthermore, equation (\ref{eq:SEmin}) still is expected to have a very dense spectrum and $\lambda$ is an interior eigenvalue so the initial problem is not expected to be solved in this approach.
-
-\textcolor{red}{matrix preconditioners: Many different types developed \cite{Helmke2010}; most of them are effective only on a small class of problems as \textit{e.g.} especially well-suited for matrices originating from FEM-problems \cite{PrecFem, PrecFem2} and can be even specialised to a FEM structure \cite{MultPrec,MultPrec2} or for a particular physical problem \cite{HelmhPrec}. Often their performance moreover depends on the solver to be used later \cite{PrecKr}.}
-
-Instead of the reformulation, here a regularisation of the problem used, applying the spectral transformation shift and invert.
-Starting thit the problem: $\mat{A}\vec{x}=\lambda\mat{B}\vec{x}$ where the eigenvalues closest to the target energy $\varepsilon$ are of interest, the spectrum can be shifted to a target energy of $0$ by
+where $\tilde{\lambda}$ is the target value of the original problem.
+Than, the equation is multiplied by $\mat{A}$, resulting in the problem 
 \begin{equation}
-\left(\mat{A}-\varepsilon\mat{B}\right)\vec{x}=(\lambda-\varepsilon)\mat{B}\vec{x}
+\left(\mat{A}-\tilde{\lambda}\mat{M}\right)\left(\mat{A}-\tilde{\lambda}\mat{M}\right)\vec{x}=(\lambda-\tilde{\lambda})\left(\mat{A}-\tilde{\lambda}\mat{M}\right)\mat{M}\vec{x}
 \end{equation}
-and than inverted to become
+which is observed to lead to faster convergence for Krylov-subspace methods \cite{slepcManual}.
+
+Further spectral transformations are the spectral folding \cite{slepcManual} where the left and right side of equation (\ref{eq:Shift}) are squared respectively which often leads to higher stability but the squaring of eigenvalues leads to ambiguities with respect to the eigenvalues $\lambda$ of the original problem.
+%Instead of the reformulation, here a regularisation of the problem used, applying the spectral transformation shift and invert.
+%Starting thit the problem: $\mat{A}\vec{x}=\lambda\mat{B}\vec{x}$ where the eigenvalues closest to the target energy $\varepsilon$ are of interest, the spectrum can be shifted to a target energy of $0$ by
+%\begin{equation}
+%\left(\mat{A}-\varepsilon\mat{B}\right)\vec{x}=(\lambda-\varepsilon)\mat{B}\vec{x}
+%\end{equation}
+The scheme that turned out to be most beneficial for the matrices used in this work is the shift and invert scheme where the inverted problem of eq. (\ref{eq:Shift}), \textit{i.e.}
+\begin{equation}\label{eq:stSI}
+\left(\mat{A}-\tilde{\lambda}\mat{M}\right)^{-1}\mat{M}\vec{x}=\frac{1}{\lambda-\tilde{\lambda}}\vec{x},
+\end{equation}
+is solved. 
+The formulation (\ref{eq:stSI}) has the advantage that the transformed eigenvalues $\frac{1}{\lambda-\tilde{\lambda}}$ are well-separated and on the extrema of the new spectrum, making the convergence faster and more stable \cite{str-7}.
+A more generalised transformation is the Cayley-transform which has two parameters $\tilde{\lambda}$ and $\tilde{\tilde{\lambda}}$ and yields the usual eigenvalue problem
 \begin{equation}
-\vec{x}=(\lambda-\varepsilon)\left(\mat{A}-\varepsilon\mat{B}\right)^{-1}\mat{B}\vec{x}
+\left(\mat{A}-\tilde{\lambda}\mat{M}\right)^{-1}\left(\mat{A}+\tilde{\tilde{\lambda}}\mat{M}\right)\vec{x}=\frac{\lambda+\tilde{\tilde{\lambda}}}{\lambda-\tilde{\lambda}}\vec{x}.
 \end{equation}
-which is equivalent to the usual eigenproblem
-\begin{equation} \label{eq:stSI}
-\left(\mat{A}-\varepsilon\mat{B}\right)^{-1}\mat{B}\vec{x}=\tilde\lambda \vec{x} \qquad \tilde\lambda=\frac{1}{\lambda-\varepsilon}.
-\end{equation}
-The formulation (\ref{eq:stSI}) has the advantage that the transformed eigenvalues are well-separated and on the extrema of the new spectrum, making the convergence faster and more stable \cite{str-7}.
-\begin{itemize}
-\item Why do I prefer to use the first formulation?
-\item Computing Interior Eigenvalues with Harmonic Extraction --> still good/nice with ST?
-\item Purification of Eigenvectors --> Can it help me to do some nice shit?
-\end{itemize}
+
+Finally, a regularisation of eigenvalue problems can be performed using matrix preconditioners.
+Many different types of preconditioners are developed \cite{Helmke2010} but most of them are effective only on a small class of problems as \textit{e.g.} especially well-suited for matrices originating from FEM-problems \cite{PrecFem, PrecFem2} and can be even specialised to a FEM structure \cite{MultPrec,MultPrec2} or for a particular physical problem \cite{HelmhPrec}. 
+Often their performance moreover depends on the solver to be used later \cite{PrecKr}.
+This makes their effective use more intricate and can easily lead to higher costs than their benefit is.
+In this thesis, the shift-and-invert scheme (\ref{eq:stSI}) is used.
 
 \subsection{Solving Large Eigenproblems}
 \label{ch:ghep}
-For the computation of eigenpairs large classes of solvers have been developed with various numerical properties.
+For the computation of eigenpairs, many classes of solvers have been developed with various numerical properties.
 Besides direct solvers such as the Gau\ss-elimination, many iterative solvers have been developed that are especially well-suited for large but spares problems.
 Besides the famous Jacobi- and Gau\ss-Seidel algorithms which converge only in certain cases, also the Davidson method and several Krylov subspace methods are commonly used.
+For finite element problems, the Krylov subspace solvers turned out to be the most efficient class.
 
 As discussed in the sections \ref{ch:GenEV} and \ref{ch:regular} already, the solution of a generalised eigenvalue problem involves matrix operations which need to be avoided to keep their sparse structure.
 
@@ -383,10 +404,10 @@ To prevent this, the vectors usually are orthonormalised subsequently.
 An important issue in this scheme is a good choise for $\vec{x}$ which crucially determines the speed of convergence.
 If a reasonable start-vector is not given, the space $\mathcal{K}_r$ needs to be extended by increasing $r$ iteratively.
 The orthogonalisation method being used distinguishes different Krylov subspace methods such as the Arnoldi \cite{str-4} or Lanczos \cite{str-5}.
-In the particular implementation, the Krylov-Schur algorithm is used \cite{str-7} which was introduced 2001 \cite{KrSch}.
-To keep the dimensionality low, most schemes restart the algorithm after $r$ reached a certain value, starting with a better guess $\vec{x}$.
-The efficient restart is another critical issue in this scheme.
-In the Krylov-Schur algorithm \cite{KrSch} used here, the restart is conducted implicitly as described in more detail in ref. \cite{str-7}.
+In the particular implementation, the Krylov-Schur algorithm is used \cite{str-7,KrSch}.
+To keep the dimensionality low, in this algorithm the subspace iteration is restarted after $r$ reached a certain value, starting with a better guess $\vec{x}$.
+%The efficient restart is another critical issue in this scheme.
+%In the Krylov-Schur algorithm \cite{KrSch} used here, the restart is conducted implicitly as described in more detail in ref. \cite{str-7}.
 
 %\subsubsection{Inverse iteration and Power methods}
 %not suitable for the initial problem, but maybe for the transformed one?

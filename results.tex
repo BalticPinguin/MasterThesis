@@ -16,6 +16,8 @@ Atomic Systems have some experimental data as well: For Xe and Kr the spectra at
 A combined theoretical and experimental study on CH$_2$F$_2$ is in ref. \cite{ch2f2}. Here, theory is quite bad and experiment is also angular resolved, thus may be interesting.
 
 \section{Benchmarks and Tests on the Formalism}
+\label{ch:resBench}
+
 \subsection{Comparison of Formulations}
 While the unconjugated Burnett-formulation was not very successfull, the conjugated formulations of Burnett and Astley-Leis might both be interesting to compare for a quantum mechanical problem.
 Since the conjugated Burnett elements lead to infinitely large matrix elements, here the Astley-Leis elements (\ref{eq:ALelem}) will be compared with a symmetrised form where the shape functions are of the form
@@ -69,6 +71,24 @@ Investigation of the spectrum as a function of the power $p$ for the symmetric a
 \end{figure}
 
 \subsection{Numerical Convergence}
+Tested on Lithium with a sphere with $r_\text{max}=2.8$
+1:  Using the mapping of Son with a naive approach, setting the number of circles by hand and growing quadratically with the size  ($N_\text{circle}=20$, $l= 2.0$ , $N= 10$)
+2: using the Son scheme with N according to above formula
+3: using the tm scheme as described above, p=1
+4: using the tm scheme as described above, p=2
+
+\begin{tabular}{|c|c|c|}
+\hline
+scheme & \#elements & error in energy [a.u.]\\
+\hline
+1      & 2370      & 0.496220, 0.520199, 0.572279 \\
+2      & 2022      & 0.038136, 0.046119, 0.055691 \\
+3      & 2166      &-0.003638, 0.027219, 0.050588 \\
+4      & 2338      & none converged \\
+\hline
+\end{tabular}
+In these calculations the number of elements were kept as similar as possible.
+
 In the FEM scheme used to compute the FEF, several parameters governing numerical and physical characteristics are used.
 The size of the Krylov-subspace does not play a role for the quality of the solution as shown in Figure \ref{fig:E_nev} for the symmetric formulation with a power $p=\frac 12$ of the damping function $D$.
 \begin{wrapfigure}{r}{0.5\textwidth}
@@ -84,6 +104,7 @@ More important than the subspace used numerically is obviously the size of the s
    \item `Convergence' speed depends on power of $D$, chose $p=\frac 12$ here.
    \item Increasing box-size leads to contributions of larger $l$ 
    \item Non-symmetric formulation leads to stronger mixing of angular momenta
+   \item Spectra converged for $p=1/8$, see Figure \ref{fig:powerSpect} in supplement.
 \end{itemize}
 \begin{figure}
 \includegraphics[width=\textwidth]{Figures/RadWaves_p0_5.pdf}
@@ -103,6 +124,8 @@ Experiment 2 from \cite{LiSonntag}.
 \caption{The functional $J(\alpha,\omega)$ described in eqation (\ref{eq:J_ao}) for Lithium}
 \label{fig:Lith-otrsh}
 \end{wrapfigure}
+
+Cross-section: \cite{LiCS}.
 
 The appearance of $2p$-states are accessed by a dipole-transition in the bound part and can not be described within the theory applied here due to the neglect of the conjugate DO term in equation (\ref{eq:fullDO}) \cite{saPonzi}.
 
