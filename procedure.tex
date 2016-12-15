@@ -53,7 +53,7 @@ The correlation potential finally is defined as the functional derivative of the
 In the case of the
 The LYP-correlation energy functional is based on the Colle-Salvetti formula which estimates the correlation energy in the Hartree-Fock approach and introduces two parameters that are set by fitting to experimental data \cite{lyp}.
 
-\subsection{Excited State Properties}
+\subsection{Properties of Excited States}
 \label{ch:tddft}
 The DFT is not only a well-established method to obtain ground-state properties of many different kinds of systems, but it has also a time-dependent counterpart, formally based on the Runge-Gro\ss\, theorem \cite{RungeGross}.
 Commonly, when referring to TDDFT, respective the linear-response scheme is meant \cite{dreuw}.
@@ -198,7 +198,7 @@ Finally, after putting the points together as described above, they are connecte
 Here additional points may be introduced to guarantee well-shaped elements (\texttt{i.e.} no sharp peaks).
 
 One scheme suggested by Son and Chu \cite{Son_Chu0}:
-\begin{equation}
+\begin{equation} \label{eq:son_map}
 r_i=\frac{il}{N-i+\frac{lN}{r_\text{max}}} \qquad i=1,\hdots ,N 
 \end{equation}
 where $l$ is a parameter to chose.
@@ -217,29 +217,31 @@ Besides a constant number, also a constant spherical density (hence $N\propto r^
 In particular, I followed the design rule of keeping the space between points in radial direction similar to space between points in angular distribution.
 Hence, $d_\text{spheric}=\sqrt{\frac{4\pi r_i^2}{N_i}}\approx r_i-r_{i-1}$.
 For the above described radial schemes, this results in 
-\[
+\begin{equation}\label{eq:tm_num}
 N_i= \frac{4\pi}{ \left(1-\frac{i-1 }{i}\frac{N-i+\frac{lN}{r_\text{max}}}{N-i+1+\frac{lN}{r_\text{max}}}\right)^2 }
-\]
+\end{equation}
 for the first scheme and 
-\[
+\begin{equation} \label{eq:son_num}
 N_i= \frac{4\pi}{\left(1-\frac{i-1 }{i}\frac{ (\frac{N}{i})^p \left(\frac{lN}{r_\text{max}}-1\right)+1}{ (\frac{N}{i-1})^p\left( \frac{Nl}{r_\text{max}} -1 \right) +1 } \right)^2 }
-\]
+\end{equation}
 for the latter.
 
-The respective radii and number of points per sphere are shown in figure \ref{fig:maps}.\\
+The respective radii and number of points per sphere are shown in Figure \ref{fig:maps}.\\
 Special mapping schemes are the constant radial mapping $r_i=a i$ which corresponds to a constant spherical grid density $N_i=4\pi a^2 i^2$ and an exponential map $r_i=q^i r_0$ which would require a constant number of spherical grid points $N_i=\frac{4\pi q^2}{(1-q)^2}$ according to the rule derived above.
 
 \begin{figure}
-\includegraphics[width=0.7\textwidth]{Figures/RadialMap}
-\caption{the radius and number of points of the spheres as for $N=15$, $r_\text{max}=5$ and $l=2$.}
+\includegraphics[width=\textwidth]{Data/radial_mapping}
+\caption{Comparison of the radius (left) and number of points (right) of the different spheres ($N=15$, $r_\text{max}=5$ and $l=2$) for the different radial schemes (\ref{eq:son_map}) and (\ref{eq:tm_map}).}
 \label{fig:maps}
 \end{figure}
 
 Since some of the spherical schemes described above allow only for certain numbers of points each, here, the best approximation is used respectively.
 
-\subsection{Obtaining ESP}
- - obtained from \prog{NWChem}
- - interpolation of that grid
+\subsection{Obtaining the Electrostatic Potential and Dyson orbitals}
+The electrostatic potential used in this work is obtained with a modified version of \prog{NWChem} \cite{nwchem} where the points, at which this potential should be computed can be set by the user.
+Setting these points to the quadrature points of the integration scheme requires some extra effort but has the great advantage that no interpolation needs to be done internaly.
+An internal interolation would require an interpolation of scattered data for which several schemes such as radial basis function interpolation or inverse distance interpolation are available but both methods give, if the parameters are chosen not accurately, spurious oscillations between the quadrature points and thus do not result an a smooth electrostatic potential.
 
-\section{Obtaining the DOs}
- - from coefficients to values
+The second external quantity needed to compute the intensities is the DO.
+In the developed protocol, the DO is computed with the in hous code \prog{DYSON} \cite{MAgg}, having the coefficients for the primitive basis functions as its output.
+From these primitives, the values of the DO at all quadrature points are computed with a self-written function in \prog{FreeWilly}.
