@@ -1,9 +1,8 @@
 \label{ch:proced}
 After describing different approaches to compute PESs in chapter \ref{ch:calcPES} and pointing out why the DO formalism combined with a finite element method for the computation of the photoelectron function is well-suited for our needs, in this chapter the protocol as being used to obtain the PESs is be presented.
 
-In the first section the computation of the wave functions of initial (unionised) and final (ionised) states will be described.
-Thereafter, in section \ref{sec:grid} the setup of the finite element system that is used to compute the free electron function as well as the dipole matrix element will be described.
-In the final section, the computation of Dyson orbitals will be sketched and it will be described how to transfer it to the finite element setup.
+In the first section the computation of the wave functions of initial (unionised) and final (ionised) states as well as the genaral procedure used to compute the DOs is described.
+Thereafter, in section \ref{sec:grid} the setup of the finite element system that is used to compute the free electron function as well as the dipole matrix element are explained which is implemented in the program \prog{FreeWilly} \cite{FreeWilly} in the framework of this thesis.
 
 \section{Bound State Functions}
 The DO formalism as it is described in \ref{ch:do} can be used with any self-consistent field method which can predict excited state energies and wave functions.
@@ -96,19 +95,26 @@ Using such a scheme, the degrees of freedom obtained are used to optimise a part
 \end{equation}
 or a similar one which can also account for lower-lying orbitals or the electron affinities which should resemble the binding energies of the lowest unoccupied molecular orbital (LUMO).
 
-Another quantity to optimise is the derivative discontinuity \cite{sanchez}.
+Another quantity to optimise is the derivative discontinuity \cite{derdis,sanchez,Autschbach} that is based on the fact that the exchange-correlation energy should be a straight line when varying the number of electrons from $N$ to $N+1$.
+The slope of that line corresponds to the binding energy of the respective electron and thus is discontinuous at integer numbers of electrons.
+The approximate exchange correlation functionals, however, usually do not fulfill this condition but the parameters $\alpha$ and $\beta$ can be tuned such that only small deviations can be observed \cite{bokareva}.
 
 For this optimization procedure the Gaussian package \prog{G09} \cite{g09} is used with the 6-31G(d) \cite{6-31g,6-31gd} basis set and the functional LC-BLYP \cite{lcblyp}. 
 The ground state DFT calculation, determination of geometries and the linear-response TDDFT calculations have been conducted with a locally modified version of \prog{NWChem} \cite{nwchem}, employing the basis set def2-tzvp \cite{def2tzvp} without symmetry restrictions.
 The Kohn-Sham orbitals (obtained by ground state DFT) and CI-coefficients (obtained by linear-response TDDFT which yields the configuration interaction singles expansion for a number of excited states) as well as the atomic overlap matrix are interfaced to the in-house software \prog{DYSON} \cite{MAgg} that computes the DOs.
 The integration of the transition dipole matrix elements in eq. (\ref{eq:sigma_do}) finally is performed using \prog{ezDyson} \cite{ezDyson}.
 
-\subsection{Computing the Dyson orbital}
-The DO is computed in the framework of this thesis with the in-house code \prog{DYSON} \cite{MAgg}.
+\subsection{Obtaining the Electrostatic Potential and Dyson orbitals}
 %Considering a state as linear combination of CI-states is denoted as weak-coupling representation \cite{McCarthy}.
+The electrostatic potential used in this work is obtained with a modified version of \prog{NWChem} \cite{nwchem} where the points, at which this potential should be computed can be set by the user.
+Setting these points to the quadrature points of the integration scheme requires some extra effort but has the great advantage that no interpolation needs to be done internaly.
+An interpolation of the data in \prog{FreeWilly} \cite{FreeWilly} would require an interpolation of scattered data for which several schemes such as radial basis function interpolation or inverse distance interpolation are available but both methods give, if the parameters are chosen not accurately, spurious oscillations between the quadrature points and thus do not result an a smooth electrostatic potential.
+
+The second external quantity needed to compute the intensities is the DO that is computed in the framework of this thesis with the in-house code \prog{DYSON} \cite{MAgg}.
+To obtain the required data for this, the \prog{NWChem}-code is modified to produce more verbose output and the respective data are extracted and reformatted with a self-written script \cite{nwc2dy}.
 
 \section{Free electron function}
-The FEF is computed with a finite element scheme, using the program \prog{Free Willy} developed in the framework of this thesis.
+The FEF is computed with a finite element scheme, using the program \prog{FreeWilly} \cite{FreeWilly} developed in the framework of this thesis.
 It is based on the library \prog{Libmesh} \cite{libmesh} which itself uses several libraries for the required linear algebra and the mesh-setup.
 
 \subsection{Setup of the Grid}
@@ -126,24 +132,20 @@ It is expected that the main parameters, the mesh should depend on are
 In this work the generation of the point-distribution is chosen similarly to the grid used by Son and Chu \cite{Son_Chu} which is based on spherical distributions around the atoms whose overlapping regions are cut off.
 To yield a reasonable mesh, the radii of these spheres need to be much larger than the bond lengths to avoid holes or interatomic gaps in the molecule, \textit{e.g.} between different ligands.
 Using such a scheme, the parameters are determined by the size of the largest sphere $r_\text{max}$, number $N$ of spheres being used as well as the radial distribution and angular distributions, respectively.
-\begin{figure}
-   \includegraphics[width=0.5\textwidth]{water1}
-   \includegraphics[width=0.5\textwidth]{water2}
-   \caption{Example of a mesh for the water-geometry. It consists of $5$ spheres with constant number of points per sphere. The overlapping regions are cut off. Left: cut through the nuclear plane. 
-   \textcolor{red}{add figure with distribution: tm}}
-   \label{fig:molmesh}
-\end{figure}
 
 For the radial distribution of $N$ spheres Son and Chu \cite{Son_Chu0} suggested the scheme
-\begin{equation}
+\begin{equation} \label{eq:son_map}
 r_i=\frac{il}{N-i+\frac{lN}{r_\text{max}}} \qquad i=1,\hdots ,N 
 \end{equation}
 where $l$ is a free parameter.
-As an alternative distribution, in this work the formula
-\begin{equation}
+Using this function, the smallest spheres ($i<<N$) are scaled linearly with distances $r_\text{max}/N$ whereas the distance of the largest spheres depends non-trivially on the parameters but can become very large.
+
+To obtain better control of the distance between the inner spheres and the maximum distance which needs to be consiberably smaller than the wave length, in this work the formula
+\begin{equation} \label{eq:tm_map}
 r_i=\frac{il}{\left( \frac Ni \right)^p \left(\frac{Nl}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N 
 \end{equation}
 is suggested where two degrees of freedom $l$ and $p\geq 1$ are given and the condition $N<\frac{r_\text{max}}{l}$ needs to be fulfilled to prevent the singularity.
+Here $l$ is an asymtotic expression for the distance between two spheres and the distance of inner spheres grows with the power $p+1$ so that it can be tuned freely.
 %Thereby it is important to mention that in this scheme (in contrast to the above one) the (asymptotic for $r\rightarrow \infty$) maximum distance between two spheres is $l$ and hence could be physically chosen to $l\approx \frac \lambda 2$.
 
 While the distribution of spheres follows, at least on a qualitative level, a clear scheme since it should always resemble the local kinetic energy, the distribution of points on the surface of each sphere more complicated.
@@ -151,6 +153,16 @@ Here, a regular distribution is a good choise, but on the non-linear topology of
 While so-called geodesic grids are popular in earth sciences \cite{geodesic1,geodesic2,geodes_charge}, their construction allows only for exponentially growing mesh-sizes.
 Another common approach is to use quadrature points of integration rules of a given order which lead to Lebedev-grids \cite{lebedev,lebedev2} and spherical t-designs \cite{t-design1, t-design2} that are found more often in quantum chemical contexts \cite{LebQC1,LebQC2,lebDFT,lebDFT2} and will be used in this thesis.
 Further methods involve the search of extrem such as minimisation of the Riesz s-energy, and other geometric properties \cite{fliegeMaier,womersley,wom2,wom3} or a set of qualitatively lower but computationally much easier schemes such as the spherical fibonacci mapping \cite{fibonacci,fibonacci2}.
+\begin{figure}
+   %\includegraphics[width=0.5\textwidth]{water1}
+   %\includegraphics[width=0.5\textwidth]{water2}
+   %\caption{Example of a mesh for the water-geometry. It consists of $5$ spheres with constant number of points per sphere. The overlapping regions are cut off. Left: cut through the nuclear plane. 
+   %\textcolor{red}{add figure with distribution: tm}}
+   \includegraphics[width=\textwidth]{Figures/CO2_grid}
+   \caption{Examples of point-distributions for a CO$_2$-molecules with $r_\text{max}=3\,$a.u. and $18$ spheres, in the upper row the full mesh, below cuts through the molecular plane.
+   left: constant number of points, radial scheme (\ref{eq:son_map}) with $l=0.7$; centre: radial scheme (\ref{eq:son_map}) with number of points according to (\ref{eq:son_num}) with $l=0.7$; right: radial distribution (\ref{eq:tm_map}) with $l=0.7$, $p=2$ and number of points per sphere (\ref{eq:tm_num})}
+   \label{fig:molmesh}
+\end{figure}
 
 Since in finite element theory the sphere neither needs to be really round nor is there any global functional defined on it,
 the complicated distributions described above may be not even needed. 
@@ -168,12 +180,11 @@ Moreover, here the problem is not only two dimensional but the whole sphere (not
 Hence, besides the question of a radial density of different spherical surfaces, also the number of points per sphere as function of the radial distance 
 needs to be considered.
 
-Whether the approach of subdividing the atomic meshes into radial and angular parts as opposed to another volume tessellation can be questioned and 
-may turn out to be inefficient.
-Application of Geodesic grid in calculating surface charges: \cite{geodes_charge}, also mentioning Connolly algorithm (refs 26, 29 therein).
+%Whether the approach of subdividing the atomic meshes into radial and angular parts as opposed to another volume tessellation can be questioned and may turn out to be inefficient.
+%Application of Geodesic grid in calculating surface charges: \cite{geodes_charge}, also mentioning Connolly algorithm (refs 26, 29 therein).
 
-The second scheme has a divergence around $Nl=r_\text{max}$. 
-It can be shown that the condition $N\leq \frac rl $ is enough here to stabilise it.
+%The second scheme has a divergence around $Nl=r_\text{max}$. 
+%It can be shown that the condition $N\leq \frac rl $ is enough here to stabilise it.
 
 %\textcolor{yellow}{
 %If the above described procedures prove to be too inefficient, one could try to implement some WKB-based scheme similar to \cite{impLDVR} but in 3D.
@@ -181,37 +192,37 @@ It can be shown that the condition $N\leq \frac rl $ is enough here to stabilise
 %\[ \alpha_i= \int_V dV \sqrt{2\mu (E-V(r))} \]
 %.This ensures dense points there, where the potential is lowest and a coarse mesh far away; however, a consistent formulation in 3D would need to be invented.
 %}
+%
+%To account for the molecular geometry and the general tendency of the photo electron to oscillate stronger in the vicinity of the nuclei, the mesh is built out of spheres, centred at the nuclear positions.
+%Thereby, a study of Son \cite{Son_Chu0} had shown that it is numerically most efficient when the overlapping regions of these spheres are cut out.
+%Figure \ref{fig:molmesh} shows an example for the water molecule.
+%
+%For the radial distribution we will use the the function
+%\begin{equation}
+%r_i = \frac{1+x_i}{1-x_i+\frac{2L}{r_{max}}} L \qquad x_i = \frac{2i}{N_r} -1
+%\end{equation}
+%suggested by Son \textit{et. al.}\cite{Son_Chu0, Son_Chu}.
+%The parameters $N_r$, $L$ specifying the number of spheres and their distribution; the larger $L$ is, the denser are the spheres close to the centre.
+%
+%The optimal choice of these parameters as well as the angular distribution of points on the spheres is still an open question.
+%Finally, after putting the points together as described above, they are connected to a Delaunay triangulation using \prog{tetgen} \cite{tetgen}. 
+%Here additional points may be introduced to guarantee well-shaped elements (\texttt{i.e.} no sharp peaks).
+%
+%One scheme suggested by Son and Chu \cite{Son_Chu0}:
+%\begin{equation} \label{eq:son_map}
+%r_i=\frac{il}{N-i+\frac{lN}{r_\text{max}}} \qquad i=1,\hdots ,N 
+%\end{equation}
+%where $l$ is a parameter to chose.
+%Own scheme:
+%\begin{equation} \label{eq:tm_map}
+%r_i=\frac{il}{\left( \frac Ni \right)^p \left(\frac{Nl}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N 
+%\end{equation}
+%where $l$ and $p\leq 1$ are parameters to chose. Thereby it is important to mention that in this scheme (in contrast to the above one) the (asymptotic for $r\rightarrow \infty$) maximum distance between two spheres is $l$ and hence could be physically chosen to $l\approx \frac \lambda 2$.
+%
+%The second scheme has a divergence around $Nl=r_\text{max}$. 
+%It can be shown that the condition $N\leq \frac rl $ is enough here to stabilise it.
 
-To account for the molecular geometry and the general tendency of the photo electron to oscillate stronger in the vicinity of the nuclei, the mesh is built out of spheres, centred at the nuclear positions.
-Thereby, a study of Son \cite{Son_Chu0} had shown that it is numerically most efficient when the overlapping regions of these spheres are cut out.
-Figure \ref{fig:molmesh} shows an example for the water molecule.
-
-For the radial distribution we will use the the function
-\[
-r_i = \frac{1+x_i}{1-x_i+\frac{2L}{r_{max}}} L \qquad x_i = \frac{2i}{N_r} -1
-\]
-suggested by Son \textit{et. al.}\cite{Son_Chu0, Son_Chu}.
-The parameters $N_r$, $L$ specifying the number of spheres and their distribution; the larger $L$ is, the denser are the spheres close to the centre.
-
-The optimal choice of these parameters as well as the angular distribution of points on the spheres is still an open question.
-Finally, after putting the points together as described above, they are connected to a Delaunay triangulation using \prog{tetgen} \cite{tetgen}. 
-Here additional points may be introduced to guarantee well-shaped elements (\texttt{i.e.} no sharp peaks).
-
-One scheme suggested by Son and Chu \cite{Son_Chu0}:
-\begin{equation} \label{eq:son_map}
-r_i=\frac{il}{N-i+\frac{lN}{r_\text{max}}} \qquad i=1,\hdots ,N 
-\end{equation}
-where $l$ is a parameter to chose.
-Own scheme:
-\begin{equation} \label{eq:tm_map}
-r_i=\frac{il}{\left( \frac Ni \right)^p \left(\frac{Nl}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N 
-\end{equation}
-where $l$ and $p\leq 1$ are parameters to chose. Thereby it is important to mention that in this scheme (in contrast to the above one) the (asymptotic for $r\rightarrow \infty$) maximum distance between two spheres is $l$ and hence could be physically chosen to $l\approx \frac \lambda 2$.
-
-The second scheme has a divergence around $Nl=r_\text{max}$. 
-It can be shown that the condition $N\leq \frac rl $ is enough here to stabilise it.
-
-Besides the tricky question about this mapping, also the number of points per sphere depending on the radial distance should be considered. 
+Besides the tricky question about this mapping, also the number of points per sphere depending on the radial distance needs to be considered. 
 In \cite{Son_Chu0} this is chosen to be constant without further discussion but of course there are several possible design criteria as well.
 Besides a constant number, also a constant spherical density (hence $N\propto r^2$) are possible; However, it might be sensible to follow a similar idea than in the radial mapping: Being fine close to the nuclei and get coarser with increasing distance.
 In particular, I followed the design rule of keeping the space between points in radial direction similar to space between points in angular distribution.
@@ -236,12 +247,3 @@ Special mapping schemes are the constant radial mapping $r_i=a i$ which correspo
 \end{figure}
 
 Since some of the spherical schemes described above allow only for certain numbers of points each, here, the best approximation is used respectively.
-
-\subsection{Obtaining the Electrostatic Potential and Dyson orbitals}
-The electrostatic potential used in this work is obtained with a modified version of \prog{NWChem} \cite{nwchem} where the points, at which this potential should be computed can be set by the user.
-Setting these points to the quadrature points of the integration scheme requires some extra effort but has the great advantage that no interpolation needs to be done internaly.
-An internal interolation would require an interpolation of scattered data for which several schemes such as radial basis function interpolation or inverse distance interpolation are available but both methods give, if the parameters are chosen not accurately, spurious oscillations between the quadrature points and thus do not result an a smooth electrostatic potential.
-
-The second external quantity needed to compute the intensities is the DO.
-In the developed protocol, the DO is computed with the in hous code \prog{DYSON} \cite{MAgg}, having the coefficients for the primitive basis functions as its output.
-From these primitives, the values of the DO at all quadrature points are computed with a self-written function in \prog{FreeWilly}.

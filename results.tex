@@ -49,6 +49,8 @@ Left: Astley-Leis-formulation ($p=1$), middle: symmetrised form ($p=0.5$) right:
 As shown in the Figure \ref{fig:IFEMform_project}, the nature of the states obtained is in all cases strongly mixed in the quantum number $l$ with significant contributions even for $l>7$.
 However, the relative contributions of the angular momenta critically depends on the power $p$, making a reasonable choise of this parameter important.
 
+\textcolor{blue}{Second parameter to be converged: The order of radial polynomial: Show graph similar to \ref{fig:IFEMform_spect} for this to see convergence.}
+
 \textcolor{red}{Show 1-D and 2D cuts through solutions as function of $p$!  (What kind of box?)}
 
 \subsection{Hamiltonian dependence on wave vector}
@@ -63,26 +65,53 @@ The obtained energies of the solutions vary strongly when changing the target mo
 In the figure, the target energy is varied between $0.566451\,$a. u. and $0.066551\,$a. u. and lead to strongly changing eigenenergies.
 This strong dependence on $k$ is also observed when projecting the obtained FEFs onto spherical waves (\ref{eq:spherWave}) which is not shown here.
 
-\subsection{Numerical Convergence}
-Tested on Lithium with a sphere with $r_\text{max}=2.8$
-1:  Using the mapping of Son with a naive approach, setting the number of circles by hand and growing quadratically with the size  ($N_\text{circle}=20$, $l= 2.0$ , $N= 10$)
-2: using the Son scheme with N according to above formula
-3: using the tm scheme as described above, p=1
-4: using the tm scheme as described above, p=2
-
-\begin{tabular}{|c|c|c|}
+\subsection{Mesh-Construction and Quality}
+\label{sec:NumConve}
+In section \ref{sec:grid} several parameters for the setup of the grid were discussed whose numerical properties are te compared and evaluated in this section.
+Here, three different schemes for distritributing the concentric spheres are presented for the Lithium atom, each with a maximum radius $r_\text{max}=7\,$bohr and $N=20$ spheres.
+In the scheme denoted in Table \ref{tab:RadScheme} and Figure \ref{Fig:SchemHist} (left) as ``const'', the spheres are placed according to eq. (\ref{eq:tm_map}) with $N_i=74$ points on each sphere.
+The scheme denoted as tm also uses eq. (\ref{eq:tm_map}) for the size of respective spheres but adapts the number of points per sphere according to (\ref{eq:tm_num}).
+The last scheme tested here uses the radial mapping suggested by Son and Chu \cite{Son_Chu0} (\ref{eq:son_map}) and the number of points per sphere (\ref{eq:son_num}).
+The parameters for the radial mapping are chosen as $l=1.8$ and $p=2.6$ and for the distribution of points on the spheres the Lebedev-scheme \cite{lebedev} is used, respectively.
+\begin{table}
+\begin{tabular}{|c|c|c|c|}
 \hline
-scheme & \#elements & error in energy [a.u.]\\
+scheme & runtime [s] & DOS$^{a)}$ [$(m E_h)^{-1}$] & number of nodes\\
 \hline
-1      & 2370      & 0.496220, 0.520199, 0.572279 \\
-2      & 2022      & 0.038136, 0.046119, 0.055691 \\
-3      & 2166      &-0.003638, 0.027219, 0.050588 \\
-4      & 2338      & none converged \\
+const   &  438   &    7    &   3255 \\
+tm      &  825   &    13   &   5132 \\
+son     &  891   &    4    &   6368 \\
 \hline
 \end{tabular}
-In these calculations the number of elements were kept as similar as possible.
+\caption{The runtime, density of states and number of nodes used for the different radial mapping schemes that are described in the text.\\
+$^{a)}$: density of states, averaged over 23 states}
+\label{tab:RadScheme}
+\end{table}
+Some characteristic properties of the respective results are shown in Table \ref{tab:RadScheme}.
+The runtime given in this table is only a rough estimation but seem to scale directly proportional to the number of nodes.
+Seemingly the radial mapping scheme (\ref{eq:tm_map}) in combination with the angular density (\ref{eq:tm_num}) seems to be advantageous compared to the others even though it should be noted that this may be different for other parameters and that the density of states in these calculations is not uniform so that an average over more or fewer states can influence the results qualitatively.
+However, the results may be very sensitive with respect to the change of parameters such as box-size and the parameter $l$, respectively.
+Moreover, during the creation of tetrahedra from the given point-sets a quality-check is done by the respective library \cite{tetgen} which adds or removes points to ensure well-shaped tetrahedra which may, however, alter the distributions considerably.
+These corrections of the point-set may be also responsible for the very similar distribution of the properties of the different tetrahedra.
+In Figure \ref{fig:SchemHist} (left), the distribution of the ratio of the longest edge to the height of the smallest side is shown.
+Here no significant differences between the schemes under investigation can be seen.
 
-In the FEM scheme used to compute the FEF, several parameters governing numerical and physical characteristics are used.
+The angular distribution of points seems to be only of minor importance.
+As shown in the Figures \ref{fig:SchemHist} and \ref{appFig:ShemHist} in supplement, the statistics are very similar and also the obtained density of states is very comparable.
+However, the angular distribution can play a larger role when considering non-spherical systems.
+In this work unless otherwise noted, the Lebedev scheme is used which provided the highest density of states (DOS) in this test.
+The impression of very similar properties of the meshes generated by different schemes is also supported by the statistics of further parameters of the tetrahedra, see Figure \ref{appFig:SchemHist}.
+\begin{figure}
+\includegraphics[width=0.49\textwidth]{Figures/Radi_hist.pdf}
+\includegraphics[width=0.49\textwidth]{Figures/Sph_hist.pdf}
+\caption{Distribution of aspect ratio (longest edge length divided by the smallest side height).}
+\label{fig:SchemHist}
+\end{figure}
+Concluding one can say that the procedures studied here yield meshes with similar quality.
+
+\subsection{Numerical Convergence}
+In the FEM scheme used to compute the FEF, several parameters governing numerical and physical characteristics are used such as box-size, target energy and subspace used for solving the eigensystem.
+
 The size of the Krylov-subspace does not play a role for the quality of the solution as shown in Figure \ref{fig:E_nev} for the symmetric formulation with a power $p=\frac 12$ of the damping function $D$.
 \begin{wrapfigure}{r}{0.5\textwidth}
 \includegraphics[width=0.5\textwidth]{Figures/Root_E_nev.pdf}

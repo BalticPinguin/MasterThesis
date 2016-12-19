@@ -64,7 +64,7 @@ A third expansion that is availible \textit{e.g.} in the program \prog{ezDyson} 
 where $Z=-1$ is assumed and $J_{2l+2}(x)$ is the Bessel function that is connected to the spherical Bessel functions $j_l(x)$ via the relation $j_l(x)=\sqrt{\frac{\pi}{2x}} J_{l+\frac 12}(x)$ \cite{Lifschitz}.
 This case is separately available in \prog{ezDyson} \cite{ezDyson}.
 
-The spherical Harmonics moreover have the form
+The spherical Harmonics \cite{SphHarm} moreover have the form
 \begin{equation}\label{eq:SphHarm}
 Y_l^m(\theta,\phi)= (-1)^{(m+|m|)/2} i^l \sqrt{\frac{2l+1}{4\pi}\frac{(l-|m|)!}{(l+|m|)!}}  P_l^{|m|}(\cos(\theta)) e^{im\phi}
 \end{equation}
@@ -117,204 +117,203 @@ Chosing the energetically best-fitting solution though might in principle result
 
 \subsection{Stieltjes Imaging}
 \label{ch:stieltjes}
-The Stieltjes imaging provides an elegant way to still use the numerially obtained solutions of a non-continuous spectrum by using moment theory.
-Starting from the expression for the photoelectron spectrum 
-\begin{equation}
-\sigma(\varepsilon)\propto \left|\langle \Psi_0 |\hat{d}|\Psi_\text{el} \rangle \right|^2
+The Stieltjes imaging \cite{stieltjesCeder,langhoff3,stieltjeLanczos,langhoff} provides an elegant way to use the numerially obtained FEFs of a discrete character lying above the ionisation threshold for PES calculations.% by using moment theory.
+To correct on the different character of the spectrum and the smaller extend of the numerically obtained solution, the Stieltjes imaging approach uses spectral moments 
+\begin{equation} \label{eq:SpecMom}
+\mu_n=\int_0^\infty \epsilon^n df(\epsilon)
 \end{equation}
-where $\Psi_\text{el}$ is a continuum function and as such, as discussed above, not square integrable which is an important characteristic for the dimensionality of this expression \cite{stieltjesCeder}.
-To repair this, the Stieltjes imaging approach uses spectral moments, where  the $n$-th spectral moment is of the form
+where $n<0$ denotes the order of the moment, $\epsilon=E-E_0$ is the transition energy and 
 \begin{equation}
-   M_n=\langle \Psi_0 |\hat{d} (\hat{H}-E_0)^n \hat{d} | \Psi_0  \rangle
+\frac{df}{d\varepsilon}=\frac 23 (E-E_0) \left|\langle \Psi_0 |\vec{\hat{d}}|\Psi_f \rangle \right|^2
 \end{equation}
-where $\hat{H}$ is the systems Hamiltonian and $E_0$ is the ground state energy \cite{langhoff3}.
-Inserting the closure relation $\sum_\alpha |\Psi_\alpha\rangle\langle \Psi_\alpha|+\int |\Psi_\varepsilon\rangle\langle \Psi_\varepsilon| d\varepsilon$ for the full (anatlytic) Hamiltonian results in
+is the oscillator strength with the dipole operator $\vec{\hat{d}}$, the energes $E_0$ and $E$ of the ground state $|\Psi_0\rangle$ and final state $|\Psi_f\rangle$, respectively.
+Since the final state can be of bound state character $|\Psi_\alpha\rangle$, where the enegies are discrete, as well as of continuous character $|\Psi_\varepsilon\rangle$ with continuous spectrum, one can rewrite the spectral moment (\ref{eq:SpecMom}) as \cite{langhoff3} 
+%Inserting the closure relation $\sum_\alpha |\Psi_\alpha\rangle\langle \Psi_\alpha|+\int |\Psi_\varepsilon\rangle\langle \Psi_\varepsilon| d\varepsilon$ for the full (anatlytic) Hamiltonian results in
 \begin{align}\label{eq:M_n_ana}
-   M_n&=\sum_\alpha \langle \Psi_0 |\hat{d} (\hat{H}-E_0)^n|\Psi_\alpha\rangle\langle \Psi_\alpha| \hat{d} | \Psi_0  \rangle
-      + \int  \langle \Psi_0|\hat{d} (\hat{H}-E_0)^n|\Psi_\varepsilon\rangle\langle \Psi_\varepsilon| \hat{d} | \Psi_0  \rangle d\varepsilon \\
-      &= \sum_\alpha \left(E_\alpha-E_0\right)^n \left|\langle \Psi_0 | \hat{d}| \Psi_\alpha\rangle \right|^2 + 
-         \int_{0}^\infty \varepsilon^n \left|\langle \Psi_0 | \hat{d}| \Psi_\varepsilon\rangle \right|^2 d \varepsilon.
+   \mu_n&=
+   %\sum_\alpha \langle \Psi_0 |\hat{d} (\hat{H}-E_0)^n|\Psi_\alpha\rangle\langle \Psi_\alpha| \hat{d} | \Psi_0  \rangle
+      %+ \int  \langle \Psi_0|\hat{d} (\hat{H}-E_0)^n|\Psi_\varepsilon\rangle\langle \Psi_\varepsilon| \hat{d} | \Psi_0  \rangle d\varepsilon \\
+      \sum_\alpha \left(E_\alpha-E_0\right)^n \left|\langle \Psi_0 | \hat{d}| \Psi_\alpha\rangle \right|^2 + 
+         \int_{0}^\infty \varepsilon^n \left|\langle \Psi_0 | \hat{d}| \Psi_\varepsilon\rangle \right|^2 d \varepsilon
 \end{align}
-However, inserting the unity expression for the numerical Hamiltonian which does not have continuum functions but an everywhere discrete spectrum and hence $L^2$-integrable eigenfunctions results in
+where $\varepsilon$ denotes the kinetic energy of the FEF.
+%However, inserting the unity expression for the numerical Hamiltonian which does not have continuum functions but an everywhere discrete spectrum and hence $L^2$-integrable eigenfunctions results in
+Since, in contrast to the analytic case (\ref{eq:M_n_ana}), the numeric Hamiltonian has a discrete spectrum, the respective spectral moments here are of the form
 \begin{equation} \label{eq:M_n_num}
-      M_n= \sum_{j=0}^N (E_j-E_0) \left| \langle \Psi_0 | \hat{d}| \Psi_j\rangle \right|^2
+      \mu_n= \sum_{j=0}^N (E_j-E_0) \left| \langle \Psi_0 | \hat{d}| \Psi_j\rangle \right|^2
 \end{equation}
-where $N$ denotes the number of eigenfunctions $|\Psi_j\rangle$ \cite{stieltjeLanczos,stieltjesCeder}.
-For a good numerical approximation, the expressions (\ref{eq:M_n_num}) and (\ref{eq:M_n_ana}) should be similar for as many $n$ as possible where, due to convergence of the spectral moments, $n<2$ \cite{stieltjesCeder}.
-These considerations are used in the Stieltjes imaging approach with moment theory \cite{langhoff, langhoff2}.
-
-In the protocol derived from this scheme thus the oscillator strength $|\langle \Psi_0|\hat{d}|\Psi_\text{el}\rangle|^2$ is approximated by the histogram
+where $N$ denotes the number of eigenfunctions $|\Psi_j\rangle$ and the sum accounts for the bound as well as unbound states \cite{stieltjeLanczos,stieltjesCeder}.
+%For a good numerical approximation, the expressions (\ref{eq:M_n_num}) and (\ref{eq:M_n_ana}) should be similar for as many $n$ as possible where, due to convergence of the spectral moments, $n<2$ \cite{stieltjesCeder}.
+%These considerations are used in the Stieltjes imaging approach with moment theory \cite{langhoff, langhoff2}.
+Assuming that the first $2l-1$ spectral moments can be restored by the numerical Hamiltonian in good approximation, they can be used to obtain a histogram representation of the cross section of the form
+%In the protocol derived from this scheme thus the oscillator strength $|\langle \Psi_0|\hat{d}|\Psi_\text{el}\rangle|^2$ is approximated by the histogram
 \begin{equation}
 \sigma(\varepsilon)=\frac 23 \frac{df}{d\varepsilon}
-      =\frac 23 \begin{cases} 0 & 0< \varepsilon <\varepsilon_1(n) \\
-      \frac 12 \frac{(f_i+f_{i+1})}{\varepsilon_{i+1}-\varepsilon_i}  & \varepsilon_j(n)<\varepsilon<\varepsilon_{j+1}(n)\\
-      0   & \varepsilon_n(n)<\varepsilon \end{cases}
+      =\frac 23 \begin{cases} 0 & 0< \varepsilon <\varepsilon_1(l) \\
+      \frac 12 \frac{(f_i+f_{i+1})}{\varepsilon_{i+1}-\varepsilon_i}  & \varepsilon_j(n)<\varepsilon<\varepsilon_{j+1}(l)\\
+      0   & \varepsilon_n(l)<\varepsilon \end{cases}
 \end{equation}
 %where $f_i$ is obtained from enforcing the relation (\ref{eq:M_n_num}) for $n=1,\hdots, m$ which is done by solving the matrix equation
-where $(\varepsilon_i,f_i)_{i=1,...,l}$ are the principal pseudo spectra \cite{stieltjeLanczos} that are obtained from
-
-\begin{equation} \label{eq:StieltMat}
-   \vec{M}=\mat{E}\vec{f}
+where $(\varepsilon_i,f_i)_{i=1,...,l}$ are a principal pseudo spectrum \cite{stieltjeLanczos}. 
+The values $\varepsilon_i$ and $f_i$ are obtained from an eigenvalue equation of a symmetric tridiagonal matrix whose diagonal elements $\alpha_i$ and off-diagonal elements $\beta_i$ can be found as parameters a function 
+\begin{equation}\label{eq:I_z1}
+I(z)=\frac{\beta_0^2}{z-\alpha_1-\frac{\beta_1^2}{z-\alpha_2-\hdots-\frac{\beta_{l-1}^2}{z-a_l}}}
 \end{equation}
-where $\vec{f}_i=f_i$, $\vec{M}_i=M_i$ and $\mat{E}_{i,j}=\varepsilon_i^j$ \cite{langhoff3}.
-It can be shown moreover that $M_n$ is only for $n<2$ finite and therefore negative moments are used \cite{stieltjesCeder}.
-Moreover, it can be shown that the expression (\ref{eq:M_n_num}) converges already for small $N$, so only a small fraction of the spectrum needs to be considered in practice and the matrix equation (\ref{eq:StieltMat}) remains at a reasonable size. 
-Usually not more than $10-12$ moments are used to avoid spurious oscillations due to unconverged high order moments \cite{stieltje}.
+which contains the full information about the first $2l-1$ spectral moments and has the alternative form \cite{nesbet}
+\begin{equation} \label{eq:I_z2}
+I(z)=\frac{\mu_0}{z}+\frac{\mu_1}{z^2}+\hdots+\frac{\mu_{2l-1}}{z^{2l}}
+\end{equation}
+where $\mu_i$ are the spectral moments (\ref{eq:m_n_num}) \cite{nesbet}.
+The key task in Stieltjes imaging is the transformation from the form (\ref{eq:I_z2}) to (\ref{eq:I_z1}) \cite{nesbet}.
 
-In practice this method becomes very demanding if energetically narrow transitions occur since many terms in expression (\ref{eq:M_n_num}) are needed for convergence, making this method effective mainly for low energy range \cite{H2pDeCleva}.
-Another disadvantage that no asymtotic information about this scheme present \cite{H2pDeCleva}.
+In practice, the Stieltjes imaging is very demanding if energetically narrow transitions occur since many terms in expression (\ref{eq:M_n_num}) are needed for convergence, making this method efficient mainly for low energy range \cite{H2pDeCleva}.
+%Another disadvantage that no asymtotic information about this scheme is reported \cite{H2pDeCleva}.
 
 \section{Finite Differences and Finite Volumes}
 \label{ch:FD}
-The most common and straightforward approach to solve differential equations numerically is via the so-called finite difference (FD) scheme.
+The most common and straightforward approach to solve differential equations such as the SE numerically is via the so-called finite difference (FD) scheme.
 Starting from the one-particle SE in atomic units
 \begin{equation} 
-\left( \frac 12 \nabla^2 + V(\vec{r}) \right) \Psi(\vec{r})=E\Psi(\vec{r})
+\left(-\frac 12 \nabla^2 + V(\vec{r}) \right) \Psi(\vec{r})=E\Psi(\vec{r})
 \end{equation}
 where $V(\vec{r})$ is an arbitrary potential at this point.
-Considering a general problem where the low symmetry does not support a product ansatz which would reduce the dimensionality and thus the complexity of the problem, the kinetic energy operator has at least $6$ non-diagonal terms which lead to an Hamiltonian of a non-banded structure \cite{fd_Cart}.
-Moreover, the finite-difference schemes require the evaluation points to be on a regular grid whose size is governed by the sharpest features in the system while local refinement is hardly available.
-To resemble the expected fine structure close to the nuclei, a dense grid is needed but any FD scheme beyond the first order requires the evaluation points to be on a regular grid, making the computation of a FEF with a reasonable box size very expensive \cite{richardsFD}.
-Nonetheless, there are applications to this scheme to the SE \cite{fd_Cart,fd_Cart2}, some of them with massive parallelisation using MPI and multiple GPUs \cite{fd_gpu}.
+Considering a general problem where the low symmetry does not support a product ansatz as \textit{e.g.} eq. (\ref{eq:radSE}) which reduces the dimensionality and thus the complexity of the problem, the kinetic energy operator has in a matrix representation at least $6$ off-diagonal terms per line whose non-banded structure requires iterative solvers \cite{fd_Cart}.
+An important disadvantage of finite difference schemes is that they require the evaluation points to be on a regular grid whose stepsize is governed by the sharpest features in the system while local refinement is hardly available.
+If considering molecules and thus Coulomb-shaped potentials $V(\vec{r})$, the finest structures are expected to be close to the nuclei whereas at larger distances a respectively dense grid is not needed and thus computations of FEFs with a reasonable box size become very expensive \cite{richardsFD}.
+Nonetheless, there are applications of this scheme to the SE \cite{fd_Cart,fd_Cart2}, some of them with massive parallelisation using MPI and multiple GPUs \cite{fd_gpu}.
 
 To overcome this bottleneck for systems with non-uniform parameters, often the finite volume method is used.
 The finite volume method is an integral method that is not based on a regular grid.
-Instead, for the estimation of the kinetic energy Gau\ss's theorem $\int_V \nabla \vec{u}(\vec{r}) dV=\int_{\partial V} \vec{u}(\vec{r}) \vec{n}dS $ is used where $\vec{u}(\vec{r})$ is a vector-valued function and $\vec{n}$ is the normal vector on the surface $S$ of the volume $V$ under consideration.
+Instead, for the estimation of the kinetic energy Gau\ss's theorem $\int_V \nabla \vec{u}(\vec{r}) dV=\int_{S} \vec{u}(\vec{r}) \vec{n}dS $ is used where $\vec{u}(\vec{r})$ is a vector-valued function and $\vec{n}$ is the normal vector on the surface $S$ of the volume $V$ under consideration.
 Chosing $\vec{u}(\vec{r})=\nabla\Psi(\vec{r})$ yields the relation
 \begin{equation} \label{eq:kinFV}
    \nabla^2\Psi(\vec{r})=\lim_{V\rightarrow 0} \frac{ \int_{\partial V} \nabla\Psi(\vec{r}) \vec{n} dS}{V}.
 \end{equation}
 This scheme becomes especially interesting when the finite volume elements are chosen to be Voronoi cells \cite{Son_Chu0}.
-A Voronoi-tesselation is associated with a grid and is constructed such that the Voronoi cell $T_i$ consists of all points in space that are closer to the point $i$ than to any other points in the grid \cite{voronoi,voronoi1,voronoi2}.
+A Voronoi-tesselation is associated with a grid and is constructed such that the Voronoi cell $T_i$ consists of all points in space that are closer to the point $i$ than to any other points in the grid, see Figure {\ref{fig:VorCell} \cite{voronoi,voronoi1,voronoi2}.
 
 This description has the advantage that the quantities on the right-hand side of (\ref{eq:kinFV}) can be associated with properties of the Voronoi-Cell, leading to the first-order approximation of the kinetic energy
 \begin{wrapfigure}{l}{0.5\textwidth}
    \includegraphics[width=0.5\textwidth]{Figures/VoronoiFD}
-   \caption{2-dimensional Voronoi diagram on an arbitrary point-distribution. \cite{Son_Chu}}
+   \caption{2-dimensional Voronoi diagram on an arbitrary distribution of seven points \cite{Son_Chu}.}
    \label{fig:VorCell}
 \end{wrapfigure}
 \begin{equation}\label{eq:kinVoron}
    \nabla^2\Phi(\vec{r}_i)=\frac{1}{v_i} \sum_j^\text{neighbours} \frac{\Psi(\vec{r}_j)-\Psi(\vec{r}_i)}{h_{ij}} s_{ij}a
 \end{equation}
-where $v_i$ is the volume of the $i$-th Voronoi-cell, $h_{ij}=|\vec{r}_i-\vec{r}_j|$ is the distance between the centres of the $i$-th and $j$-th Voronoi-cell and $s_{ij}$ is the lengthe of the common facet of the $i$-th and $j$-th Voronoi cell.
+where $v_i$ is the volume of the $i$-th Voronoi-cell (yellow area in Figure \ref{fig:VorCell}), $h_{ij}=|\vec{r}_i-\vec{r}_j|$ is the distance between the centres of the $i$-th and $j$-th Voronoi-cells (bolt black line) and $s_{ij}$ is the area of the common facet of the $i$-th and $j$-th Voronoi cells (red line in Figure \ref{fig:VorCell}).
 
-Such a scheme is applied \textit{e.g.} by Son and Chu \cite{Son_Chu0, Son_Chu} to the time-dependent SE, studying multi-photon ionisation of several molecular systems.
+Such a scheme is applied, \textit{e.g.}, by Son and Chu \cite{Son_Chu0, Son_Chu} to the time-dependent SE, studying multi-photon ionisation of several molecular systems.
 
 %\section{Discrete Variable Representation and Splines}
 \section{Pseudospectral Methods}
 \label{ch:dvr}
-Under the term (pse)udospectral methods a large group of methods is comprised which treat the differential equation of interest variationally using an orthogonal basis $span\{\varphi_i(\vec{r})\}$, hence seeking for a solution of the form
+Under the term (pse)udospectral methods a large group of methods is comprised which treat the differential equation of interest variationally using an orthogonal basis $\{\varphi_i(\vec{r})\}$, hence seeking for a solution of the form
 \begin{equation}
 \Psi(\vec{r})=\sum_i^n c_i \varphi_i(\vec{r})
 \end{equation}
 where $c_i$ are coefficients to be found \cite{SpectMeth}.
-In the pseudospectral methods the basis functions $\varphi_i(\vec{r})$ are smooth global functions such as $\varphi_{\vec{k}}(\vec{r})=\frac{1}{(2\pi)^\frac 32 }e^{\text{i}\vec{k}\vec{r}}$ resulting in the Fourier method \cite{Fourier}.
+In the pseudospectral methods the basis functions $\varphi_i(\vec{r})$ are smooth global functions, \textit{e.g.} $\varphi_{\vec{k}}(\vec{r})=e^{\text{i}\vec{k}\vec{r}}$, resulting in the Fourier space \cite{Fourier}.
 Alternatively Jacobi, Chebychef or Legendre polynomials are commonly used \cite{PSbook}.
 
-To find the corresponding coefficients, the equation is evaluated on a grid, leading to a linear system of equations to be solved.
-Depending on the technique used for determining the coefficients, it can be seen as a high-order FD or high-order ($p$-) finite element method (FEM).
-One large advantage of this class of methods is that the error of the solution $\psi(\vec{r})$ usually decays exponentially with the number $n$ of basis functions and the grid can be chosen coarsely, making the numerical scheme very efficient \cite{PSbook, Tannor}.
+To find the corresponding coefficients, the problem is solved on a grid, leading to a linear system of equations.
+Depending on the technique used for determining the coefficients, it can be seen as a high-order FD or high-order FEM.
+One prominent advantage of this class of methods is that the error of the solution $\psi(\vec{r})$ usually decays exponentially with the number $n$ of basis functions and the grid can be chosen coarsely, making the numerical scheme very efficient \cite{PSbook, Tannor}.
 In addition, many formulations allow for an implementation making use of the fast fourier transform \cite{PSbook}.
 
-A special representative subgroup of the pseudospectral methods are the so-called discrete variable representation (DVR) schemes which are frequencly used to study quantum chemical problems \cite{yipDVR,impLDVR,coulDVR}.
-Since this scheme is applicable in one dimension only, often symmetry-adapted coordinates such as spherical coordinates are used and the ansatz
-\begin{equation}
-  \varphi= \sum_{l, m} R_{l,m}(r) Y_l^m(\theta, \phi)
-\end{equation}
-is applied where $Y_l^m(\theta, \phi)$ are the well-known spherical harmonics \cite{SphHarm} and $R_{l,m}(r)$ are radial functions that are computed explicitly, solving the radial SE.
+A special representative subgroup of the pseudospectral methods are the so-called discrete variable representation (DVR) schemes which are frequently used to study electronic structure and vibrational problems in molecules \cite{yipDVR,impLDVR,coulDVR}.
+Since this scheme is applicable in one dimension only, often symmetry-adapted coordinates such as spherical coordinates are used product functions such as (\ref{eq:RadSE}) are applied.
 
-The basis functions used in this scheme commonly are Lagrange polynomials \cite{taoDVR,impLDVR,coulDVR} whose nodes are chosen by a general Gau\ss quadrature rule \cite{impLDVR} or from a quadrature rule for the radial Coulomb function which is in particular popular for quntum chemical problems \cite{coulDVR,Tannor}.
-Even if the DVR provides a flexible and fast-convergent basis, an extension to higher dimensionality can be achieved by a product ansatz only and thus is applicable to problems with high symmetry only.
+The basis functions used in this scheme commonly are Lagrange polynomials \cite{taoDVR,impLDVR,coulDVR} whose nodes are chosen by a general Gau\ss\, quadrature rule \cite{impLDVR} or from a quadrature rule for the radial Coulomb function which is in particular popular whene electronic structure problems are considered \cite{coulDVR,Tannor}.
+Even if the DVR provides a flexible and fast-convergent basis, an extension to higher dimensionality can only be achieved by a product ansatz and thus is applicable to problems with high symmetry.
 
 Moreover, as for the other pseudospectral methods, the system matrices are dense and thus the solution is numerically expensive.
-This is, at least in parts, solved by using a hybrid scheme of the finite element and DVR scheme where the DVR scheme is used on small segment only, connected by single bridge-functions each \cite{taoDVR,impLDVR}.
+This is at least partially solved by using a hybrid scheme of the finite element and DVR scheme where the DVR scheme is used on small segment only, connected by single bridge-functions each \cite{taoDVR,impLDVR}.
 
 \section{Radial Basis Functions}
-The radial basis function (RBF) technique is a basis that is based on an arbitrary point distribution with very general properties.
-The basis functions $\varphi_i(\vec{r})$ used in this technique need to be spherically symmetric, \textit{i.e.} $\varphi_i(\vec{r})=\varphi_i(|\vec{r}|)$ and are placed at the grid points of a given domain.
-Among the commonly used functions are, besides linear and cubic functions, multiquadratic ($\sqrt { r^2 + r0^2 }$), inverse multiquadratic ($\frac{1}{ \sqrt { r^2 + r0^2}}$) and Gaussian ($ e^{-\frac{r^2}{2r_0^2}}$) functions \cite{rbfSE,rbfWave}.
-
-If the parameter $r_0$ is chosen reasonably the scheme is numerically stable and fast-convergeing \cite{rbfSE}.
-Another advantage is the straight-forward implementation and generality of this method.
-But the coise of $r_0$ can be non-trivial especially for highly non-regular grids where the occurring large distances require broad and smooth functions which lead to instabilities for close-lying points.
-Moreover the resulting system matrices are dense due to the global definition of the ansatz functions, making it compputationally expensive.
-\begin{wrapfigure}{r}{0.6\textwidth}
-   \includegraphics[width=0.6\textwidth]{Figures/RBF/RBFerror}
-   \caption{A function (blue) represented in a RBF basis with Gaussian functions, centred at different distances compared to the broadening parameter $r_0$.}
-   \label{fig:rbfError}
-\end{wrapfigure}
-
+The radial basis function (RBF) technique is based on an arbitrary point distribution with very general properties.
+The ansatz functions $\varphi_i(\vec{r})$ used in this technique need to be spherically symmetric, \textit{i.e.} $\varphi_i(\vec{r})=\varphi_i(|\vec{r}|)$ and are placed at the grid points on a given domain.
 The RBF-scheme is used not only for solving differential equations but is also a usefull tool for interpolation of scattered data in arbitrary dimensions \cite{rbfInterpol} and surface reconstruction from scattered data \cite{rbfSurf}.
 
-An important disadvantage of the RBF scheme is that the space between two interpolation points is interpolated non-linearly and, depending on the distance of the two functions, the values are over- or underestimated.
-This error is visualised in Figure \ref{fig:rbfError} for the case of a function that is one at both supporting points, represented by a Gaussian RBF basis.
-The intermediate course of the function depends strongly on the ratio of the broadening $r_0$ and the difference between the supporting points.
+Among the commonly used functions are, besides linear and cubic ones, multiquadratic ($\sqrt { r^2 + r_0^2 }$), inverse multiquadratic ($( r^2 + r_0^2)^{-\frac 12}$) and Gaussian ($ \exp(-\frac{r^2}{2r_0^2})$) functions are to be mentioned where $r_0$ is the radius, respectively \cite{rbfSE,rbfWave}.
 
-While this behaviour is not problematic for visual purposes, it may introduce a substructure which can lead to unintended behaviour of the solution.
-Since on irregular grids strongly varying distances between supporting points occur, this behaviour is stronger the less regular the initial data are.
+If the parameter $r_0$ is chosen reasonably, the scheme is numerically stable and fast convergeing \cite{rbfSE}, but the choise of $r_0$ can be non-trivial especially for highly non-regular grids where a good quality of of the representation between two points with a large distance require a respectively large radius $r_0$ whereas too large radii can make the scheme numerically instable for close-lying points.
+Moreover the resulting system matrices are dense due to the global definition of the ansatz functions, making it compputationally expensive when large domains are considered.
+%Another advantage is the straight-forward implementation and generality of this method.
+%\begin{wrapfigure}{r}{0.6\textwidth}
+%   \includegraphics[width=0.6\textwidth]{Figures/RBF/RBFerror}
+%   \caption{A function (blue) represented in a RBF basis with Gaussian functions, centred at different distances compared to the broadening parameter $r_0$.}
+%   \label{fig:rbfError}
+%\end{wrapfigure}
+%An important disadvantage of the RBF scheme is that the space between two interpolation points is interpolated non-linearly and, depending on the distance of the two functions, the values are over- or underestimated.
+%This error is visualised in Figure \ref{fig:rbfError} for the case of a function that is one at both supporting points, represented by a Gaussian RBF basis.
+%The intermediate values of the function depends strongly on the ratio of the broadening $r_0$ and the difference between the supporting points.
+%While this behaviour is not problematic for visual purposes, it may introduce a substructure which can lead to unintended behaviour of the solution.
 
 \section{Finite Elements}
 \label{ch:introFEM}
-In the FEM the differential equations to be solved are formulated in their weak form that can be understood as a generalisation of it.
+In the FEM the differential equations to be solved are formulated in their weak form which is an integro-differential equation and can be understood as a generalisation of the differential equation \cite{femBraess}.
 Starting with the well-known (strong) form of the SE defined on a domain $ \Gamma$ in atomic units which are used here and in the following chapters
 \begin{equation} \label{eq:SEstrong}
 -\frac 12 \nabla^2\Psi(\vec{r})+ V(\vec{r})\Psi(\vec{r})=E \Psi(\vec{r}) \qquad  \vec{r}\in \Gamma
 \end{equation}
-with the condition for the boundary domain $\partial \Gamma$ which is assumed to be Lipschitz continuous
+with the condition 
 \begin{equation}
     %\lim_{\vec{r}\longrightarrow \infty} \Psi(\vec{r})=0
-    \Psi(\vec{r})=0  \qquad \vec{r} \in \partial \Gamma.
+    \Psi(\vec{r})=0  \qquad \vec{r} \in \partial \Gamma
 \end{equation}
+for the boundary domain $\partial \Gamma$ which is assumed to be Lipschitz continuous.
 The first term in equation (\ref{eq:SEstrong}) corresponds to the kinetic energy and $V(\vec{r})$ is a potential that is not further specified at this point.
 The unknowns of this equation are the wave function $\Psi(\vec{r})$ and respective energy $E$.
 To bring equation (\ref{eq:SEstrong}) into the weak form, it is first multiplied by the complex conjugate of a test function $\Phi(\vec{r})$ which fulfils the same boundary conditions and needs to be differentiable.
-In the second step, one integrates over the whole space of interest resulting in
+In the second step, one integrates over the whole space of interest resulting in the equation
 \begin{align}
 \int d \vec{r} & \left( - \frac 12 \left(\nabla^2\Phi^*(\vec{r})\right)\Psi(\vec{r})
                + V(r) \Phi^*(\vec{r}) \Psi(\vec{r})\right) = E \int d \vec{r} \Phi^*(\vec{r}) \Psi(\vec{r}).
 \end{align}
-The kinetic energy term can be symmetrised using Green's first identity $\int_\Gamma (\nabla^2\Psi)\Phi^* d\vec{r}=\int_{\partial \Gamma} (\nabla\Psi)\Phi^* ds -\int_\Gamma (\nabla\Psi)(\nabla\Phi^*)$ to obtain the final expression
+The kinetic energy term can be symmetrised using Green's first identity $\int_\Gamma (\nabla^2\Psi)\Phi^* d\vec{r}=\int_{\partial \Gamma} (\nabla\Psi)\Phi^* ds -\int_\Gamma (\nabla\Psi)(\nabla\Phi^*) d\vec{r}$ to obtain the final expression
 \begin{align}\label{eq:SEweak}
-\int d \vec{r} & \left(  \frac 12 \left(\nabla\Phi^*(\vec{r})\right) \left(\nabla\Psi(\vec{r})\right) 
-               + V(r) \Phi^*(\vec{r}) \Psi(\vec{r})\right) = E \int d \vec{r} \Phi^*(\vec{r}) \Psi(\vec{r})\\
+\int_\Gamma d \vec{r} & \left(  \frac 12 \left(\nabla\Phi^*(\vec{r})\right) \left(\nabla\Psi(\vec{r})\right) 
+               + V(r) \Phi^*(\vec{r}) \Psi(\vec{r})\right) = E \int_\Gamma d \vec{r} \Phi^*(\vec{r}) \Psi(\vec{r})\\
    % &\lim_{\vec{r}\longrightarrow \infty} \Phi(\vec{r})=0.\qquad
    % \lim_{\vec{r}\longrightarrow \infty} \Psi(\vec{r})=0.
     &\Phi(\vec{r})=0\quad
-     \Psi(\vec{r})=0\quad  \vec{r}\in\Gamma
+     \Psi(\vec{r})=0\quad  \vec{r}\in\partial\Gamma
 \end{align}
 which is denoted as the weak form of the SE.
 A function $\Psi(\vec{r})$ is considered as a solution of (\ref{eq:SEweak}) if the equation holds for any test function $\Phi(\vec{r})$.
 Since usually only real-valued bases functions are used, in the literature the complex conjugation is omitted.
-From a mathematical point of view, since $\Phi(\vec{r})$ is an arbitrary function, complex conjugation does not change anything here but it will be shown later that it is more reasonable from a physical point of view if the weak formulation is defined as given in equation (\ref{eq:SEweak}).
+Moreover, from a mathematical point of view, since $\Phi(\vec{r})$ is an arbitrary function, complex conjugation does not change anything here but it will be shown later that it is more reasonable from a physical point of view if the weak formulation is defined as given in equation (\ref{eq:SEweak}).
 
-The weak formulation (\ref{eq:SEweak}) has two main differences compared to the strong formulation (\ref{eq:SEstrong}).
+The weak formulation (\ref{eq:SEweak}) has two main changes in its properties compared to the strong formulation (\ref{eq:SEstrong}).
 The first is that any solution of (\ref{eq:SEstrong}) solves (\ref{eq:SEweak}) while the space of solutions of the weak form is larger since only first derivatives need to be defined, which lead to the terms weak and strong respectively.
 In addition, a weak solution is defined only up to a cardinal number of zero; hence changing the values of a given solution $\Psi(\vec{r})$ along a finite number of planes in three dimensions yields a function that still solves (\ref{eq:SEweak}).
-These properties play an important role here since they allow \textit{e.g.} for piecewise linear basis functions as they are commonly used in the FEM scheme which do not have a second derivative and whose first derivative is undefined on areas with a cardinal number of zero.
+These properties play an important role here since they allow \textit{e.g.} the use of piecewise linear basis functions as they are commonly used in the FEM scheme which do not have a second derivative and whose first derivative is undefined on certain planes.
 
-To obtain the finite element formulation, one does not work on the whole space of differentiable and quadratically integrable functions defined on $\Gamma$ but restricts the space to subspace spanned by a finite set of test functions for both $\Psi(\vec{r})$ and $\Phi(\vec{r})$, leading to the Petrov-Galerkin scheme.
+As usual for numerical methods, in the FEM scheme one restricts the search for solutions to a subspace spanned by a finite set of test functions for both $\Psi(\vec{r})$ and $\Phi(\vec{r})$, leading to the Petrov-Galerkin scheme.
 To get best flexibility for the wave function, the domain $\Gamma$ is subdivided into finite volume elements with a close packing.
 These volume elements, denoted as finite elements, give this method its name.
 Having this subdivision of space, the ansatz (basis) functions $\varphi(\vec{r})$ used to construct $\Psi(\vec{r})$ and $\Phi(\vec{r})$ are defined as piecewise polynomials being non-zero only on one or few elements.\\
-Considering $\Gamma$ to describe a plane, the elements can be for example triangles as shown in Figure \ref{fig:2Del}.
-In this plane the vertices of the triangles can be enumerated as $\vec{r}_i\, i=1,\hdots ,N $, leading to the definition of piecewise linear basis functions
+Considering $\Gamma$ to describe a 2D-plane, the elements can be, for example, triangles as shown in Figure \ref{fig:2Del}.
+Enumerating the vertices of the triangles as $\vec{r}_i\, i=1,\hdots ,N $, the piecewise linear (Langrange-) basis functions are defined as
 \begin{equation}\label{eq:femAnsatz}
    \varphi_i(\vec{r}_j)=
            \begin{cases} 1  & j=i \\
                          0  & j\neq i \end{cases}
 \end{equation}
-resulting it two dimensional ``hat'' functions as depicted in Figure \ref{fig:2Del}.
+resulting it two-dimensional ``hat'' functions as depicted in Figure \ref{fig:2Del} for an index $i$.
 \begin{wrapfigure}{r}{0.75\textwidth}
    \includegraphics[width=.75\textwidth]{Figures/FEM2d-crop}
    \caption{Example of finite elements in 2D of triangular shape and linear basis functions $\varphi_i(\vec{r})$ defined on them.}
    \label{fig:2Del}
 \end{wrapfigure}
-The so defined basis ensures continuity of the solution over $\Gamma$ while the first derivatives are continuous only within each element.
+This definition of a basis ensures continuity of the solution over $\Gamma$ while the first derivatives are continuous only within each element.
 To assure continuity of the first derivatives as well, second order polynomials are needed.
+At the boarder of $\Gamma$, respectively truncated ``hat'' functions are used whose coefficients are given by the boundary condition.
 
-As usual in variational schemes, the wave function of interest is a linear combination of these basis functions $\Psi(\vec{r})=\sum_i c_i \varphi_i(\vec{r})$ where $c_i$ are weighting coefficients.
+As usual in variational schemes, the wave function of interest is constructed as a linear combination of these basis functions $\Psi(\vec{r})=\sum_i c_i \varphi_i(\vec{r})$ where $c_i$ are weighting coefficients.
 The test functions are chosen from the same space of ansatz functions, testing each basis separately $\Phi(\vec{r})=\varphi_j(\vec{r}), j\in {1,\hdots, N}$.
-Hence, the SE (\ref{eq:SEweak}) is rewritten as
+Hence, the SE (\ref{eq:SEweak}) with the finite basis reads
 \begin{multline}
      \sum_i \int d  \vec{r} \left(\frac 12 \left(\nabla\varphi_i(\vec{r})\right) \left(\nabla\varphi_j(\vec{r})\right) +
                              V(r) \varphi_i(\vec{r}) \varphi_j(\vec{r}) \right) c_i =
@@ -328,37 +327,36 @@ which is the $j$-th component of the generalised matrix eigenvalue problem
 \text{with}
 \begin{align} \label{eq:FEMmatrix}
       \mat{A}_{ij} &=\int d \vec{r} \left(\nabla\varphi_i(\vec{r})\right) \left(\nabla\varphi_j(\vec{r})\right) \quad
-      \mat{V}_{i,j}&=\int d \vec{r} V(r) \varphi_i(\vec{r}) \varphi_j(\vec{r}) \quad
+      \mat{V}_{i,j}&=\int d \vec{r} V(\vec{r}) \varphi_i(\vec{r}) \varphi_j(\vec{r}) \quad
       \mat{M}_{i,j}&=\int d \vec{r} \varphi_i(\vec{r}) \varphi_j(\vec{r})
 \end{align}
 and the vector $\vec{c}$ in equation (\ref{eq:SEmat}) contains the coefficients $c_i$ to be found.
 
 The quality of this basis depends strongly on the size and shape of the finite elements:
-The stronger the solution varies, the smaller be should the elements, or it should have higher order ansatz functions to be able to represent the wave function.
+The stronger the solution varies, the smaller element sizes or higher order ansatz functions are required to be able to represent the wave function.
 Knowledge about ranges of sharp structures and areas with smooth variation of the wave function $\Psi(\vec{r})$ hence is crucial for the setup of a good mesh.
 
-In the next chapter more details about the finite element formulation will be given with a special focus on how to setup a grid that is well suited for describing free particles in quantum mechanics.
-
+In chapter \ref{ch:fem} more details about the finite element formulation are given with a special focus on how to setup a grid that is well suited for describing free particles in quantum mechanics.
 
 \section{Hybrid Methods}
-In addition to the three methods presented above also mixed forms of these exists, utilizing the advantages of the respective ideas.
+In addition to the three methods presented above also mixed forms exists, utilizing the advantages of the respective ideas.
 One of the most prominent combinations of the above-mentioned methods is the finite element discrete-variable representation (FE-DVR) \cite{impLDVR,taoDVR}.
-Therein a DVR scheme is used with a set of ansatz functions each defined on a given interval only, the finite element.
-A single function connects these intervals respectively, similarly to the hat functions in FEM.
-Using this approach, more flexibility is obtained by varying the size of the elements or the number of basis functions per element.
-Moreover, the usually dense matrix of DVR schemes changes to a block-structure, each coupled by only one row \cite{taoDVR}.
+In this schem, a DVR is used with a set of ansatz functions each defined on a given interval only, referred to as the finite element.
+A single function connects these intervals respectively, similarly to the ``hat'' functions in FEM.
+Using this approach, more flexibility is obtained by varying the size of the elements or the number of basis functions per element which is especially advantageous for problems involving a Coulomb potential where the local kinetic energy varies strongly \cite{yipDVR}.
+Moreover, the usually dense matrix of DVR schemes changes to a block-structure, each weakly coupled \cite{taoDVR}.
 
-Another scheme resulting in a similar description to the above-mentioned which is used by several authors on quantum mechanical problems is the spectral element method \cite{sem1}.
-In contrast to the FE-DVR-scheme it is based on the weak formulation and uses Chebychev or Lagrange polynomials and hence allows for larger elements than usual FEM.
-While the spectral elements are found to be well suited for linear problems they require a complex implementation and lead to denser system matrices.
-The larger density in general leads to a reduced numerical stability and is computationally more expensive.
+Another scheme based on the FEM scheme are the so-called spectral elements \cite{sem1,sem2,sem3} used by several authors on quantum mechanical problems.
+In contrast to the FE-DVR-scheme it is based on the weak formulation and typically uses Chebychev or Lagrange polynomials \cite{sem1} and hence allows for larger elements than usual FEM.
+While the spectral elements are found to be well suited for linear problems, they require a complex implementation and lead to denser system matrices.
+The larger density in the resulting matrices in general leads to a reduced numerical stability and computationally more expensive solution strategies.
 Finally, complex geometries usually benefit more from smaller elements that from higher orders \cite{hf_dreyer}.
 
-A successfull variety of spectral elements and the finite element method is the so-called spectral difference method.
+A successfull variety of spectral elements and the finite element method is the so-called spectral difference method \cite{SpectDiff,sd_mult}.
 In this scheme, a spacially uniform grid is used (as usual in the finite difference scheme) while employing a stepwise defined pseudospectral basis.
 The appealing properties of this method are an exponential convergence as known from finite difference methods by employing the sparsity of the equation system obtained in FEM \cite{SpectDiff}.
 
-More advanced methods based on the above-mentioned schemes are available as well \cite{sd_mult,sd_unstructured} but are not described in more detail for brevity.
+More advanced methods based on the spectral difference schemes are available as well \cite{sd_mult,sd_unstructured} but are for brevity not discussed here in more detail.
 
 \section{Wavelets}
 \label{ch:wavelet}
@@ -400,7 +398,7 @@ In contrast to most other bases, here no smootheness properties are required but
    \label{fig:wavelets}
 \end{figure}
 
-Besides their broad use in data compression and analysis, wavelet bases also provide a handy tool to solve partial differential equations and are found to have similar numerical properties as the FEM \cite{FdFeWavelet}.
+Besides their broad use in data compression and analysis, wavelet bases also provide a handy tool to solve partial differential equations and are found to have similar numerical properties as the FEM \cite{FdFeWavelet,CoulWavelet}.
 When applying a wavelet basis to solve a partial differential equation, the weak form (\ref{eq:SEweak}) is used, leading to a similar description as in the FEM scheme \cite{dahlke}.
 However, not all wavelets provide a valid basis for partial derivatives since, for example, the Haar-wavelet has a constant derivative of zero and the Daubechies-wavelet $2$ (shown in Figure \ref{fig:wavelets}) is only semi-differentiable at some points \cite{WaveletChem}.
 At the same time hand the generality of the wavelet formulation allows to use problem-specific bases that are \textit{e.g.} especially adapted to certain pseudo-differential operators, increasing the convergence properties \cite{dahlke}.

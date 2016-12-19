@@ -97,7 +97,7 @@ The goal of this thesis is to use the DO formalism with bound states being descr
 In the protocol used the DFT and time-dependent DFT calculations for excited states are done using a locally modified version of \prog{NWChem} \cite{nwchem} and the \prog{Gaussian 09} package \cite{g09}.
 From those, the DO is calculated with the in-house code \prog{DYSON} developed previously \cite{MAgg}.
 A self-written interface extracts the required data as \textit{e.g.} the molecular orbital coefficients and overlap matrix of atomic orbitals from the output of these programs.
-For the computation of the FEF, the grogram \prog{FreeWilly} is developed using the finite element library \prog{Libmesh} \cite{libmesh}. 
+For the computation of the FEF, the grogram \prog{FreeWilly} \cite{FreeWilly} is developed using the finite element library \prog{Libmesh} \cite{libmesh}. 
 \prog{Libmesh} is an open source library that provides a broad range of capabilities and interfaces to several high-performance linear algebra libraries \cite{slepc1,slepc2,petsc}.
 Moreover, it supports MPI parallelisation and implements a recent formulation of the above-mentioned infinite elements \cite{dreyer}.
 Especially the latter is to the best of my knowledge a unique option.
