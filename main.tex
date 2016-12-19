@@ -15,8 +15,11 @@
 \usepackage[font=small]{caption}
 \usepackage{subcaption}
 \usepackage{hyperref}
-\usepackage[backend=biber, hyperref=true, url=false, isbn=false, style=numeric-comp,
-            block=none, maxbibnames=3, sorting=none]{biblatex}
+%\usepackage[backend=biber, hyperref=true, url=false, isbn=false, style=numeric-comp,
+%            block=none, maxbibnames=3, sorting=none]{biblatex}
+\usepackage[backend=biber, hyperref=true, url=false, doi=false, isbn=false, style=numeric-comp,
+            block=none, maxbibnames=2,firstinits=true, eprint=false, sorting=none]{biblatex}
+\AtEveryBibitem{\clearfield{note}}
 \usepackage[left=28mm, right=21mm, top=21mm, bottom=21mm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage{csquotes}
