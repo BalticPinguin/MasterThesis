@@ -15,7 +15,7 @@ The DFT formalism which is introduced in the sections \ref{ch:dft} and \ref{ch:t
 The DFT is formally based on the Hohenberg-Kohn theorems \cite{HohenbergKohn} which state that the ground-state electron density determines the potential in the SE and with this also the wave-function.
 Moreover, the second Hohenberg-Kohn theorem states that the energy of the ground state can be found variationally from the density.
 Thus, the electron density contains all information needed and the computation of the $N$-electron wave function can be omitted.
-Since the Hohenberk-Kohn theorems do not point out a way how to determine the electron density without knowing the wave-function, usually the Kohn-Sham scheme \cite{KohnSham} is used where the electrons are described as non-interacting particles in a respective pseudo-potential that is constructed such that the electron density of these Kohn-Sham orbitals corresponds to the real electron density.
+Since the Hohenberg-Kohn theorems do not point out a way how to determine the electron density without knowing the wave-function, usually the Kohn-Sham scheme \cite{KohnSham} is used where the electrons are described as non-interacting particles in a respective pseudo-potential that is constructed such that the electron density of these Kohn-Sham orbitals corresponds to the real electron density.
 Since the particles do not interact with each other, the Kohn-Sham orbitals $\Psi_j(\vec{r})$ can be obtaind from the one-particle SE
 \begin{equation}
 \left( -\frac 12  \nabla^2 + V_\text{eff}(\vec{r}) \right) \Psi_j(\vec{r})=\epsilon_j \Psi_j(\vec{r})
@@ -24,7 +24,7 @@ where $\epsilon_j$ is the binding energy of the respective Kohn-Sham orbital and
 \begin{equation}
 V_\text{eff}(\vec{r})=V_\text{ext}(\vec{r})+ \int \frac{\rho(\vec{r}')}{|\vec{r}-\vec{r}'|} d\vec{r}' + V_\text{xc}(\vec{r})
 \end{equation}
-can be separated into the external potential $V_\text{ext}(\vec{r})$ which consists of the attractive nuclear electrostatic potential and external fields the electrostatic interaction of the particles where $\rho(\vec{r})=\sum_{i\neq j} |\Psi_i|^2$ and the exchange correlation potential $V_\text{xc}(\vec{r})$.
+can be separated into the external potential $V_\text{ext}(\vec{r})$, which consists of the attractive nuclear ESP and external fields, the electrostatic interaction of the particles where $\rho(\vec{r})=\sum_{i\neq j} |\Psi_i|^2$ and the exchange-correlation potential $V_\text{xc}(\vec{r})$ which contains the complexity of the electronic interaction \cite{baerRSH}.
 The exchange correlation potential $V_\text{xc}(\vec{r})$ contains, besides contributions from exchange and correlation, also the error of kinetic energy in the Kohn-Sham scheme to account for the fact that the Kohn-Sham wave-functions differ from the real orbitals and thus have another kinetic energy as well \cite{Holthausen}.
 
 Assuming that the Kohn-Sham orbitals coincide with the physical orbitals, the exchange potential acts on an orbital $\Psi_i(\vec{r})$ as
@@ -32,7 +32,7 @@ Assuming that the Kohn-Sham orbitals coincide with the physical orbitals, the ex
 V_{x;j}(\vec{r})\Psi_i(\vec{r}) =\int \frac{\Psi_j^\dagger(\vec{r}') \Psi_i(\vec{r}')}{\left|\vec{r}-\vec{r'}\right|} d\vec{r}' \Psi_j(\vec{r})
 \end{equation}
 and thus is non-local \cite{Holthausen}. % the ``exact'' exchange energy thus corresponds the term $E_{x}=\sum_{i<j}\int \Psi_i^\dagger(\vec{r}) V_{x;j}(\vec{r}) \Psi_i(\vec{r}) d\vec{r}$  respectively.
-In DFT usually the exchange energy is approximated as a local functional of the density and its derivative, leading to the so-called local density approximation and gradient corrected functionals.
+In DFT usually the exchange energy is approximated as a local functional of the density and its derivative, leading to the so-called local density approximation and gradient corrected functionals \cite{baerRSH}.
 The Becke \cite{blyp} exchange-functional used in this work has the form
 \begin{equation} \label{eq:blypXC}
 E_x=\frac 32 \left(\frac{3}{4\pi}\right)^\frac 13 \sum_\sigma \int \rho_\sigma(\vec{r})^\frac 43 d^3\vec{r} 
@@ -79,10 +79,12 @@ As the negative sign of the transition energy in the lower block indicates, lowe
 Since the matrix $\mat{B}$ contains usually only small elements, it is often set to zero which is refferred to as Tamm-Dancoff approximation and reduces the original equation to a hermitian equation of half dimensionality \cite{casida}.
 
 \subsection{OTRSH-scheme}
-One main issue concerned with the DFT-formalism is that the approximate exchange functional decays exponentially instead of $\frac 1r$ and $\frac{1}{r^4}$ for the exchange and correlation terms respectively \cite{Bokareva}. \textcolor{red}{But the Becke functional should have fixed this!?}
+%One main issue concerned with the DFT-formalism is that the approximate exchange functional decays exponentially instead of $\frac 1r$ and $\frac{1}{r^4}$ for the exchange and correlation terms respectively \cite{Bokareva}. \textcolor{red}{But the Becke functional should have fixed this!?}
+One main issue concerned with the DFT-formalism is that the approximate exchange functional lead to wrong asymptotic behaviour of the electoron density.
+The local density approximation leads to an exponential decay instead of $\frac 1r$ and $\frac{1}{r^4}$ for the exchange and correlation terms respectively \cite{Bokareva} which is improved significantly with gradient-corrected functionals but usually still yields spuirous behaviour \cite{baerRSH}.
 This wrong behaviour affects the obtained wave functions and thus the orbital energies \cite{OT-RSH}.
 
-To reduce this error, so-called range-separated hybrid (RSH) functionals are used, in which the DFT-exchange term as \textit{e.g.} the Becke functional (\ref{eq:blypXC}) is used for small interelectronic distances only, while at larger distances, where correlation effects are not that important, the Hartree-Fock exact-exchange (\ref{eq:HF_exch}) is used.
+To reduce this error, so-called range-separated hybrid (RSH) functionals are used, in which the DFT-exchange term as \textit{e.g.} the Becke functional (\ref{eq:blypXC}) is used for small interelectronic distances only, while at larger distances, where correlation effects are not that important, the Hartree-Fock exact-exchange (\ref{eq:HF_exch}) is used \cite{LC-tddft}.
 The interchange between the schemes is done by the scheme
 \begin{equation}
    \frac 1r = \underbrace{\frac{\alpha +\beta erf(\omega r)}{r}}_{\text{exact exchange}} +\underbrace{\frac{1-\alpha-\beta erf(\omega r)}{r}}_{\text{DFT exchange}}
@@ -91,7 +93,7 @@ where $\alpha+\beta=1$ and $\omega$ are parameters to be chosen.
 Besides taking the standard parameters that are fitted to a set of testing-systems, ab-initio schemes for chosing $\alpha$ and $\omega$ are available which are referred to as optimally-tuned RSH (OTRSH) schemes.
 Using such a scheme, the degrees of freedom obtained are used to optimise a particular system-property such as Koopmans' theorem by minimising the functional \cite{Bokareva}
 \begin{equation}\label{eq:J_ao}
-   J(\alpha_\text{opt},\omega_\text{opt})=min_{\alpha, \omega} \left\{ |E_N(\alpha,\omega)-E_{N-1}(\alpha,\omega)-\varepsilon_\text{HOMO}| \right\}
+   J(\alpha_\text{opt},\omega_\text{opt})=\text{min}_{\alpha, \omega} \left\{ |E_N(\alpha,\omega)-E_{N-1}(\alpha,\omega)-\varepsilon_\text{HOMO}| \right\}
 \end{equation}
 or a similar one which can also account for lower-lying orbitals or the electron affinities which should resemble the binding energies of the lowest unoccupied molecular orbital (LUMO).
 
@@ -106,9 +108,9 @@ The integration of the transition dipole matrix elements in eq. (\ref{eq:sigma_d
 
 \subsection{Obtaining the Electrostatic Potential and Dyson orbitals}
 %Considering a state as linear combination of CI-states is denoted as weak-coupling representation \cite{McCarthy}.
-The electrostatic potential used in this work is obtained with a modified version of \prog{NWChem} \cite{nwchem} where the points, at which this potential should be computed can be set by the user.
+The ESP used in this work is obtained with a modified version of \prog{NWChem} \cite{nwchem} where the points, at which this potential should be computed can be set by the user.
 Setting these points to the quadrature points of the integration scheme requires some extra effort but has the great advantage that no interpolation needs to be done internaly.
-An interpolation of the data in \prog{FreeWilly} \cite{FreeWilly} would require an interpolation of scattered data for which several schemes such as radial basis function interpolation or inverse distance interpolation are available but both methods give, if the parameters are chosen not accurately, spurious oscillations between the quadrature points and thus do not result an a smooth electrostatic potential.
+An interpolation of the data in \prog{FreeWilly} \cite{FreeWilly} would require an interpolation of scattered data for which several schemes such as radial basis function interpolation or inverse distance interpolation are available but both methods give, if the parameters are chosen not accurately, spurious oscillations between the quadrature points and thus do not result an a smooth ESP.
 
 The second external quantity needed to compute the intensities is the DO that is computed in the framework of this thesis with the in-house code \prog{DYSON} \cite{MAgg}.
 To obtain the required data for this, the \prog{NWChem}-code is modified to produce more verbose output and the respective data are extracted and reformatted with a self-written script \cite{nwc2dy}.

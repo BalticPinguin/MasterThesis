@@ -54,11 +54,11 @@ Finally a large class of methods treat the system uniformly, using a joint treat
 %Typically time-domain methods are in this last group of methods.
 
 The Koopmans' approach is, at least among the frequency domain methods, the most prominent representative \cite{Koerzd1,PottsHolland,dos,dos2}.
-In this scheme, the systems ground state is computed with a self-consisten field quantum mechanical method to obtain the one-electron binding energies.
+In this scheme, the systems ground state is computed with a self-consistent field quantum mechanical method to obtain the one-electron binding energies.
 The photoelectron spectrum is than estimated using the orbital energies as the transition energies and using uniform intensities.
 Although this method has shown to be in qualitative agreement with experiments for different systems \cite{Koerzd1,Koerzd2, EggerKronik,PottsHolland,YepesJaque}, it breaks down in case of strong electron correlation \cite{2phcederbaum,2phcederbaum2} due to relaxation of the orbitals upon ionisation.
 %Since the estimation of the role of correlation effects can only hardly be estimated in advance, this method has only poor predictive character.
-This method is characterised by its low computational costs and robustness and, thus, well-suited for very large systems such as solid state problems where calculations beyond ground-state DFT are very demanding or not feasible at all.
+This method is characterised by its low computational costs and robustness and, thus, is well-suited for very large systems such as solid state problems where calculations beyond ground-state DFT are very demanding or not feasible at all.
 
 In the following sections, the most important methods will be briefly introduced according to their affiliation to the groups distiguished in Figure \ref{fig:PEScat}.
 First, in section \ref{ch:gf} the working equations of the Green's function approach are introduced to give a fundamental understanding of this group of methods.
@@ -101,7 +101,7 @@ However, computing the Greens' function is a demanding task which is of similar 
 Over the years several approaches were developed of which the algebraic diagrammatic construction \cite{1pGFcederbaum} and the equation of motion \cite{PottsHolland,1pGFcederbaum} are the most prominent.
 In the diagrammatic construction one starts with an initial zeroth order Greens' function $\mat{G}^0(\omega)$ constructed in a Hartree-Fock basis and corrects it iteratively by the term $\mat{G}^0(\omega)\mat{\Sigma}(\omega)\mat{G}(\omega)$, where $\mat{\Sigma}(\omega)$ is the self-energy, an effective potential that is used to recover electron correlation and relaxation effects \cite{GreenBayse}.
 The self-energy usually is expanded in a perturbation series with respect to Feynman diagrams with increasing number of vertices and is exact in the limit of infinite terms \cite{bookGF,cederbADC}.
-The one-particle energies, Coulomb matrix elements and overlap integrals are obtained from self-consistent field (SCF) calculations \cite{1pGFcederbaum} \textit{e.g.} on the HF-level \cite{GreenBayse} but (TD)DFT or any other quantum chemical method can be used as well \cite{Koerzd1}.
+The one-particle energies, Coulomb matrix elements and overlap integrals are obtained from self-consistent field (SCF) calculations \cite{1pGFcederbaum} \textit{e.g.} on the HF-level \cite{GreenBayse} but (TD)DFT or any other quantum chemical method can be used as well via the GW-approach \cite{gf_intro,hedinGW}.
 Being much easier to compute, the Hartree-Fock basis has the disadvantage that only single configurational electronic states can be treated.
 
 On the other hand, an important advantage of the Greens' function method is that the transition energies are computed directly whereas in most other methods they are calculated as the difference of the initial and final state energies.
@@ -235,7 +235,7 @@ An important feature of the expansion (\ref{eq:DOexpansion}) is that the dynamic
 %\text{i}\frac{\partial}{\partial t}|\Psi_j(t)\rangle =
 %\left{-\frac 12 \nabla^2 + \hat{v}_\text{ext}(\ver{r},t) +\Delta_j(t) \right} |Psi_j(t)\rangle
 %\end{equation}
-In this approach the interaction of the DO with the bound states is approximated by the mean-field electrostatic potential \cite{TD-do}, neglecting exchange and correlation.
+In this approach the interaction of the DO with the bound states is approximated by the mean-field electrostatic potential (ESP) \cite{TD-do}, neglecting exchange and correlation.
 
 The physical interpretation of the TDDO becomes clear when regarding its definition, given by the $N-1$-electron integral
 \begin{equation} \label{eq:TDDO}
@@ -366,3 +366,18 @@ Finally, the expression (\ref{eq:sa}) can be further simplified to get the appro
 Therefore the electron relaxation is neglected and thus the $N-1$-electron state can be written as $|\Psi_{k}^{N-1}\rangle= \hat{a}_k|\Psi_i^N\rangle$. 
 Thus, the sum over all permutations $\hat{P}$ in (\ref{eq:sa}) reduces to the case $\delta_{P(j),j}$ due to orthogonality of the orbitals.
 Moreover, due to the normalisation of the orbital functions, all transitions have a probability of one and thus corresponds to the scheme described earlier.
+
+\section{Angular Resolved Photoelectron Spectra}
+An important variant of the PES is the angular resolved PES (ARPES) where in addition to the energetic information, also angular resolution of the photoelectrons is obtained.
+This technique is challenging from both experimental and theoretical view but gives an additional insight into the nature of nature of molecular orbitals involved since the obtained angular distributions correspond to the momentum distribution in the bound state, \textit{i.e.} the Dyson orbital.
+
+\textcolor{red}{Need references for these statements}
+\begin{itemize}
+   \item Only information about 1 angle, so it is orientation-dependent
+   \item introduce $\sigma=\sigma_0(1+0.495\beta P\cos(2\phi+2\phi_0))$ \cite{Li-R1}
+   \item Not possible using the Koopmans' approach (->or Greens' functions (???))
+   \item In time-domain this can be accessed by the long-time behaviour of wave-function
+   \item in Freq.-domain, two approaches available:
+   \item By integration with DO (init./fin. state) of angular part only -> how to generalise for irregular systems?
+   \item By Fourier-transformation of (??) The DO? How is formal approach for it?
+\end{itemize}

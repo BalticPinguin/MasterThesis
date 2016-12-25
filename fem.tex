@@ -5,7 +5,7 @@ A brief review about these works is given in section \ref{ch:feQM}.
 Besides its large flexibility and computational efficiency pointed out in section \ref{ch:introFEM} already, the large amount of available libraries for FEM \cite{libmesh,dealII,freefem, hermes,oofem} is another advantage of practical importance due to the complexity of the generation of a suitable mesh, assembling of matrices and solution of matrix equations.
 
 In the following chapter the integration of the matrix elements (section \ref{ch:feInt}) and set up of the mesh (section \ref{ch:feAss}) will be described.
-Thereby the focus is put on the application to the one-particle SE that is to be solved with molecular electrostatic potential.
+Thereby the focus is put on the application to the one-particle SE that is to be solved with molecular ESP.
 Since the interest thereby is on free particle solutions, the spectrum is expected to be very dense and the wave function to be delocalised, requirering for well-designed boundary conditions.
 A discussion of various boundary conditions and asymptotic descriptions available for FEM is described in section \ref{ch:BC}.
 
@@ -80,26 +80,27 @@ These brick-shaped elements however have the disadvantages that the regular cube
 Another approach used by Lehtovaara \textit{et al.} \cite{fe_dft2} is to put layers of polyhedra around the atoms with increasing number of points and radii.
 Thereby the overlapping regions of these spheres are removed by deleting elements that are closer to another atom.
 \begin{figure}
-   \begin{subfigure}{0.24\textwidth}
-   \includegraphics[width=0.95\textwidth]{Figures/QuadMeshBenzene}
-   \caption{}
+  \begin{subfigure}{0.23\textwidth}
+   \includegraphics[width=\textwidth]{Figures/QuadMeshBenzene}
+   \vspace{-43mm}\caption{$\qquad\qquad\qquad\qquad$}
    \label{fig:HexBenz}
   \end{subfigure}
-  \begin{subfigure}{0.24\textwidth}
-   \includegraphics[width=0.95\textwidth]{Figures/QuadDiatomic}
-   \caption{}
+  \begin{subfigure}{0.28\textwidth}
+   \includegraphics[width=\textwidth]{Figures/QuadDiatomic}
+   \vspace{-43mm}\caption{$\qquad\qquad\qquad\qquad\quad$}
    \label{fig:HexDia}
   \end{subfigure}
-  \begin{subfigure}{0.24\textwidth}
-   \includegraphics[width=.95\textwidth]{Figures/PolyBenzene}
-   \caption{}
+  \begin{subfigure}{0.23\textwidth}
+   \includegraphics[width=\textwidth]{Figures/PolyBenzene}
+   \vspace{-42mm}\caption{$\quad\qquad\qquad\qquad\quad$}
    \label{fig:PolyBenz}
   \end{subfigure}
-  \begin{subfigure}{0.24\textwidth}
-   \includegraphics[width=.95\textwidth]{Figures/AdaptiveEthylene}
-   \caption{}
+  \begin{subfigure}{0.23\textwidth}
+   \includegraphics[width=\textwidth]{Figures/AdaptiveEthylene}
+   \vspace{-44mm}\caption{$\qquad\quad\qquad\qquad$}
    \label{fig:AdapEthyl}
   \end{subfigure}
+  \vspace{34mm}
   \caption{2D cuts through 3D meshes for molecular systems obtained with different schemes for local refinement:
     (a) hexahedral elements adapted for the benzene molecules \cite{fe_dft1}
     (b) hexahedral mesh for a diatomic \cite{fe_hf}
@@ -185,7 +186,7 @@ The boundary element method (BEM) can be used as a self-standing method for solv
 In its pure form, the BEM solves the problems using only conditions given at its boundaries that are connected to the volume properties via Greens' theorem, the Gauss-Ostrogradskii (divergence) theorem as well as Stokes theorem \cite{bemBook}.
 Even though the BEM procedure suffers strongly from the restriction of being applicable only to linear systems for which a fundamental solution is known as well as the disadvantage of leading to dense, unsymmetric matrix equations \cite{bemCostabel} it has some popularity until these days \cite{bem1,bem2,bem3}.
 But its main advantages come into play when being used with the FEM \cite{bem-fem} where the FEM can be used to obtain an accurate solution in the inner region and the boundaries are treated with the BEM.
-Considering an unbound domain as, \textit{e.g.} the problem of the outgoing electron, the infinite domain $\Gamma$ can be divided into a finite region $\Gamma_i$ where the atoms electrostatic potential leads to ... and the remaining domain $\Gamma_o$ in which the time-independent SE reduces to the Helmholtz-problem whose fundamental solutions are well-known and thus the BEM is applicable \cite{bemCostabel, bettessBEM}.
+Considering an unbound domain as, \textit{e.g.} the problem of the outgoing electron, the infinite domain $\Gamma$ can be divided into a finite region $\Gamma_i$ where the ionic ESP leads to a system-specific wave-function and the remaining domain $\Gamma_o$ in which the time-independent SE reduces to the Helmholtz-problem whose fundamental solutions are well-known and thus the BEM is applicable \cite{bemCostabel, bettessBEM}.
 
 \subsection{Infinite Elements}
 \label{ch:InfEl}
@@ -219,6 +220,10 @@ Important is, however, that in the equation later on the test and ansatz functio
 These oscillations make the Hamiltonian non-hermitian and introduce a strong dependence on the energy $E=\frac{k^2}{2}$.
 Moreover it was found that this formulation can lead to numerical instabilities \cite{Astley} and a wrong asymptotic behaviour.
 
+This reformulation though lead to a quadratic eigenvalue problem instead of the generalised eigenvalue problem from before.
+However, assuming that the difference between the eigenvalues of (\ref{eq:SEinf}) and the target energy of the outgoing electron is small, the quadratic eigenvalue problem can be approximated by the generalised eigenvalue problem (\ref{eq:SEmat}) by setting $k$ to the respective target momentum in the Hamiltonian.
+However, this approximation, which is applied here for simplicity, needs to be verified.
+
 \subsubsection{Conjugate Burnett Elements}
 To get rid of the oscillatory terms, a modification of the test functions applied was introduced such that, in the notation used within this thesis, the test functions coincide with the space of ansatz functions, having the form
 \begin{equation}
@@ -250,11 +255,8 @@ with
 \end{align}
 where the prime is used as short-form of the spacial derivative and the relation $E=\frac 12 k^2$ is used \cite{dreyer}.
 
-This reformulation though lead to a quadratic eigenvalue problem instead of the generalised eigenvalue problem from before.
-However, assuming that the difference between the eigenvalues of (\ref{eq:SEinf}) and the target energy of the outgoing electron is small, the quadratic eigenvalue problem can be approximated by the generalised eigenvalue problem (\ref{eq:SEmat}) by setting $k$ to the respective target momentum in the Hamiltonian.
-However, this approximation, which is applied here for simplicity, needs to be verified.
-
-The nonhermiticity of this Hamiltonian is, however, an important drawback of this formulation.
+This formulation has been shown to be computationally robust for exterior acoustics \cite{dreyer_effectiveness,astley_stability}.
+The nonhermiticity of this Hamiltonian is, however, an important drawback of this formulation \cite{HamSelfAdj}.
 The introduced imaginary part of the eigenvalue can be considered as a broadening of the line width and thus as a lifetime as well as an uncertainty of the energy.
 However, this is not very meaningfull since the ansatz is done in praticular in such a way that the wave function is not changed in an unphysical sense.
 To understand the respective results, here a symmetrised ansatz is suggested in the following.
@@ -273,10 +275,10 @@ is suggested where $\varphi(\vec{r})$ is of the form as before but $D(\vec{r})=\
 The basis formulation (\ref{eq:ALsymm}) changes the mass and potential energy matrices only in a trivial way whereas the kinetic energy matrix, which is in the original Astley-Leis formulation non-hermitian, becomes now
 \begin{multline} \label{eq:SymmKinE}
 \int \left(\nabla \Phi^*_i(\vec{r})\right) \left(\nabla \Psi_j(\vec{r})\right) d\vec{r}=
-\int D^{2p}\large(
+\int D^{2p}\big(
 p^2 \frac{D'(r) D'(r)}{D^2(r)} +p \frac{D'(r)}{D(r)} \left(\varphi_i(\vec{r})\varphi'_j(\vec{r})+ \varphi'_i(\vec{r})\varphi_j(\vec{r}) \right)\\
 + \left(  \varphi'_i(\vec{r})\varphi'_j(\vec{r}) + ik\mu'(r) \left(\varphi_i(\vec{r})\varphi'_j(\vec{r})- \varphi'_i(\vec{r})\varphi_j(\vec{r})  \right) -(ik\mu'(r))^2 \varphi_i(\vec{r})\varphi_i(\vec{r}) \right)
-\large)d\vec{r}  
+\big)d\vec{r}  
 \end{multline}
 
 \section{Solving Large Eigenvalue Problems}

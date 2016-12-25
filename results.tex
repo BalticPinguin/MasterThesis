@@ -1,7 +1,7 @@
 In the previous chapters, many different methods that can be used to compute PESs numerically are described and in chapter \ref{ch:proced} the method used within this work is described in more detail.
 In this chapter some results are shown and explained.
 
-Since the method developed in this work combines several techniques that have not been used together so far and several conceptual questions need to be clarified before computing actual PESs, is section \ref{ch:resBench} several benchmarking and test calculations are performed, testing the dependence of the solution on numerical parameters and the formulation of the infinite elements. 
+Since the method developed in this work combines several techniques that have not been used together so far and several conceptual questions need to be clarified before computing actual PESs, is section \ref{ch:BCbench} three boundary conditions are compared in their influence on the wave-function. In section \ref{sec:NumConve} further benchmarking calculations on some numerical parameters are shown.
 For simplicity, these calculations were performed using a Lithium atom as test system.
 
 In section \ref{ch:resLI} further results for atomic Lithium are presented, showing several conceptual ... .
@@ -14,14 +14,27 @@ In section \ref{ch:resLI} further results for atomic Lithium are presented, show
 %Atomic Systems have some experimental data as well: For Xe and Kr the spectra at photon energies of 150$\,$eV are shown in reference \cite{KrXe}.
 %A combined theoretical and experimental study on CH$_2$F$_2$ is in ref. \cite{ch2f2}. Here, theory is quite bad and experiment is also angular resolved, thus may be interesting.
 
-\section{Benchmarks and Tests on the Formalism}
-\label{ch:resBench}
+\section{Comparison of Boundary Conditions}
+\label{ch:BCbench}
+In section \ref{ch:BC} many boundary conditions were introduced briefly which give rise to diverse properties for the solution which are studied in various works for several systems \cite{babuska}.
+Since in general the design of proper boundaries is sufisticated, no comprehensive investigation on this is given.
+Instead, a few results obtained with Dirichlet boundaries, CAPs and infinite elements are compared and some main characteristics should be found.
+
+\subsection{Dirichlet Boundary Conditions}
+Study the behaviour of solutions with box-size.\\
+Mainly look at DOS and spherical partial waves.
+
+\subsection{Complex Absorbing Potential}
+Study the behaviour for different distances and strengthes for two box-sizes (smallest reasonable, larger one?)
+
+\subsection{Infinite Elements}
 Several questions and conceptual problems have been posed in the previous chapters which require some investigation to get an understanding of the properties of the numerical setup described so far.
 Among these questions is the formulation of infinite elements, discussed in section \ref{ch:InfEl} of which the most important ones are studied in section \ref{ch:bmFormul}.
 
 Another important question concerns the scheme to be used for the setup of the mesh: In section \ref{sec:grid} the properties of obtained FEFs depending on the grid-parameters are studied.
 
-\subsection{Comparison of Formulations}
+%\subsubsection{Formulation of Infinite Elements}
+\subsubsection{Comparison of Formulations}
 \label{ch:bmFormul}
 While the unconjugated Burnett-formulation was not very successfull, the conjugated formulations of Burnett and Astley-Leis both have interesting features to use for quantum mechanical problems.
 Since the conjugated Burnett elements lead to infinitely large matrix elements, here the Astley-Leis elements (\ref{eq:ALelem}) are compared with the symmetrised form (\ref{eq:ALsymm}) using different powers $p$.
@@ -49,27 +62,39 @@ Left: Astley-Leis-formulation ($p=1$), middle: symmetrised form ($p=0.5$) right:
 As shown in the Figure \ref{fig:IFEMform_project}, the nature of the states obtained is in all cases strongly mixed in the quantum number $l$ with significant contributions even for $l>7$.
 However, the relative contributions of the angular momenta critically depends on the power $p$, making a reasonable choise of this parameter important.
 
-\textcolor{blue}{Second parameter to be converged: The order of radial polynomial: Show graph similar to \ref{fig:IFEMform_spect} for this to see convergence.}
-
+\subsubsection{Radial Order}
+The order of radial polynomial: Show graph similar to \ref{fig:IFEMform_spect} for this to see convergence.
 \textcolor{red}{Show 1-D and 2D cuts through solutions as function of $p$!  (What kind of box?)}
 
-\subsection{Hamiltonian dependence on wave vector}
-Due to the inifinite elements, the Hamiltonian depends on the target momentum $k$ as can be seen in eq. (\ref{eq:SymmKinE}) and (\ref{eq:InFEMmatrix}).
-The nature of this dependence of especial interest since it is a special characteristic of this formulation and another numerical parameter influencing the solutions.
-\begin{wrapfigure}{r}{0.5\textwidth}
-\includegraphics[width=0.5\textwidth]{Figures/E_k_benchmark}
-\caption{Energies of the solutions obtained for target energies varying in the $\mu\,E_h$-range.}
-\label{fig:E_k_bm}
-\end{wrapfigure}
-The obtained energies of the solutions vary strongly when changing the target momentum $k$ as the Figure \ref{fig:E_k_bm} illustrates.
-In the figure, the target energy is varied between $0.566451\,$a. u. and $0.066551\,$a. u. and lead to strongly changing eigenenergies.
-This strong dependence on $k$ is also observed when projecting the obtained FEFs onto spherical waves (\ref{eq:spherWave}) which is not shown here.
+\subsubsection{Order of Integration}
+unstable with respect to purely numerical parameters which should converge fast.
+
+\subsubsection{Conclusion on Boundary Conditions}
+\begin{itemize}
+  \item Dirichlet BC: very slowly converging with box-size, radial function very poorly estimated for small boxes.
+       But good convergence properties, eigenstates of angular momentum.
+  \item CAP: algorithmic scheme to find single best energy, but not straight-forward to find some clear scheme if many solutions (have) to be taket into account.
+  \item infinite elements: from theory point best conditions but show chaotic behaviour due to almost-degeneracy in analytical subspace No algorithmic procedure known to finde best parameters.
+\end{itemize}
+Results in the non-intuitive conclusion that less accuracy leads to better results.
+
+%\subsection{Hamiltonian dependence on wave vector}
+%Due to the inifinite elements, the Hamiltonian depends on the target momentum $k$ as can be seen in eq. (\ref{eq:SymmKinE}) and (\ref{eq:InFEMmatrix}).
+%The nature of this dependence of especial interest since it is a special characteristic of this formulation and another numerical parameter influencing the solutions.
+%\begin{wrapfigure}{r}{0.5\textwidth}
+%\includegraphics[width=0.5\textwidth]{Figures/E_k_benchmark}
+%\caption{Energies of the solutions obtained for target energies varying in the $\mu\,E_h$-range.}
+%\label{fig:E_k_bm}
+%\end{wrapfigure}
+%The obtained energies of the solutions vary strongly when changing the target momentum $k$ as the Figure \ref{fig:E_k_bm} illustrates.
+%In the figure, the target energy is varied between $0.566451\,$a. u. and $0.066551\,$a. u. and lead to strongly changing eigenenergies.
+%This strong dependence on $k$ is also observed when projecting the obtained FEFs onto spherical waves (\ref{eq:spherWave}) which is not shown here.
 
 \subsection{Mesh-Construction and Quality}
 \label{sec:NumConve}
 In section \ref{sec:grid} several parameters for the setup of the grid were discussed whose numerical properties are te compared and evaluated in this section.
 Here, three different schemes for distritributing the concentric spheres are presented for the Lithium atom, each with a maximum radius $r_\text{max}=7\,$bohr and $N=20$ spheres.
-In the scheme denoted in Table \ref{tab:RadScheme} and Figure \ref{Fig:SchemHist} (left) as ``const'', the spheres are placed according to eq. (\ref{eq:tm_map}) with $N_i=74$ points on each sphere.
+In the scheme denoted in Table \ref{tab:RadScheme} and Figure \ref{fig:SchemHist} (left) as ``const'', the spheres are placed according to eq. (\ref{eq:tm_map}) with $N_i=74$ points on each sphere.
 The scheme denoted as tm also uses eq. (\ref{eq:tm_map}) for the size of respective spheres but adapts the number of points per sphere according to (\ref{eq:tm_num}).
 The last scheme tested here uses the radial mapping suggested by Son and Chu \cite{Son_Chu0} (\ref{eq:son_map}) and the number of points per sphere (\ref{eq:son_num}).
 The parameters for the radial mapping are chosen as $l=1.8$ and $p=2.6$ and for the distribution of points on the spheres the Lebedev-scheme \cite{lebedev} is used, respectively.
@@ -97,14 +122,15 @@ In Figure \ref{fig:SchemHist} (left), the distribution of the ratio of the longe
 Here no significant differences between the schemes under investigation can be seen.
 
 The angular distribution of points seems to be only of minor importance.
-As shown in the Figures \ref{fig:SchemHist} and \ref{appFig:ShemHist} in supplement, the statistics are very similar and also the obtained density of states is very comparable.
+As shown in the Figures \ref{fig:SchemHist} and \ref{appFig:SchemHist} in supplement, the statistics are very similar and also the obtained density of states is very comparable.
 However, the angular distribution can play a larger role when considering non-spherical systems.
 In this work unless otherwise noted, the Lebedev scheme is used which provided the highest density of states (DOS) in this test.
 The impression of very similar properties of the meshes generated by different schemes is also supported by the statistics of further parameters of the tetrahedra, see Figure \ref{appFig:SchemHist}.
 \begin{figure}
 \includegraphics[width=0.49\textwidth]{Figures/Radi_hist.pdf}
 \includegraphics[width=0.49\textwidth]{Figures/Sph_hist.pdf}
-\caption{Distribution of aspect ratio (longest edge length divided by the smallest side height).}
+\caption{Distribution of aspect ratio (longest edge length divided by the smallest side height).
+   Be aware that the ranges of the different bins differ.}
 \label{fig:SchemHist}
 \end{figure}
 Concluding one can say that the procedures studied here yield meshes with similar quality.
@@ -155,7 +181,7 @@ In this region the estimated binding energies are often not that good as those o
 %\label{fig:Lith-otrsh}
 %\end{wrapfigure}
 
-However, the well-separated single valence peak allows a more detailed study of the photon energy dependence of the intensity of a single peak as shown in Figure \ref{fig:lith-cs} where experimental values are compared with several theoretical models.
+However, the well-separated single valence peak allows a more detailed study of the photon energy dependence of the intensity of a single peak as shown in Figure \ref{fig:Lith-cs} where experimental values are compared with several theoretical models.
 \begin{wrapfigure}{l}{0.7\textwidth}
 \includegraphics[width=0.69\textwidth]{Figures/Lithium/Li_crossSect}
 \caption{Cross section of the Lithium atom as function of the photon energy \cite{LiCS}.}
@@ -175,6 +201,8 @@ CS$_2$ is known to have strong correlation effects \cite{2phcederbaum}
 \end{wrapfigure}
 
 Data of CO2: \cite{DiffLinear}.
+
+Cross-section profiles of CO$_2$ in \cite{stieltje}.
 
 \section{water}
 The PES and threshold PES, where the kinetic energy of the photoelectron is kept constant instead of the energy of the photon, of water is experimentally well studied 

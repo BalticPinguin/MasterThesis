@@ -19,7 +19,7 @@ The states considered here have a spatial infinite extend as it is well-known fo
 with $\vec{k}$ being the wave-vector as well as for spherical waves. %whose radial part contains different powers of $\frac{\sin(kr)}{kr}$ \cite{Lifschitz}.
 Moreover, continuum wave functions are not square integrable and hence can not be normalised according to $\int \Psi_{\vec{k}}^\dagger(\vec{r})\Psi_{\vec{k}}(\vec{r}) d\vec{r}=1$ and thus the probability interpretation is invalid \cite{quirky}.
 Instead, these functions are sharp in a continuous variable (namely the momentum) and hence should rather be interpreted as probability densities, suggesting the normalisation 
-$\int \Psi^\dagger(\vec{r})\Psi(\vec{r'}) d\vec{r}=\delta(\vec{k}-\vec{k'})$ where $\delta(\vec{k})$ is the Dirac delta distribution \cite{quirky}.
+$\int \Psi^\dagger(\vec{r})\Psi(\vec{r'}) d\vec{r}=\delta(\vec{k}-\vec{k'})$ where $\delta(\vec{k})$ is the Dirac delta distribution \cite{quirky,ContOrb}.
 This property distinguishes the analytical FEF from those obtained with numerical methods that often have a finite support and are obtained from an approximate Hamiltonian matrix which has no continuous spectrum due to finiteness of its basis.
 Especially the difference in the normalisation of wave functions and by this in the dimensionality of overlap integrals also affects the integral evaluated when calculating the transition dipole matrix elements \cite{stieltjesCeder}.
 However, the Stieltjes imaging approach described in section \ref{ch:stieltjes} gives a formal verification for the use of square-integrable function for the approximation of a continuum state. %since it can be considered as $0$-th order moment expansion.
@@ -35,7 +35,8 @@ An alternative interpretation would be to assume that the numerical solution cor
 %$\Psi\approx \frac{1}{k^+-k^-} \int_{k^-}^{k^+}\Psi(k) dk$
 %which changes the interpretation and normalisation required for the wave function.
 
-In other works simulating PES in frequency domain, mainly two different representations of the photoelectron are found which are based on plane-wave expansions in spherically symmetric bases \cite{ezDyson,DO_TDDFT,do_modCoul}.
+In other works simulating PES in frequency domain only sparsely explicit calculations on the FEF are obtained \cite{ContOrb,H2pDeCleva}.
+Instead, mainly two different representations of the photoelectron are found which are based on plane-wave expansions in spherically symmetric bases \cite{ezDyson,DO_TDDFT,do_modCoul}.
 One of the expansions is that in spherical waves \cite{Lifschitz}
 \begin{equation} \label{eq:spherWave}
 \Psi^\text{Sph}_{\vec{k}}(\vec{r})=4\pi
@@ -81,7 +82,7 @@ if not both $l$ and $l'$ are $0$ where $C_{l,l',m,m'}$ are Clebsch-Gordan coeffi
 The relation  (\ref{eq:dipoleRule}) governs the dipole transition probabilities of molecular systems.
 
 Both expansions (\ref{eq:spherWave}) and (\ref{eq:CoulWave}) do not take the molecular potential into account but give an easy picture for the photoelectron.
-Since the spherical wave basis is obtained under the assumption of no potential $V(\vec{r})$, this is is assumed to be a good approximation for photodetachement when the initial state is neutral whereas the Coulomb wave expansion takes into account the electrostatic potential of the remaining anion at larger distances to the molecule and thus is more reasonable for ionised remainder systems \cite{do_modCoul}.
+Since the spherical wave basis is obtained under the assumption of no potential $V(\vec{r})$, this is is assumed to be a good approximation for photodetachement when the initial state is neutral whereas the Coulomb wave expansion takes into account the ESP of the remaining anion at larger distances to the molecule and thus is more reasonable for ionised remainder systems \cite{do_modCoul}.
 Due to these obvious deficiencies of the inflexible expansions, some modifications are used by several authors which involve the coise of an effective charge $Z^*<1$ in the expansion (\ref{eq:CoulWave}) \cite{do_modCoul} and an orthogonalisation of the expansion with respect to the DO \cite{do_modCoul,do_orthonorm,do_orthonorm1,do_pworth}.
 The latter can be shown to be equivalent to a respective shift of the expansion centre such that the expectation value of the dipole moment of the DO vanishes \cite{do_orthonorm}.
 
@@ -96,10 +97,10 @@ In addition to the previously discussed questions abuot the relation of analytic
 
 The Coulomb wave basis is, given its energy $E=\frac 12 |\vec{k}|^2$, infinitely degenerate in the direction of $\vec{k}$ as well as in the quantum numbers $l$ and $m$.
 %Hence the wave function of a photoelectron can consist of any superposition of the form (\ref{eq:CoulWave}), chosing the coffecients $c_{l,m}$ accordingly.
-However, the coefficients of the physically observable FEF are determined by the matrix elements of the dipole operator with the DO (\ref{eq:sigma_do}).  
+However, the coefficients of the physically observable FEF are determined by the matrix elements of the dipole operator with the DO (\ref{eq:sigma_do}).
 Considering the ionisation of hydrogen in its ground state, the FEF is in one of the three $p$-waves because the probability to access any of the other vaccum-states with the correct energy vanishes due to dipole selection rules eq. (\ref{eq:dipoleRule}) for spherically symmetric systems.
 
-Unfortunately, as shown in section \ref{ch:resBench}, the considerations made above are not true for the numerical solution anymore where a finite set of superpositions is obtaind which, due to numerical treatment, differ in energy and thus can not be assigned to a common value of $\vec{k}$.
+Unfortunately, as shown in section \ref{ch:BCbench}, the considerations made above are not true for the numerical solution anymore where a finite set of superpositions is obtaind which, due to numerical treatment, differ in energy and thus can not be assigned to a common value of $\vec{k}$.
 Chosing the energetically best-fitting solution though might in principle result in a function with vanishing contribution of the $p$-type orbitals whereas, for a slightly changed computational schem or target energy it could yield a solution with large $p-$contributions and high intensity, respectively.
 
 %The coefficients $c_{l,m}$ moreover are arbitrary coefficients to this end since any of the linear combinations solves the SE for a given kinetic energy.
@@ -118,7 +119,7 @@ Chosing the energetically best-fitting solution though might in principle result
 \subsection{Stieltjes Imaging}
 \label{ch:stieltjes}
 The Stieltjes imaging \cite{stieltjesCeder,langhoff3,stieltjeLanczos,langhoff} provides an elegant way to use the numerially obtained FEFs of a discrete character lying above the ionisation threshold for PES calculations.% by using moment theory.
-To correct on the different character of the spectrum and the smaller extend of the numerically obtained solution, the Stieltjes imaging approach uses spectral moments 
+To correct on the different character of the spectrum and the smaller extend of the numerically obtained solution, the Stieltjes imaging approach uses spectral moments \cite{langhoff2}
 \begin{equation} \label{eq:SpecMom}
 \mu_n=\int_0^\infty \epsilon^n df(\epsilon)
 \end{equation}
@@ -163,7 +164,7 @@ which contains the full information about the first $2l-1$ spectral moments and 
 \begin{equation} \label{eq:I_z2}
 I(z)=\frac{\mu_0}{z}+\frac{\mu_1}{z^2}+\hdots+\frac{\mu_{2l-1}}{z^{2l}}
 \end{equation}
-where $\mu_i$ are the spectral moments (\ref{eq:m_n_num}) \cite{nesbet}.
+where $\mu_i$ are the spectral moments (\ref{eq:M_n_num}) \cite{nesbet}.
 The key task in Stieltjes imaging is the transformation from the form (\ref{eq:I_z2}) to (\ref{eq:I_z1}) \cite{nesbet}.
 
 In practice, the Stieltjes imaging is very demanding if energetically narrow transitions occur since many terms in expression (\ref{eq:M_n_num}) are needed for convergence, making this method efficient mainly for low energy range \cite{H2pDeCleva}.
@@ -222,7 +223,7 @@ One prominent advantage of this class of methods is that the error of the soluti
 In addition, many formulations allow for an implementation making use of the fast fourier transform \cite{PSbook}.
 
 A special representative subgroup of the pseudospectral methods are the so-called discrete variable representation (DVR) schemes which are frequently used to study electronic structure and vibrational problems in molecules \cite{yipDVR,impLDVR,coulDVR}.
-Since this scheme is applicable in one dimension only, often symmetry-adapted coordinates such as spherical coordinates are used product functions such as (\ref{eq:RadSE}) are applied.
+Since this scheme is applicable in one dimension only, often symmetry-adapted coordinates such as spherical coordinates are used product functions such as (\ref{eq:radSE}) are applied.
 
 The basis functions used in this scheme commonly are Lagrange polynomials \cite{taoDVR,impLDVR,coulDVR} whose nodes are chosen by a general Gau\ss\, quadrature rule \cite{impLDVR} or from a quadrature rule for the radial Coulomb function which is in particular popular whene electronic structure problems are considered \cite{coulDVR,Tannor}.
 Even if the DVR provides a flexible and fast-convergent basis, an extension to higher dimensionality can only be achieved by a product ansatz and thus is applicable to problems with high symmetry.
