@@ -151,8 +151,8 @@ However, using such a mapping directly is infeasible since the oscillations of t
 \label{ch:cap}
 The complex absorbing potential (CAP) is a method often found in the literature when describing particles with infinite extent\cite{bauch1, bauch2}.
 In this scheme, an artificial potential usually of the form
-\begin{equation}
-   W_\text{CAP}(\vec{r})=\begin{cases} i\nu(\vec{r}-\vec{r}_0)^2 & \vec{r}>\vec{r}_0 \\
+\begin{equation} \label{eq:cap}
+   W_\text{CAP}(\vec{r})=\begin{cases} i\eta(\vec{r}-\vec{r}_0)^2 & \vec{r}>\vec{r}_0 \\
                                            0    & \text{else} \end{cases}
 \end{equation}
 is added where $\vec{r}_0$ is larger than the bound part of the system.
@@ -256,7 +256,7 @@ with
 where the prime is used as short-form of the spacial derivative and the relation $E=\frac 12 k^2$ is used \cite{dreyer}.
 
 This formulation has been shown to be computationally robust for exterior acoustics \cite{dreyer_effectiveness,astley_stability}.
-The nonhermiticity of this Hamiltonian is, however, an important drawback of this formulation \cite{HamSelfAdj}.
+%The nonhermiticity of this Hamiltonian is, however, an important drawback of this formulation \cite{HamSelfAdj}.
 The introduced imaginary part of the eigenvalue can be considered as a broadening of the line width and thus as a lifetime as well as an uncertainty of the energy.
 However, this is not very meaningfull since the ansatz is done in praticular in such a way that the wave function is not changed in an unphysical sense.
 To understand the respective results, here a symmetrised ansatz is suggested in the following.

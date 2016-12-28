@@ -21,11 +21,23 @@ Since in general the design of proper boundaries is sufisticated, no comprehensi
 Instead, a few results obtained with Dirichlet boundaries, CAPs and infinite elements are compared and some main characteristics should be found.
 
 \subsection{Dirichlet Boundary Conditions}
-Study the behaviour of solutions with box-size.\\
-Mainly look at DOS and spherical partial waves.
+Dirichlet Boundary-conditions are conceptually the easiest but are known to have a large influence on the solution, especially for FEFs.
+In the Figure \ref{fig:dbcRad} the error in the energy of $20$ solutions is shown for different radii.
+The comparison with the green line, which is shows a cubic decay, shows that the error is inverse proportional to the volume of the box.
+\begin{wrapfigure}{l}{0.6\textwidth}
+\includegraphics[width=\textwidth]{Figures/BC/DBCenergies}
+\caption{double-logarithmic plot of the error in energy of the energetically closest solutions in dependence on the radius
+of the sphere. The comparison with $\propto \frac{1}{r^3}$ shows the general behaviour of the error.}
+\label{fig:dbcRad}
+\end{wrapfigure}
+This regular behaviour is very usefull to setup the box according to a desired error in energy and density of states.
+However, the density of solutions is only half of the trueth since also the radial part should be reasonable.
+--> figure with 2-cuts through solution.
 
 \subsection{Complex Absorbing Potential}
-Study the behaviour for different distances and strengthes for two box-sizes (smallest reasonable, larger one?)
+Using a CAP as described in section \ref{ch:cap}, two additional degrees of freedom comared to the Dirichlet boundary conditions arise: the strength $\eta$ of the artificial potential (\ref{eq:cap}) and the offset $r_0$ where it starts, the latter has the only restriction to be larger than the radius of the DO.
+In section \ref{ch:cap} it was suggested to chose the parameters such that the respective derivatives of the energy vanish \cite{CAPccEOM,CAPfreshlook}.
+This procedure is, however, only valid if one solution should be taken into account and thus is not directly applicable here.
 
 \subsection{Infinite Elements}
 Several questions and conceptual problems have been posed in the previous chapters which require some investigation to get an understanding of the properties of the numerical setup described so far.

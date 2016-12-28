@@ -109,45 +109,50 @@ The integration of the transition dipole matrix elements in eq. (\ref{eq:sigma_d
 \subsection{Obtaining the Electrostatic Potential and Dyson orbitals}
 %Considering a state as linear combination of CI-states is denoted as weak-coupling representation \cite{McCarthy}.
 The ESP used in this work is obtained with a modified version of \prog{NWChem} \cite{nwchem} where the points, at which this potential should be computed can be set by the user.
-Setting these points to the quadrature points of the integration scheme requires some extra effort but has the great advantage that no interpolation needs to be done internaly.
-An interpolation of the data in \prog{FreeWilly} \cite{FreeWilly} would require an interpolation of scattered data for which several schemes such as radial basis function interpolation or inverse distance interpolation are available but both methods give, if the parameters are chosen not accurately, spurious oscillations between the quadrature points and thus do not result an a smooth ESP.
+Setting these points to the quadrature points of the integration scheme requires some extra effort but has the great advantage that the interpolation can be restricted to the region close to the nuclei, where \prog{NWChem} can not compute the ESP explicitly.
+An interpolation of the data on the complete domain in \prog{FreeWilly} \cite{FreeWilly} would require an interpolation-scheme for scattered data such as RBF interpolation \cite{rbfSE,rbfInterpol,rbfSurf}, inverse distance interpolation \cite{adapt_idw,idw} or similar methods \cite{CompInterp,idw_krieging,interpol}, but these methods give, if the parameters are not chosen accurately, spurious oscillations between the quadrature points and thus do not result in a smooth ESP.
 
-The second external quantity needed to compute the intensities is the DO that is computed in the framework of this thesis with the in-house code \prog{DYSON} \cite{MAgg}.
-To obtain the required data for this, the \prog{NWChem}-code is modified to produce more verbose output and the respective data are extracted and reformatted with a self-written script \cite{nwc2dy}.
+The other external quantity needed to compute the intensities is the DO that is computed in the framework of this thesis with the in-house code \prog{DYSON} \cite{MAgg}.
+The wave functions of the initial and final states are computed with the \prog{NWChem}-code which is modified to produce more verbose output.
+The respective data are extracted and reformatted with a self-written script \cite{nwc2dy}, creating the input for \prog{DYSON}.
 
 \section{Free electron function}
-The FEF is computed with a finite element scheme, using the program \prog{FreeWilly} \cite{FreeWilly} developed in the framework of this thesis.
+The FEF is computed with a finite element scheme using the program \prog{FreeWilly} \cite{FreeWilly} developed in the framework of this thesis.
 It is based on the library \prog{Libmesh} \cite{libmesh} which itself uses several libraries for the required linear algebra and the mesh-setup.
+As discussed in section \ref{ch:fem}, the most crucial step in a FEM simulation is the setup of the grid.
+The \prog{FreeWilly}-code supports supports several closely related setup-schemes of which the most important are described in the following.
 
 \subsection{Setup of the Grid}
 \label{sec:grid}
-The most crucial part in a FEM simulation is the mesh being used. 
-In the program \prog{FreeWilly} the distribution of elements is obtained from a set of points via Delaunay triangulation (see \ref{app:delaunay} for details) using the library \prog{tetgen} \cite{tetgen}.
+%The most crucial part in a FEM simulation is the mesh being used. 
+In the program \prog{FreeWilly} the finite elements is obtained from a set of points via Delaunay triangulation (see \ref{app:delaunay} for details) using the library \prog{tetgen} \cite{tetgen}.
 The distribution of these points is responsible for the quality of the obtained solution via many parameters in a non-trivial way.
-It is expected that the main parameters, the mesh should depend on are
+It is expected that the most important of these parameters are
 \begin{description}
    \item[The molecular geometry] Close to the cores it should be denser, at larger distances a coarser grid is possible.
    \item[The kinetic energy] of the photo electron which gives the maximum distance between two points
    \item[The largest angular momentum of the Dyson orbital] determines the angular momentum of the photoelectron to be resembled.
 \end{description}
 
-In this work the generation of the point-distribution is chosen similarly to the grid used by Son and Chu \cite{Son_Chu} which is based on spherical distributions around the atoms whose overlapping regions are cut off.
-To yield a reasonable mesh, the radii of these spheres need to be much larger than the bond lengths to avoid holes or interatomic gaps in the molecule, \textit{e.g.} between different ligands.
-Using such a scheme, the parameters are determined by the size of the largest sphere $r_\text{max}$, number $N$ of spheres being used as well as the radial distribution and angular distributions, respectively.
+To account for these properties in the best way, here a similar scheme to that suggested by Son and Chu \cite{Son_Chu} is utilised.
+In this scheme, the molecular region is composed of spheres with different radii, centred at the nuclei each and whose overlapping regions are cut off.
+%In this work the point-distribution is chosen similarly to the grid used by Son and Chu \cite{Son_Chu} which is based on spherical distributions around the atoms whose overlapping regions are cut off.
+To yield a reasonable mesh, the radii of these spheres need to be larger than the bond lengths to avoid holes or interatomic gaps in the molecule, \textit{e.g.} between different ligands.
+Using such a scheme, the global grid is determined by the size of the largest sphere $r_\text{max}$, the number $N$ of spheres being used for each atom as well as the radial distribution of the size of spheres and angular distributions of points on each sphere, respectively.
 
-For the radial distribution of $N$ spheres Son and Chu \cite{Son_Chu0} suggested the scheme
+For the radial distribution of $N$ spheres, Son and Chu \cite{Son_Chu0} suggested the radial distribution
 \begin{equation} \label{eq:son_map}
 r_i=\frac{il}{N-i+\frac{lN}{r_\text{max}}} \qquad i=1,\hdots ,N 
 \end{equation}
-where $l$ is a free parameter.
-Using this function, the smallest spheres ($i<<N$) are scaled linearly with distances $r_\text{max}/N$ whereas the distance of the largest spheres depends non-trivially on the parameters but can become very large.
+where $l$ is a parameter that determines the distance between the most inner spheres.
+Using this function, the smallest spheres ($i<<N$) are scaled linearly with distances $r_\text{max}/N$ whereas the distance of the largest spheres depends non-trivially on the parameters but can become very large if $l$ is small whereas large $l$ lead to almost uniform distribution of spheres.
 
 To obtain better control of the distance between the inner spheres and the maximum distance which needs to be consiberably smaller than the wave length, in this work the formula
 \begin{equation} \label{eq:tm_map}
 r_i=\frac{il}{\left( \frac Ni \right)^p \left(\frac{Nl}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N 
 \end{equation}
-is suggested where two degrees of freedom $l$ and $p\geq 1$ are given and the condition $N<\frac{r_\text{max}}{l}$ needs to be fulfilled to prevent the singularity.
-Here $l$ is an asymtotic expression for the distance between two spheres and the distance of inner spheres grows with the power $p+1$ so that it can be tuned freely.
+is suggested which has two degrees of freedom $l$ and $p\geq 1$ where the condition $N<\frac{r_\text{max}}{l}$ needs to be fulfilled for a well-behaved mapping.
+Here $l$ is the asymptotic distance between two spheres whereas the distance of inner spheres can be tuned by the power $p+1$ so that the inner spheres can be tuned to become very dense.
 %Thereby it is important to mention that in this scheme (in contrast to the above one) the (asymptotic for $r\rightarrow \infty$) maximum distance between two spheres is $l$ and hence could be physically chosen to $l\approx \frac \lambda 2$.
 
 While the distribution of spheres follows, at least on a qualitative level, a clear scheme since it should always resemble the local kinetic energy, the distribution of points on the surface of each sphere more complicated.
