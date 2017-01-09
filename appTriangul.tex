@@ -1,11 +1,11 @@
-\section{Delaunay Triangulation}
-\label{app:delaunay}
-The explicit setup of non-regular meshes for the use in finite element schemes is not trivial at all.
-There are however schemes available, among which are the Delaunay and Voronoi tesselations which are their respective dual schemes.
-Since in this thesis, only Delaunay tesselation is used, I will focus on this method and its properties only.\\
-In mathematics one understands under a triangulation a connection of points to simplices.
-Thereby a structure is denoted as a simplex in $n$ dimensions, if has as few vertices as possible in this dimension.
-A simplex in $2D$ \textit{e.g.} is a triangle while it is in $3D$ a tetrahedron.
-Moreover, a simplex is denoted as Delaunay simplex if there is a circumsphere such that no vertex is inside of this sphere.\\
-A bit more intuitive acess to this scheme can be obtained via the Voronoi diagram: A Voronoi diagram splits a given volume (in $3D$) into elements using a set of points $p_i$ in this volume by assigning each point to the element of his nearest point $p_i$.
-Having this tesselation, one can transform it to a set of Delaunay simplices by connecting the points $p_i$ each with their direct neighbours \cite{tetgen}.
+%\section{Delaunay Triangulation}
+%\label{app:delaunay}
+%The explicit setup of non-regular meshes for the use in finite element schemes is not trivial at all.
+%There are however schemes available, among which are the Delaunay and Voronoi tesselations which are their respective dual schemes.
+%Since in this thesis, only Delaunay tesselation is used, I will focus on this method and its properties only.\\
+%%In mathematics one understands under a triangulation a connection of points to simplices.
+%Thereby a structure is denoted as a simplex in $n$ dimensions, if has as few vertices as possible in this dimension.
+%A simplex in $2D$ \textit{e.g.} is a triangle while it is in $3D$ a tetrahedron.
+%Moreover, a simplex is denoted as Delaunay simplex if there is a circumsphere such that no vertex is inside of this sphere.\\
+%A bit more intuitive acess to this scheme can be obtained via the Voronoi diagram: A Voronoi diagram splits a given volume (in $3D$) into elements using a set of points $p_i$ in this volume by assigning each point to the element of his nearest point $p_i$.
+%Having this tesselation, one can transform it to a set of Delaunay simplices by connecting the points $p_i$ each with their direct neighbours \cite{tetgen}.

@@ -42,7 +42,7 @@ One of the expansions is that in spherical waves \cite{Lifschitz}
 \Psi^\text{Sph}_{\vec{k}}(\vec{r})=4\pi
 \sum_{l=0}^\infty \sum_{m=-l}^l \text{i}^l j_l\left(kr\right), Y_l^m\left(\theta, \phi\right) Y^{\dagger,m}_l\left(\theta_k, \phi_k\right)
 \end{equation}
-where $k=|\vec{k}|$ and $r=|\vec{r}|$ are the lengths of the wave vector $\vec{k}$ and spacial vector $\vec{r}$, respectively, $j_l(kr)$ are spherical Bessel functions that solve the radial SE (eq. (\ref{eq:radSEeq}) with $V(r)=0$) and the arguments to the spherical Harmonics $Y_l^m$, $(\theta,\phi)$ and $(\theta_k,\phi_k)$, are the angles of the spherical coordinate system in real-space and Fourier-space, respectively \cite{ezDyson}.
+where $k=|\vec{k}|$ and $r=|\vec{r}|$ are the lengths of the wave vector $\vec{k}$ and spatial vector $\vec{r}$, respectively, $j_l(kr)$ are spherical Bessel functions that solve the radial SE (eq. (\ref{eq:radSEeq}) with $V(r)=0$) and the arguments to the spherical Harmonics $Y_l^m$, $(\theta,\phi)$ and $(\theta_k,\phi_k)$, are the angles of the spherical coordinate system in real-space and Fourier-space, respectively \cite{ezDyson}.
 Another expansion of a plane wave often used is that in Coulomb waves
 \begin{multline} \label{eq:CoulWave}
 \Psi^\text{Coul}_{\vec{k}}(\vec{r})=\frac{1}{(2\pi)^{\frac{3}{2}}}
@@ -339,52 +339,33 @@ Knowledge about ranges of sharp structures and areas with smooth variation of th
 
 In chapter \ref{ch:fem} more details about the finite element formulation are given with a special focus on how to setup a grid that is well suited for describing free particles in quantum mechanics.
 
-\section{Hybrid Methods}
-In addition to the three methods presented above also mixed forms exists, utilizing the advantages of the respective ideas.
-One of the most prominent combinations of the above-mentioned methods is the finite element discrete-variable representation (FE-DVR) \cite{impLDVR,taoDVR}.
-In this schem, a DVR is used with a set of ansatz functions each defined on a given interval only, referred to as the finite element.
-A single function connects these intervals respectively, similarly to the ``hat'' functions in FEM.
-Using this approach, more flexibility is obtained by varying the size of the elements or the number of basis functions per element which is especially advantageous for problems involving a Coulomb potential where the local kinetic energy varies strongly \cite{yipDVR}.
-Moreover, the usually dense matrix of DVR schemes changes to a block-structure, each weakly coupled \cite{taoDVR}.
-
-Another scheme based on the FEM scheme are the so-called spectral elements \cite{sem1,sem2,sem3} used by several authors on quantum mechanical problems.
-In contrast to the FE-DVR-scheme it is based on the weak formulation and typically uses Chebychev or Lagrange polynomials \cite{sem1} and hence allows for larger elements than usual FEM.
-While the spectral elements are found to be well suited for linear problems, they require a complex implementation and lead to denser system matrices.
-The larger density in the resulting matrices in general leads to a reduced numerical stability and computationally more expensive solution strategies.
-Finally, complex geometries usually benefit more from smaller elements that from higher orders \cite{hf_dreyer}.
-
-A successfull variety of spectral elements and the finite element method is the so-called spectral difference method \cite{SpectDiff,sd_mult}.
-In this scheme, a spacially uniform grid is used (as usual in the finite difference scheme) while employing a stepwise defined pseudospectral basis.
-The appealing properties of this method are an exponential convergence as known from finite difference methods by employing the sparsity of the equation system obtained in FEM \cite{SpectDiff}.
-
-More advanced methods based on the spectral difference schemes are available as well \cite{sd_mult,sd_unstructured} but are for brevity not discussed here in more detail.
-
 \section{Wavelets}
 \label{ch:wavelet}
-The wavelet method was developed in the 1980s \cite{waveletLA} and combines the advantages of the Fourier method and FEM by decomposing objects into features of different scales but using a local basis \cite{waveletLA, dahlke, FdFeWavelet}.
-Even though wavelets posess very advantagous features, they are not very well-established untill today.
-The most prominent and widely distributed application of Wavelets is compression of data as used for example in the jpeg2000 standard \cite{iso15444}.
+The wavelet method was developed in the 1980s \cite{waveletLA} as a generalisation of the Fourier transform that combines the advantages of the Fourier space and the FEM.
+Similar to the FEM, it is based on a local basis but the wavelets have some characteristic scales similar to the wavelength in the Fourier basis, so that they can be used to decompose objects into features of different scales as a generalisation of the Fourier transform \cite{waveletLA, dahlke, FdFeWavelet}.
+Even though wavelets posess very advantagous properties, they are to date not very well-established.
+The most prominent and widely distributed application of Wavelets is compression of data as used, for example, in the jpeg2000 standard \cite{iso15444}.
 
 %A wavelet is a basis of the function space $L_p(\mathbb{R}^d)$ of functions $\phi(\vec{r})$ for which $\int \phi(\vec{r})^p d\vec{r}<\infty$ which has the form
-In general, a wavelet is a basis of the function space $L_p(\mathbb{R}^d)$ \textit{i.e.}, the space of functions $\phi(\vec{r})$ for which $\int \phi(\vec{r})^p d\vec{r}<\infty$ where $\vec{r}\in\mathbb{R}^d$.
-A particular wavelet is defined by a finite set of orthonormal mother wavelets $\varphi_i(\vec{r})$ for which
+In general, a wavelet is a basis of the function space $L_p(\mathbb{R}^d)$ \textit{i.e.}, the space of functions $\phi(\vec{r})$ for which $\int \phi(\vec{r})^p d\vec{r}<\infty$ where $\vec{r}\in\mathbb{R}^d$ and $p$ is a positive integer.
+A particular wavelet is defined by a finite set of orthonormal mother wavelets $\varphi_i(\vec{r})$ for which a series of functions
 \begin{equation} \label{eq:waveBasis}
 \varphi_{i,j,\vec{\alpha}}(\vec{r})=m^{\frac{j}{2}} \varphi_i(\mat{M}^j\vec{r}-\vec{\alpha})
 \end{equation}
-with the expanding scaling matrix $\mat{M}$ (\textit{i.e.} all eigen values have modulus larger than one), $m=|det(\mat{M})|$ and the running indices $j\in \mathbb{Z}\, \vec{\alpha}\in \mathbb{Z}^d$ span $L_p(\mathbb{R}^d)$ \cite{dahlke}.
+with the matrix $\mat{M}$ whose eigenvalues have modulus larger than one, %(expanding scaling matrix), 
+$m=|det(\mat{M})|$ and the running indices $j\in \mathbb{Z}\,$ and $\vec{\alpha}\in \mathbb{Z}^d$ can be defined which span $L_p(\mathbb{R}^d)$ \cite{dahlke}.
 %The condition for (\ref{eq:waveBasis}) to be a wavelet basis is that these functionst span $L_p(\mathbb{R}^d)$.
-In practice, this very general definition is often restricted by additional requirements such as orthogonality of $\varphi_{i,j,\vec{\alpha}}(\vec{r})$ and only one mother-wavelet $\varphi(\vec{r})=\varphi_i(\vec{r})$ is used.
-For brevity, in the following only the space $L_2(\mathbb{R})$ with $\mat{M}=2$ is considered which corresponds to the initial definition of wavelets \cite{Tasche}.
-The most prominent representatives are the Haar-wavelet and Daubechies wavelets which are orthogonal functions with finite support as depicted in Figure \ref{fig:wavelets}.
+In practice, this very general definition is often restricted by additional requirements such as orthogonality of $\varphi_{i,j,\vec{\alpha}}(\vec{r})$ or utilisation of only one mother-wavelet $\varphi(\vec{r})=\varphi_i(\vec{r})$.
+For brevity, in the following only the space $L_2(\mathbb{R})$ with $\mat{M}=2$ is considered which corresponds to the original definition of wavelets \cite{Tasche}.
+The most prominent representatives are the Daubechies wavelets that are shown in Figure \ref{fig:wavelets} which are a set of orthogonal wavelets with compact support and increasing smoothness.
+Especially the first-order Daubechies wavelet, more commonly known as the Haar-wavelet, is famous and by far the easiest existing orthogonal wavelet basis.
 %The most prominent and by far simplest example of a wavelet is the so-called Haar-wavelet wich hase one mother wavelet of the form
 %\begin{equation} \label{eq:haar}
 %\varphi(x)=\begin{cases} 1 &0\leq x < \frac 12 \\ -1 & \frac 12 \leq x <1 \\ 0 & \text{else}\end{cases}
 %\end{equation}
 %for which (\ref{eq:waveBasis}) is a orthonormal basis with compact support.
-
-Another set of orthogonal wavelets with compact support are the Daubechies wavelets that are a series with increasing smoothness and support.
-The Haar-wavelet, shown in Figure \ref{fig:wavelets} on the left, can be seen as the first order Daubechies-wavelet.
-In contrast to most other bases, here no smootheness properties are required but are helpfull of course since the functions to be represented usually are smooth \cite{daubechies}.
+%Another  are the Daubechies wavelets that are a series with  and support.
+In contrast to most other bases, in principle no smootheness properties are required but are desired since the functions to be represented are usually smooth \cite{daubechies}.
 \begin{figure}
    \begin{subfigure}{0.32\textwidth}
    \includegraphics[width=\textwidth]{Figures/Daubechies1}
@@ -400,7 +381,30 @@ In contrast to most other bases, here no smootheness properties are required but
 \end{figure}
 
 Besides their broad use in data compression and analysis, wavelet bases also provide a handy tool to solve partial differential equations and are found to have similar numerical properties as the FEM \cite{FdFeWavelet,CoulWavelet}.
-When applying a wavelet basis to solve a partial differential equation, the weak form (\ref{eq:SEweak}) is used, leading to a similar description as in the FEM scheme \cite{dahlke}.
-However, not all wavelets provide a valid basis for partial derivatives since, for example, the Haar-wavelet has a constant derivative of zero and the Daubechies-wavelet $2$ (shown in Figure \ref{fig:wavelets}) is only semi-differentiable at some points \cite{WaveletChem}.
-At the same time hand the generality of the wavelet formulation allows to use problem-specific bases that are \textit{e.g.} especially adapted to certain pseudo-differential operators, increasing the convergence properties \cite{dahlke}.
-Finding such optimised bases in a systematic way is under current research but one can expect that they could obtain numerically stable, fast and accurate partial derivative solvers \cite{dahlke,kunoth}.
+When applying a wavelet basis to solve a partial differential equation, the weak form (\ref{eq:SEweak}) is used \cite{dahlke}.
+However, not all wavelets form a valid basis for partial derivatives since, for example, the Haar-wavelet has a constant derivative of zero and the Daubechies-wavelet $2$ (shown in Figure \ref{fig:wavelets}) is only semi-differentiable at some points \cite{WaveletChem}.
+However, the generality of the wavelet formulation allows to use problem-specific bases that are, \textit{e.g.}, especially adapted to certain pseudo-differential operators, increasing the speed of convergence \cite{dahlke}.
+Finding such optimised bases in a systematic way is under current research and one can expect that they can be used for numerically stable, fast and accurate partial-derivative solvers \cite{dahlke,kunoth}.
+
+\section{Hybrid Methods}
+In the previous sections a large variety of different methods are presented with different advantages and disadvantages which make them suitable for different applications.
+Moreover, there is a large number of approaches that combine the ideas of some of the above-mentioned methods to use the advantages of the respective methods together.
+In this section, several of these methods are presented which seem to be the most prominently used.
+One of the most prominent combinations of the above-mentioned methods is the FE-DVR scheme \cite{impLDVR,taoDVR} that was mentioned in chapter \ref{ch:r-mat} already.
+%In the FE-DVR scheme, a DVR is used with a set of ansatz functions each defined on a given interval only, referred to as the (1D) finite element.
+%A single function connects these intervals similar to the ``hat'' functions in FEM.
+In the FE-DVR scheme, a one-dimensional finite element scheme is used with comparatively large elements on which a DVR representation is used, but usually using the strong formulation of the respective partial-derivative equation.
+In this approach, more flexibility compared to the DVR scheme is obtained since in addition to the degree of polynomials in use, also the size of the elements can be varied which is especially advantageous for problems involving a Coulomb potential where the local kinetic energy varies strongly \cite{yipDVR}.
+Moreover, the usually dense Hamiltonian and overlap matrix of DVR representation changes to a block-structure, with block being coupled to each other by single columns and rows \cite{taoDVR}.
+A generalisation to multiple dimensions is the so-called spectral element used by several authors \cite{sem1,sem2,sem3} for quantum mechanical problems.
+In contrast to the FE-DVR-scheme, it is based on the weak formulation and typically uses higher order Chebychev or Lagrange polynomials \cite{sem1} and hence allows for larger elements than usual FEM.
+Thus, it can be also understood as a high order FEM scheme, combining the flexibility of FEM with the fast convergence of the pseudospectral basis.
+The spectral elements are found to be well suited for linear problems but require a complex implementation and lead to denser system matrices.
+The larger density in the resulting matrices in general leads to a reduced numerical stability and computationally more expensive solution strategies.
+Finally, complex geometries usually benefit more from smaller elements that from higher order bases \cite{hf_dreyer}.
+
+A successfull combination of spectral elements with the FEM is the so-called spectral difference method \cite{SpectDiff,sd_mult}.
+In this scheme, a spatially uniform grid is used (as usual in the finite difference scheme) while employing a pseudospectral basis on the respective elements.
+The appealing properties of this method are an exponential convergence as known from finite difference methods by employing the sparseness of the equation system obtained in FEM \cite{SpectDiff}.
+More advanced methods based on the spectral difference schemes are available as well \cite{sd_mult,sd_unstructured} but are for brevity not discussed here in more detail.
+

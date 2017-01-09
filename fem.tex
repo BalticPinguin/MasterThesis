@@ -1,84 +1,88 @@
 \label{ch:fem}
-As a conclusion of the previous chapter one can see that the number of methods that are currently available to describe a free electron function in presence of an intricate electrostatic background potential is not that large.
-In this work the method of choise to model the free electron function is the FEM which had been applied to quantum mechanical problems already by several authors \cite{fem_hydro, vib_fem, fe_hf, fe_dft1}, however, to the best of my knowledge, only to bound state problems so far.
-A brief review about these works is given in section \ref{ch:feQM}.
-Besides its large flexibility and computational efficiency pointed out in section \ref{ch:introFEM} already, the large amount of available libraries for FEM \cite{libmesh,dealII,freefem, hermes,oofem} is another advantage of practical importance due to the complexity of the generation of a suitable mesh, assembling of matrices and solution of matrix equations.
+As a conclusion of the previous chapter one can see that the number of methods that are currently available to describe a FEF in presence of an intricate electrostatic background potential is not that large.
+In this work, the method of choise to model the free electron function is the FEM which has been applied to quantum-mechanical problems by several authors \cite{fem_hydro, vib_fem, fe_hf, fe_dft1}.
+However, to the best of my knowledge, only the bound state problems were addressed so far.
+A brief review of these works is given in section \ref{ch:feQM}.
+Besides its large flexibility and computational efficiency pointed out in section \ref{ch:introFEM}, the large amount of available FEM libraries \cite{libmesh,dealII,freefem, hermes,oofem} that are developed mainly for engineering problems is another advantage of practical importance due to the complexity of the generation of a suitable mesh, assembling of matrices and solution of matrix equations.
 
-In the following chapter the integration of the matrix elements (section \ref{ch:feInt}) and set up of the mesh (section \ref{ch:feAss}) will be described.
-Thereby the focus is put on the application to the one-particle SE that is to be solved with molecular ESP.
-Since the interest thereby is on free particle solutions, the spectrum is expected to be very dense and the wave function to be delocalised, requirering for well-designed boundary conditions.
-A discussion of various boundary conditions and asymptotic descriptions available for FEM is described in section \ref{ch:BC}.
+In the following chapter, the integration of the matrix elements (section \ref{ch:feInt}) and set up of the mesh (section \ref{ch:feAss}) will be described.
+Thereby the focus is put on the application to the one-particle SE that is to be solved with molecular electrostatic potential (ESP).
+Since the interest thereby is on free particle solutions, the spectrum is expected to be very dense and the wave function to be delocalised, requiring well-designed boundary conditions.
+A discussion of various boundary conditions and mimicing asymptotic behaviour available for FEM is described in section \ref{ch:BC}.
 
-\section{Finite Element Calculations in Quantum Chemistry}
+%\section{Finite Element Calculations in Quantum Chemistry}
+\section{Finite Element Methods for Electronic Structure Calculations}
 \label{ch:feQM}
 The FEM is mainly known from engineering disciplines where it is used in a broad range of applications such as modelling of fluids \cite{fluid1,fluid2}, heat transfer and flow \cite{heat1, heat2,heat3} or material deformation under mechanical stress \cite{deform1, deform2}.
-However, also several different quantum chemical problems have been solved with this method: SE solvers for small systems such as light atoms \cite{fem_hydro,fem_He,fem_He1, fem_h1, LiGS_fem} or diatomics \cite{fem_H_refine}, vibrational model systems \cite{vib_fem} and solid state problems \cite{fem_crystal, fem_crystal1}.
-Moreover, even Hartree-Fock \cite{fe_hf} and DFT calculations on systems up to the size of benzene \cite{fe_dft1, fe_dft2, fe_dft3} have been performed, yielding results comparable to those obtained by the usual linear combination of atomic orbitals (LCAO) approach.
+However, also several different quantum-mechanical problems have been addressed with this method: electronic structure methods for small systems such as light atoms \cite{fem_hydro,fem_He,fem_He1, fem_h1, LiGS_fem} or diatomics \cite{fem_H_refine}, model oscillator systems \cite{vib_fem} and solid state problems \cite{fem_crystal, fem_crystal1}.
+Moreover, even Hartree-Fock \cite{fe_hf} and DFT calculations on systems up to the size of benzene \cite{fe_dft1, fe_dft2, fe_dft3} have been performed, yielding results comparable to those obtained by the usual LCAO approach.
 
-The above-mentioned publications have shown that the FEM is able to obtain reasonable results for molecular systems where the errors were comparable to those obtained with standard quantum-chemistry schemes even though their computational costs are higher.
-This suggests that the FEM is a good tool for computations in the field of quantum chemistry for going beyond the capabilities of the established schemes such as the description of unbound states.
+The above-mentioned applications have shown that the FEM is able to obtain reasonable results for molecular systems where the errors were comparable to those obtained with standard quantum-chemistry schemes even though their computational costs are higher.
+Here, usual quantum-chemical methods are more suited, since local basis functions localised on atoms are more convenient for bound problems.
+This suggests however that the FEM should be a robust tool for the description of unbound states which represents a very non-trivial task for conventional techniques.
 
 %\section{From Weak Form to a Matrix Equation}
-\section{Integration of Matrix Elements and Formulations of the Equation System}
+%\section{Integration of Matrix Elements and Formulations of the Equation System}
+\section{Setup of the Equation System}
 \label{ch:feInt}
-In section \ref{ch:introFEM} the basics of the FEM were described and the generalised eigen system shown in eq. (\ref{eq:SEmat}) to solve the SE was derived.
-Here this is taken as starting point and a closer look at the computation of the matrix elements as well as solving strategies for the large sparse generalised eigen problems are taken.
+In section \ref{ch:introFEM} the basics of the FEM were described and the generalised eigensystem shown in eq. (\ref{eq:SEmat}) for the SE was derived.
+Here this is taken as starting point and a closer look at the computation of the matrix elements as well as solving strategies for the large sparse generalised eigenproblems are taken.
 
 The generalised eigenproblem as given in eq. (\ref{eq:SEmat}) consists of three matrices.
 Since the ansatz functions (shape functions) $\varphi_i(\vec{r})$ have only a small support, most of the matrix elements are zero. 
 However, in two and three dimensions no distinct band structure is achievable and the matrices are irreducible.
-Thereby matrix elements are zero when the elements involved are not neighboured.
-The computation of the non-zero matrix elements involve an integration as \textit{e.g.} the overlap integral $\mat{M}_{i,j}=\int d \vec{r} \varphi_i(\vec{r}) \varphi_j(\vec{r})$ of ansatz functions,.
-Since these functions are the same for all elements, the evaluation of these integrals can be done via a lookup-table or an efficient numerical integration scheme whose required order is well-known and need only be multiplied by the Jacobian of the respective elements involved.
-The matrix elements $\mat{A}_{i,j}=\int d \vec{r} \left(\nabla \varphi_i(\vec{r})\right)\left(\nabla \varphi_j(\vec{r})\right)$ consist similar to those of $\mat{M}$ of overlap integrals of known functions.
-The only matrix containing system-specific information is the potential $\mat{V}_{i,j}=\int d \vec{r} \varphi_i(\vec{r}) V(\vec{r}) \varphi_j(\vec{r})$ which requires numerical integration by which $V(\vec{r})$ is approximated as a spline of given order.
+Thereby matrix elements are zero when the elements involved are not neighboured as can be followed from Figure \ref{fig:2Del} where a linear basis function of a 2D-mesh is shown.
+The computation of the non-zero matrix elements involve an integration as, \textit{e.g.}, the overlap integral $\mat{M}_{i,j}=\int d \vec{r} \varphi_i(\vec{r}) \varphi_j(\vec{r})$ of ansatz functions.
+In practice these integrals are performed on a standard reference element and than scaled according to the Jacobian of the respective linear transformation that transforms the reference element to the physical one.
+Since these functions are the same for all elements, the evaluation of the integrals on the reference elements can be done via a lookup-table or an efficient numerical integration scheme whose order is given by the shape functions.
+The matrix elements $\mat{A}_{i,j}=\int d \vec{r} \left(\nabla \varphi_i(\vec{r})\right)\left(\nabla \varphi_j(\vec{r})\right)$ consist of overlap integrals of known functions similar to those of $\mat{M}$.
+The only matrix containing system-specific information is the potential $\mat{V}_{i,j}=\int d \vec{r} \varphi_i(\vec{r}) V(\vec{r}) \varphi_j(\vec{r})$ which requires numerical integration involving a reasonable approximation to $V(\vec{r})$ which can be obtained via interpolation of known points or using exact values computed at the given quadrature points.
 
 After assembling the matrices the eigenpair $(e_i, \vec{c}_i)$ of the system
 \begin{equation} \label{eq:SEmat2}
 \left(\frac 12 \mat{A}+\mat{V}\right)\vec{c}_i = e_i \mat{M}\vec{c}_i
 \end{equation}
-need to be found where $e_i$ should be closest to the analytic value of the kinetic energy of the photoelectron.
-Since matrix eigenvalue equations with several thousands of dimensions occur in many fields, numerous schemes have been developed to solve them efficiently \cite{davidson,arnoldi, gpusolver,krylov}, a selection of them is described in section \ref{ch:ghep}.
-Despite the numerical complexity due to the high dimensionality of this problem (several thousands of basis functions) the second problem is due to the fact that the eigenenergies $e_i$ are expected to be close to each other since the corresponding analytical problem has a continuous spectrum in this range.
-It is well known in numerics that this leads to instabilities especially for the eigen vectors, making a regularisation of the problem (described in section \ref{ch:regular}) indispensable.
+need to be found, where the energy $e_i$ is the closest to the target kinetic energy of the photoelectron.
+Since matrices with dimensions of several thousands typically occur, numerous schemes have been developed to solve them efficiently \cite{davidson,arnoldi, gpusolver,krylov}, and are described in section \ref{ch:ghep}.
+Despite the numerical complexity because of the high dimensionality of this problem (several thousands of basis functions) the second problem is due to the fact that the eigenenergies $e_i$ are expected to be close to each other since the corresponding exact Hamiltonian has a continuous spectrum in this energy range.
+It is well known in numerics that this leads to instabilities especially for the eigenvectors, making a regularisation of the problem (described in section \ref{ch:regular}) indispensable.
 
 \section{Element Types and Mesh Types}
 \label{ch:feAss}
-Among the FEM formulations several `flavours' were designed for different purposes.
-Given a certain equation to be solved in FEM there are in general two systematic ways to increase the accuracy.
+Among the FEM formulations several flavours were designed for different purposes.
+Given a certain equation to be solved in FEM, there are in general two systematic ways to increase the accuracy.
 The first way is to increase the number of elements witch is referred to as the $h$-FEM approach \cite{dreyer,}.
 The refinement of the mesh is in principle always possible but technically demanding since it is not known in which regions of a mesh are too coarse in general \cite{dreyer}.
-To overcome this, some FEM implementations such as that of \prog{Libmesh} \cite{libmesh} which is used here, provide an adaptive mesh refinement scheme, iteratively refining the mesh using local error estimations and thus fully automatic \cite{libmesh}.
-But theses schemes are numerically demanding and hence can be only applied to benchmark systems.
+To overcome this, some FEM implementations such as that of \prog{Libmesh} \cite{libmesh} which is used here, provide an iterative mesh refinement scheme, adapting the mesh using local error estimations and thus is fully automatic \cite{libmesh}.
+However, theses schemes are numerically demanding and hence can be only applied to benchmark systems.
 
 The second strategy is called $p$-FEM. 
-In the $p$-FEM scheme, the order $p$ of the test functions in increased, resulting in smother and more flexible solutions.
-This scheme requires a large set of functions to be implemented but is known to yield good results if the function is smooth \cite{p-fem}.
-While standard FEM-libraries usually have only $p=1,2$ implemented, others have high-order polynomials implemented \cite{hermes}.
-Combined schemes where the grid-size as well as the element order are adapted is referred to as $hp$-fem \cite{hp-fem}.
+In the $p$-FEM scheme, the order $p$ of the test functions in increased, resulting in smoother and more flexible solutions at the price of incrementing dimensionality \cite{p-fem}.
+Standard FEM-libraries usually have only $p=1,2$ implemented, but high-order polynomials are also reported \cite{hermes}.
+Combined schemes where the grid-size as well as the element order are adapted is referred to as $hp$-FEM \cite{hp-fem}.
+These schemes are in principle promising but require detailed knowledge about the solution to setup the parameters reasonable in order to keep the computational demands in a feasible range.
 
-Besides these different refinement strategies, finite element types also vary in their use of the degrees of freedom.
-While Lagrange elements are integrated by evaluating certain inner or boarder points, \textit{e.g.} in Argyris or Hsieh-Clough-Tocher elements also first or even second derivatives are evaluated \cite{femPraxis,femCiarlet}.
-Moreover, the arrangement of elements one distinguishes conforming and the more general non-conforming meshes \cite{nonconfFEM}. In case of the latter, more general structures are supported as \textit{e.g.} hanging nodes which occur when a vertex of one element is on the edge of an other as can be found in Figure \ref{fig:HexBenz} \cite{femCiarlet}.
+Besides different refinement strategies, finite element types also vary in the way in which global smotheness is ensured and the numerical integration is obtained.
+While for Lagrange elements the shape functions ar evaluated at certain inner or boarder points, \textit{e.g.} in Argyris or Hsieh-Clough-Tocher elements also first or even second derivatives are evaluated \cite{femPraxis,femCiarlet}.
+Moreover, one distinguishes conforming and the more general non-conforming meshes \cite{nonconfFEM}. In case of the latter, more general structures are supported as \textit{e.g.} hanging nodes which occur when a vertex of one element is on the edge of an other as illustrated in Figure \ref{fig:HexBenz} \cite{femCiarlet}.
 The setup of the mesh is, as mentioned above already, critical to the quality of the solution and hence of special importance.
 Moreover, it is technically non trivial to set up a close packing of volume elements with the desired properties in a systematic way.
-There are different element types available, each with their techniques for set up.
 Although in principle any element shape can be chosen, in three dimensions only tetrahedral (simplex), prism- and pyramid-shaped as well as hexahedral elements commonly are used.
-By choosing the element shape and the polynomial order, also the type of shape functions is defined.
+By choosing the element shape and the polynomial order, the element type of shape functions are fully defined.
 %When using hexahedral elements the ansatz functions usually are of the type $\varphi(\vec{r})=x^ky^lz^m$ where $p=k+l+m$ is the element order.
 
-When considering meshes to describe molecular properties it is clear that the element size should be smaller in the vicinity of the nuclei while it may be broader at larger distances.
+When considering meshes to describe molecular properties it is clear that the element size should be smaller in the vicinity of the nuclei while it may be larger at longer distances.
 One way to create a hexahedral mesh with local refinement is to start with a coarse uniform lattice and subdivide the hexahedra where necessary as shown in Figure \ref{fig:HexBenz} for a benzene molecule.
 Another way is to setup small regular cubic grids around the nuclei and expand them radially in boxes of growing size as shown in Figure \ref{fig:HexDia}.
-These brick-shaped elements however have the disadvantages that the regular cube-like structures therein might be not well-suited for atoms and molecules that rely rather on spherical shapes.
+These brick-shaped elements however have the disadvantages that the regular cube-like structures therein might be not well-suited for atoms and molecules having higher symmetries.
 %Further hexahedral elements are known to give less accurate solutions than tetrahedra which are commonly used nowadays \textcolor{green}{cite}.
-
 %\begin{wrapfigure}{r}{\textwidth}
 %\includegraphics[width=\textwidth]{Figures/Elements3d-crop.pdf}
 %\caption{The different Shapes of 3D elements.}
 %\end{wrapfigure}
-Another approach used by Lehtovaara \textit{et al.} \cite{fe_dft2} is to put layers of polyhedra around the atoms with increasing number of points and radii.
-Thereby the overlapping regions of these spheres are removed by deleting elements that are closer to another atom.
+
+Another approach used by Lehtovaara \textit{et al.} \cite{fe_dft2} is to put layers of polyhedra around the atoms with increasing number of vertices and size.
+Thereby the overlapping regions of these polyhedra are removed by excluding the vertices that are closer to a different atom.
 \begin{figure}
   \begin{subfigure}{0.23\textwidth}
    \includegraphics[width=\textwidth]{Figures/QuadMeshBenzene}
@@ -110,24 +114,25 @@ Thereby the overlapping regions of these spheres are removed by deleting element
 \end{figure}
 The mesh obtained with this procedure for a benzene molecule \cite{fe_dft1} is shown in Figure \ref{fig:PolyBenz}.
 
-When restricting oneself to tetrahedral elements, other design principles are possible: Since they are simplexes in three dimensions, they can be designed from general grids using \textit{e.g.} Voronoi \cite{voronoi} or Delaunay \cite{delaunay} tessellations (the latter is described in section \ref{app:delaunay} in appendix) from a set of points with the required properties.
+When restricting oneself to tetrahedral elements, other design principles are possible: Since they are simplexes in three dimensions, they can be designed from general grids using, \textit{e.g.}, Voronoi \cite{voronoi} or Delaunay \cite{delaunay} tessellations %TODO:(the latter is described in section \ref{app:delaunay} in appendix) 
+from a set of points with the required properties.
 Son and Chu \cite{Son_Chu, Son_Chu0} constructed sets of points resembling molecular geometries by inserting $N$ spherical grids with different radii $r_i$ around the atoms and cutting off the overlapping regions.
-Thereby the respective radii are chosen as
+The respective radii are chosen as
 \begin{equation}
 r_i=\frac{il}{N-i+\frac{lN}{r_\text{max}}} \qquad i=1,\hdots ,N 
 \end{equation}
-where$r_\text{max}$ is the radius of the largest sphere and $l$ is a parameter smoothly changing between a linear $l\rightarrow \infty$ and a $1/r$-mapping.
-As spherical grids they suggested the use of Lebedev-grids \cite{lebedev} and a design of Womersley \cite{Womersley2001,Sloan}.
-A more detailed discussion about the choices of grids will be given in section \ref{sec:grid}.
+where $r_\text{max}$ is the radius of the largest sphere and $l$ is a parameter smoothly changing between a linear $l\rightarrow \infty$ and a $1/r$-mapping.
+For the angular distribution of grid points they suggested the use of Lebedev-grids \cite{lebedev} and a Womersley design \cite{Womersley2001,Sloan}.
+A more detailed discussion about the choices of grids is given in section \ref{sec:grid}.
 %Choises for angular and radial grid distributions in this scheme are discussed in.% the chapters \ref{app:Sphere} and \ref{app:radius} respectively.
 
 A more entangled method is used by Alizadegan \textit{et al.} \cite{fe_hf}. 
 They start with an initial guess for the wave function and create a grid whose distances are inverse proportional to the second gradient of the electron density
-\[
-d \propto \left[ max\left\{\left|\frac{\partial^2 \rho}{\partial^2 x}\right| ,
-                           \left|\frac{\partial^2 \rho}{\partial^2 y}\right| ,
-                           \left|\frac{\partial^2 \rho}{\partial^2 z}\right| \right\} \right]^{-1}.
-\]
+\begin{equation}
+d \propto \left[ max\left\{\left|\frac{\partial^2 \rho}{\partial x^2}\right| ,
+                           \left|\frac{\partial^2 \rho}{\partial y^2}\right| ,
+                           \left|\frac{\partial^2 \rho}{\partial z^2}\right| \right\} \right]^{-1}.
+\end{equation}
 which gives an estimate for the error due to linear approximation within each element.
 After solving the eigenvalue equation on this grid, they recompute another mesh on the basis of the new function, iterating this procedure several times.
 A cut through a mesh obtained by this procedure is shown in Figure \ref{fig:AdapEthyl}.
@@ -135,51 +140,65 @@ A cut through a mesh obtained by this procedure is shown in Figure \ref{fig:Adap
 \section{Boundary Conditions}
 \label{ch:BC}
 Boundary conditions have not been addressed in this thesis so far for any of the methods but play an important role for the properties of the solution.
-Hence there is a large number of boundary conditions.
-The simplest case applicable here are Dirichlet-boundaries, requiring the wave function to vanish at the boundaries of the finite element box.
+In many cases, the boundary condition (BC) leads to uniqueness of the solution or at least it determines the branch to be seeked as, \textit{e.g.} outgoing or incoming waves in case of the Helmholtz equation.
+%Hence there is a large number of boundary conditions.
+The simplest case applicable to the SE are Dirichlet-boundaries, requiring the wave function to vanish at the boundaries of a finite region.
 In the FEM this condition can be applied especially simple by setting the coefficients of the outermost shape functions to zero.
-
-Due to the large extend of the free particle, these boundaries however are unphysical if they are not applied at distances that are several times larger than the wavelength.
-However, considering a particle with $0.1\,$eV kinetic energy, its wavelength is $~4.4\,$Angstroms and the box would need to have a diameter of several tens of Angstroms which is not feasible any more while kinetic energies in the $m$eV-range would lead to even worse scenarios.
+This truncation, however, strongly influences the wave function and discretises the spectrum since only integer numbers of radial nodes can occur.
+To ensure a reasonable low error in energy, large domains are required.
+Considering a particle with $0.1\,$eV kinetic energy, its wavelength is $~4.4\,$\AA and the box would need to have a diameter of several tens of \AA ngstroms which is not feasible any more while kinetic energies in the $m$eV-range lead to unfeasibly large domains.
+%Due to the large extend of the free particle, Dirichlet boundaries however are unphysical if they are not applied at distances that are several times larger than the wavelength.
 
 %These considerations make clear that a more advanced boundary condition is needed which has only local influence on the wave function.
 %In the following sub chapters, three boundaries that can be applied in FEMs are introduced and discussed.
-Besides the numerical restriction to a finite box also mapping schemes can be used as \textit{e.g.} $x=\tan (\frac y2)$ that maps $[-\infty:\infty]$ to $[-\pi:\pi]$ \cite{PSbook}.
-However, using such a mapping directly is infeasible since the oscillations of the wave function would become arbitrarily sharp in the mapped range and hence the representation of the FEF would still be poor.
+
+Besides the numerical restriction to a finite box also mapping schemes can be used as \textit{e.g.} $x=\tan (\frac y2)$ that maps the range $[-\infty:\infty]$ to $[-\pi:\pi]$ \cite{PSbook}.
+However, using such a mapping directly leads to arbitrarily high oscillations in the mapped region and thus to arbitrarily sharp features in the mapped range. % and hence the representation of the FEF would still be poor.
+Since the solution of unbounded differential equation occurs in many fields, a large set of bounary conditions is available of which the most important ones are presented in the following sections.
 
 \subsection{Complex Absorbing Potential}
 \label{ch:cap}
-The complex absorbing potential (CAP) is a method often found in the literature when describing particles with infinite extent\cite{bauch1, bauch2}.
-In this scheme, an artificial potential usually of the form
+The complex absorbing potential (CAP) is a method often found in the literature when describing quantum  mechanical problems with infinite extent \cite{bauch1, bauch2,capWork}.
+In this scheme, an artificial potential that is usually of quadratic form
 \begin{equation} \label{eq:cap}
-   W_\text{CAP}(\vec{r})=\begin{cases} i\eta(\vec{r}-\vec{r}_0)^2 & \vec{r}>\vec{r}_0 \\
+   W_\text{CAP}(\vec{r})=\begin{cases} -i\eta(\vec{r}-\vec{r}_0)^2 & \vec{r}>\vec{r}_0 \\
                                            0    & \text{else} \end{cases}
 \end{equation}
-is added where $\vec{r}_0$ is larger than the bound part of the system.
-Such a potential damps the reflection of the wave function at the boarders and thus enhances the quality of states obtained on a finite region \cite{cap1, cap2}.
-However, studies with different shapes of these potentials show that it influences the wave function not only close to the boarders and a proper design of the parameters is non-trivial \cite{CAPfreshlook}.
+is added where $\vec{r}_0$ is larger than the region where the solution is to be evaluated.
+Such a potential damps the reflection of the wave function at the boarders and thus enhances the quality of states obtained on a finite region \cite{cap1, cap2} and can be shown to be equivalent to the complex scaling schemes where a variable transformation \cite{compScale} $r\rightarrow re^{i\theta}$ is applied \cite{cap2,capWork}.
+The imaginary potential (\ref{eq:cap}) leads to a nonhermitian term in the Hamiltonian and thus complex eigenvalues whose real part is interpreted as the energy of the respective state and the imaginary part is considered as its lifetime \cite{compScale}.
 
+However, studies with different shapes of these potentials show that it influences the wave function not only close to the boarders and a proper design of the parameters is non-trivial \cite{CAPfreshlook}.
 To minimise the error due to the CAP, the parameter $\eta$ can be chosen such that its dependency on the energy vanishes in first order, \textit{i,e.} $\eta\frac{dE}{d\eta}=0$ \cite{CAPccEOM,CAPfreshlook}.
 Moreover, due to non-hermiticity the usual scalar product is not suitable when calculating overlap integrals any more.
 Too strong $\eta$ introcudes reflections, too weak $\eta$ lead to unstable resonances, making them strongly basis-set dependent \cite{CAPfreshlook}.
 Moreover, for Helmholtz problems, a dependence of the error on the frequency was observed \cite{babuska}.
 
-The idea of damping down a function and making sure no reflections are scattered back to the region of interest is common to further approaches as \textit{e.g.} absorbing boundary conditions \cite{Engquist}, transparent boundaries \cite{HelmhPrec}, perfectly matched layer schemes \cite{pmlBook,pml1, pml2} or certain variable transformations \cite{taoDVR}.
 
-\subsection{Mode-matching Schemes}
-Consider the solution in an inner and outer region as different variables following the equations
+%\subsection{Mode-matching Schemes}
+\subsection{Non-Reflecting Boundary Conditions}
+The term non-reflecting BC (or absorbing BC) describes a large class of BCs for problems on an infinite domain where the domain is subdivided into a finite computational domain and a residual infinite part \cite{nrBCrev}.
+Thus, also the previously described R-matrix approach as well as the infinite elements described is section \ref{ch:InfEl} belong to this group of BCs.
+More modern approaches are perfectly matched layer schemes \cite{pmlBook,pml1, pml2} that are, similar to the scheme described in ref. \cite{taoDVR}, based on variable transformations and are not discussed here in more detail.
+
+Absorbing BCs can in principle be applied to any kind of system but is particularly prominent for the Helmholtz problem \cite{Engquist,HelmhPrec, nonreflectBC,nrBCrev}.
+However, the setup of a reasonable BC that fulfills the requirement of not reflecting the solution back into the finite region of interenst is not solved for general problems yet and is still under research \cite{nonreflectBC,nrBCrev}.
+
+As an example for a non-reflecting BC, here the mode-matching scheme \cite{AstleyMM} is presented which yields a particularly simple formalism.
+In this scheme, the solution of the Helmholtz problem in the finite, inner, and infinite region is considerede as two different variables, each described by the equations
 \begin{equation}
+   \label{eq:modeMatch}
    \nabla^2\Psi_1 +V(\vec{r})\Psi_1-E\Psi_1=0 \qquad \nabla^2\Psi_2 -E\Psi_2=0 
 \end{equation}
 whereby the outer function needs to satisfy the Sommerfeld condition $r^\alpha \left(\frac{\partial \Psi_2}{\partial r} - ik \Psi_2  \right)\rightarrow 0$.
-These equations are coupled by the conditions
+The quantities $\Psi_1$ and $\Psi_2$ are moreover coupled by 
 \begin{equation}
+\label{eq:modeCoup}
 \Psi_1=\Psi_2  \qquad \nabla \Psi_1 \vec{n}=\Psi_2 \vec{n}
 \end{equation}
-to ensure continuity of the solution and the gradient normal to the boundary \cite{AstleyMM}.
-Thereby, the asymptotic behaviour of the outer function is ensured by taking basis functions that individually fulfil the condition and the boundaries enter the weak formulation since the application of Greens' theorem leads to an extra term.
-
-The mode-matching scheme can be considered as a generalisation of the R-matrix approach in a finite element formulation.
+that ensure continuity of the solution and the gradient normal to the boundary \cite{AstleyMM}.
+To ensure the Sommerfeld condition, one uses a respective basis in the outer region, \textit{e.g.} Spherical waves.
+Using the mode-matching scheme with finite elements, the eq.s (\ref{eq:modeMatch}) result in matrices similar to eq. (\ref{eq:SEmat}) that are coupled by (\ref{eq:modeCoup}) that enter the weak formulation since the application of Greens' first identity in eq. (\ref{eq:SEweak}) leads to an extra term.
 
 \subsection{The Boundary Element Method}
 The boundary element method (BEM) can be used as a self-standing method for solving partial differential equations using the weak formulation \cite{bemDai,bemCostabel}.
@@ -206,7 +225,7 @@ Over the decades several formulations of infinite elements were developed which 
  \Psi(\vec{r}) = \varphi(\vec{r}) e^{ik(r-r_0)},
 \end{equation}
 where $\varphi(\vec{r})=f(r)\varphi_2(\vec{r})$ is a product of a transversal shape function $\varphi_2(\vec{r)}$ which is orthogonal to the radial direction $r$.
-The function $f(r)$ is a multipole expansion \textit{i.e.} a polynomial in $\frac{r_0}{r}$ where Jacobi-polynomials turned out te be most stable \cite{dreyer_improved}.
+The function $f(r)$ is a multipole expansion \textit{i.e.} a polynomial in $\frac{r_0}{r}$ where Jacobi-polynomials turned out te be most stable \cite{dreyer_improved, infelNew}.
 The differences in the formulations are introduced by the test functions applied \cite{Astley}.
 %An overwiev about different formulations is given in the references \cite{dreyer} and \cite{Astley}.
 
@@ -222,14 +241,14 @@ Moreover it was found that this formulation can lead to numerical instabilities 
 
 This reformulation though lead to a quadratic eigenvalue problem instead of the generalised eigenvalue problem from before.
 However, assuming that the difference between the eigenvalues of (\ref{eq:SEinf}) and the target energy of the outgoing electron is small, the quadratic eigenvalue problem can be approximated by the generalised eigenvalue problem (\ref{eq:SEmat}) by setting $k$ to the respective target momentum in the Hamiltonian.
-However, this approximation, which is applied here for simplicity, needs to be verified.
+%However, this approximation, which is applied here for simplicity, needs to be verified.
 
 \subsubsection{Conjugate Burnett Elements}
 To get rid of the oscillatory terms, a modification of the test functions applied was introduced such that, in the notation used within this thesis, the test functions coincide with the space of ansatz functions, having the form
 \begin{equation}
  \Phi(\vec{r}) = \varphi(\vec{r}) e^{ik(r-r_0)}.
 \end{equation}
-An important disadvantage of this formulation is, however, that in this formulation integrals with infinite contribution arise.
+An important disadvantage of this formulation is, however, that in this formulation integrals with infinite contribution arise which cannot be treated in as Cauchy principal values as done in the unconjugated scheme \cite{infelNew}
 
 \subsubsection{Asley-Leis Formulation}
 To regularise the matrix elements, an additional damping is needed.

@@ -75,7 +75,7 @@ where $i,j$ denote occupied and $a,b$ virtual states and $\mat{1}$ is the unity 
 The indices $i,j$ and $a,b$ denote occupied and virtual orbitals with binding energy $\varepsilon_i, \varepsilon_a$ respectively \cite{dreuw}.
 The Casida equation (\ref{eq:casida}) is an non-hermitian eigenvalue problem whose eigenvalues $\omega$ correspond to the transition energies and the eigenvectors denote the transition coefficients.
 The different blocks in equation (\ref{eq:casida}) have different physical interpretation.
-As the negative sign of the transition energy in the lower block indicates, lower half of the eigen vector, denoted as $\vec{Y}$, corresponds to negative excitation energies $\varepsilon_i$ and can be assigned to de-excitations from virtual orbitals which makes no physical sense if the reference state is a ground state \cite{dreuw}.
+As the negative sign of the transition energy in the lower block indicates, lower half of the eigenvector, denoted as $\vec{Y}$, corresponds to negative excitation energies $\varepsilon_i$ and can be assigned to de-excitations from virtual orbitals which makes no physical sense if the reference state is a ground state \cite{dreuw}.
 Since the matrix $\mat{B}$ contains usually only small elements, it is often set to zero which is refferred to as Tamm-Dancoff approximation and reduces the original equation to a hermitian equation of half dimensionality \cite{casida}.
 
 \subsection{OTRSH-scheme}
@@ -107,9 +107,16 @@ The Kohn-Sham orbitals (obtained by ground state DFT) and CI-coefficients (obtai
 The integration of the transition dipole matrix elements in eq. (\ref{eq:sigma_do}) finally is performed using \prog{ezDyson} \cite{ezDyson}.
 
 \subsection{Obtaining the Electrostatic Potential and Dyson orbitals}
+\begin{wrapfigure}{l}{0.5\textwidth}
+\includegraphics[width=0.5\textwidth]{Figures/ESP}
+\caption{Double-logarithmic plot of the radial projection of the ESP of atomic Lithium}
+\label{fig:esp}
+\end{wrapfigure}
 %Considering a state as linear combination of CI-states is denoted as weak-coupling representation \cite{McCarthy}.
 The ESP used in this work is obtained with a modified version of \prog{NWChem} \cite{nwchem} where the points, at which this potential should be computed can be set by the user.
-Setting these points to the quadrature points of the integration scheme requires some extra effort but has the great advantage that the interpolation can be restricted to the region close to the nuclei, where \prog{NWChem} can not compute the ESP explicitly.
+Setting these points to the quadrature points of the integration scheme requires some extra effort but has the great advantage that no interpolation is required.
+However, \prog{NWChem} can compute the values only up to a minimum distance to the nuclei.
+The missing points are chosen as $Z/r$ where $Z$ is the charge and $r$ is the distance of the quadrature point to the closest nucleus which is a good approximation as Figure \ref{fig:esp} shows.
 An interpolation of the data on the complete domain in \prog{FreeWilly} \cite{FreeWilly} would require an interpolation-scheme for scattered data such as RBF interpolation \cite{rbfSE,rbfInterpol,rbfSurf}, inverse distance interpolation \cite{adapt_idw,idw} or similar methods \cite{CompInterp,idw_krieging,interpol}, but these methods give, if the parameters are not chosen accurately, spurious oscillations between the quadrature points and thus do not result in a smooth ESP.
 
 The other external quantity needed to compute the intensities is the DO that is computed in the framework of this thesis with the in-house code \prog{DYSON} \cite{MAgg}.
@@ -125,7 +132,8 @@ The \prog{FreeWilly}-code supports supports several closely related setup-scheme
 \subsection{Setup of the Grid}
 \label{sec:grid}
 %The most crucial part in a FEM simulation is the mesh being used. 
-In the program \prog{FreeWilly} the finite elements is obtained from a set of points via Delaunay triangulation (see \ref{app:delaunay} for details) using the library \prog{tetgen} \cite{tetgen}.
+In the program \prog{FreeWilly} the finite elements is obtained from a set of points via Delaunay triangulation %TODO (see \ref{app:delaunay} for details) 
+using the library \prog{tetgen} \cite{tetgen}.
 The distribution of these points is responsible for the quality of the obtained solution via many parameters in a non-trivial way.
 It is expected that the most important of these parameters are
 \begin{description}
@@ -142,17 +150,17 @@ Using such a scheme, the global grid is determined by the size of the largest sp
 
 For the radial distribution of $N$ spheres, Son and Chu \cite{Son_Chu0} suggested the radial distribution
 \begin{equation} \label{eq:son_map}
-r_i=\frac{il}{N-i+\frac{lN}{r_\text{max}}} \qquad i=1,\hdots ,N 
+r_i=\frac{iq}{N-i+\frac{qN}{r_\text{max}}} \qquad i=1,\hdots ,N 
 \end{equation}
-where $l$ is a parameter that determines the distance between the most inner spheres.
-Using this function, the smallest spheres ($i<<N$) are scaled linearly with distances $r_\text{max}/N$ whereas the distance of the largest spheres depends non-trivially on the parameters but can become very large if $l$ is small whereas large $l$ lead to almost uniform distribution of spheres.
+where $q$ is a parameter that determines the distance between the most inner spheres.
+Using this function, the smallest spheres ($i<<N$) are scaled linearly with distances $r_\text{max}/N$ whereas the distance of the largest spheres depends non-trivially on the parameters but can become very large if $q$ is small whereas large $q$ lead to almost uniform distribution of spheres.
 
 To obtain better control of the distance between the inner spheres and the maximum distance which needs to be consiberably smaller than the wave length, in this work the formula
 \begin{equation} \label{eq:tm_map}
-r_i=\frac{il}{\left( \frac Ni \right)^p \left(\frac{Nl}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N 
+r_i=\frac{iq}{\left( \frac Ni \right)^p \left(\frac{Nq}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N 
 \end{equation}
-is suggested which has two degrees of freedom $l$ and $p\geq 1$ where the condition $N<\frac{r_\text{max}}{l}$ needs to be fulfilled for a well-behaved mapping.
-Here $l$ is the asymptotic distance between two spheres whereas the distance of inner spheres can be tuned by the power $p+1$ so that the inner spheres can be tuned to become very dense.
+is suggested which has two degrees of freedom $q$ and $p\geq 1$ where the condition $N>\frac{r_\text{max}}{q}$ needs to be fulfilled to ensure positive radii.
+Here $q$ is the asymptotic distance between two spheres whereas the distance of inner spheres can be tuned by the power $p+1$ so that the inner spheres can be tuned to become very dense.
 %Thereby it is important to mention that in this scheme (in contrast to the above one) the (asymptotic for $r\rightarrow \infty$) maximum distance between two spheres is $l$ and hence could be physically chosen to $l\approx \frac \lambda 2$.
 
 While the distribution of spheres follows, at least on a qualitative level, a clear scheme since it should always resemble the local kinetic energy, the distribution of points on the surface of each sphere more complicated.
@@ -167,7 +175,7 @@ Further methods involve the search of extrem such as minimisation of the Riesz s
    %\textcolor{red}{add figure with distribution: tm}}
    \includegraphics[width=\textwidth]{Figures/CO2_grid}
    \caption{Examples of point-distributions for a CO$_2$-molecules with $r_\text{max}=3\,$a.u. and $18$ spheres, in the upper row the full mesh, below cuts through the molecular plane.
-   left: constant number of points, radial scheme (\ref{eq:son_map}) with $l=0.7$; centre: radial scheme (\ref{eq:son_map}) with number of points according to (\ref{eq:son_num}) with $l=0.7$; right: radial distribution (\ref{eq:tm_map}) with $l=0.7$, $p=2$ and number of points per sphere (\ref{eq:tm_num})}
+   left: constant number of points, radial scheme (\ref{eq:son_map}) with $q=0.7$; centre: radial scheme (\ref{eq:son_map}) with number of points according to (\ref{eq:son_num}) with $q=0.7$; right: radial distribution (\ref{eq:tm_map}) with $q=0.7$, $p=2$ and number of points per sphere (\ref{eq:tm_num})}
    \label{fig:molmesh}
 \end{figure}
 
@@ -190,8 +198,8 @@ needs to be considered.
 %Whether the approach of subdividing the atomic meshes into radial and angular parts as opposed to another volume tessellation can be questioned and may turn out to be inefficient.
 %Application of Geodesic grid in calculating surface charges: \cite{geodes_charge}, also mentioning Connolly algorithm (refs 26, 29 therein).
 
-%The second scheme has a divergence around $Nl=r_\text{max}$. 
-%It can be shown that the condition $N\leq \frac rl $ is enough here to stabilise it.
+%The second scheme has a divergence around $Nq=r_\text{max}$. 
+%It can be shown that the condition $N\leq \frac rq $ is enough here to stabilise it.
 
 %\textcolor{yellow}{
 %If the above described procedures prove to be too inefficient, one could try to implement some WKB-based scheme similar to \cite{impLDVR} but in 3D.
@@ -226,7 +234,7 @@ needs to be considered.
 %\end{equation}
 %where $l$ and $p\leq 1$ are parameters to chose. Thereby it is important to mention that in this scheme (in contrast to the above one) the (asymptotic for $r\rightarrow \infty$) maximum distance between two spheres is $l$ and hence could be physically chosen to $l\approx \frac \lambda 2$.
 %
-%The second scheme has a divergence around $Nl=r_\text{max}$. 
+%The second scheme has a divergence around $Nq=r_\text{max}$. 
 %It can be shown that the condition $N\leq \frac rl $ is enough here to stabilise it.
 
 Besides the tricky question about this mapping, also the number of points per sphere depending on the radial distance needs to be considered. 
@@ -249,7 +257,7 @@ Special mapping schemes are the constant radial mapping $r_i=a i$ which correspo
 
 \begin{figure}
 \includegraphics[width=\textwidth]{Data/radial_mapping}
-\caption{Comparison of the radius (left) and number of points (right) of the different spheres ($N=15$, $r_\text{max}=5$ and $l=2$) for the different radial schemes (\ref{eq:son_map}) and (\ref{eq:tm_map}).}
+\caption{Comparison of the radius (left) and number of points (right) of the different spheres ($N=15$, $r_\text{max}=5$ and $q=2$) for the different radial schemes (\ref{eq:son_map}) and (\ref{eq:tm_map}).}
 \label{fig:maps}
 \end{figure}
 
