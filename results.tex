@@ -1,3 +1,4 @@
+\label{ch:res}
 In the previous chapters, many different methods that can be used to compute PESs numerically are described and in chapter \ref{ch:proced} the method used within this work is described in more detail.
 In this chapter some results are shown and explained.
 
@@ -47,7 +48,7 @@ Moreover, these boundaries enforce the real and imaginary part of the solution t
 
 These properties are found in various tests conducted to find reasonable parameters for application to more complex systems.
 In Figure \ref{fig:dbcRad} a), the error in the energy of $20$ solutions is shown for different radii.
-The comparison with the red line, which shows a cubic decay, shows that the error is inverse proportional to the volume of the box. 
+The comparison with the red line that represents a cubic decay, shows that the error is inverse proportional to the volume of the box which is a well-known result for particles in a box with infinite potential walls. 
 The number of spheres is kept constant at $N=20$.
 The influence of the number of spheres on the energies is shown in the panels c) and d) of Figure \ref{fig:dbcRad}.
 In these figures several branches of solutions can be seen that correspond to different angular momenta.
@@ -74,8 +75,19 @@ Moreover, for example the comparison of the Figures \ref{fig:dbcRad} e) and f) s
 
 \subsection{Infinite Elements}
 \label{sec:iBCbench}
-Several questions and conceptual problems have been posed in the previous chapters which require some investigation to get an understanding of the properties of the numerical setup described so far.
+In section \ref{ch:InfEl}, several formulations of infinite elements are presented.
+
+which require some investigation to get an understanding of the properties of the numerical setup described so far.
 Among these questions is the formulation of infinite elements, discussed in section \ref{ch:InfEl} of which the most important ones are studied in section \ref{ch:bmFormul}.
+\begin{wrapfigure}{L}{0.5\textwidth}
+\includegraphics[width=0.5\textwidth]{Figures/BC/plane_fin}
+\caption{2D-cut of a solution with infinite elemnts using a spherical finite element region indicated by the red circle with a radius of $r=6\,$bohr and $N=11$ spheres.}
+\label{fig:cutInf}
+\end{wrapfigure}
+In Figure \ref{fig:cutInf}, a 2D-cut of a solution obtained with infinite elements for the Hydrogen atom is shown, the red circle indicates the region of finite elements.
+The features shown in Figure \ref{fig:cutInf} are prototypic for the properties that are found for the infinite elements here.
+It is clearly visible from the graph that the infinite region resembles the asymtotic behaviour, showing the expected regular oscillations of an outgoing wave.
+However, the angular momentum is quite large, leading to only small contributions in the finite element region.
 
 %\subsubsection{Formulation of Infinite Elements}
 \subsubsection{Comparison of Formulations}
@@ -116,8 +128,8 @@ This value is far in the convergence region of Figure \ref{fig:IFEMform_project}
 \label{ch:bmSize}
 %More important than the subspace used numerically is obviously the size of the sphere used for the FEM description.
 Similarly to the Dirichlet BCs discussed in section \ref{sec:DBCbench}, also for infinite element the size of the finite element region has a strong influence on the solution, even if the dependency is weaker as can be seen in Figure \ref{fig:InfBoxs} where the energy of the energies closest to the target value is plotted for different box sizes.
-However, the energy-dependence on the box-size is much weaker than in the case of Dirichlet BCs as the comparison with the $\frac{1}{r^3}$-curve in Figure \ref{fig:InBoxs} and \ref{fig:dbcRad} (a) shows.
-\begin{wrapfigure}{l}{0.6\textwidth}
+However, the energy-dependence on the box-size is much weaker than in the case of Dirichlet BCs as the comparison with the $\frac{1}{r^3}$-curve in Figure \ref{fig:InfBoxs} and \ref{fig:dbcRad} (a) shows.
+\begin{wrapfigure}{L}{0.6\textwidth}
 \includegraphics[width=0.6\textwidth]{Figures/BC/BoxsInfEL}
 \caption{Double-logarithmic plot of the error in energy for different radii of the finite element region.}
 \label{fig:InfBoxs}
@@ -167,19 +179,18 @@ The increasing angular momentum with the radial order is, in contrast to the beh
 As mentioned in section \ref{ch:InfEl}, the  first order infinite element term corresponds to the radial behaviour of an $s$-wave whereas higher radial orders describe the faster decaying waves with respectively larger angular momentum.
 Thus, choosing a low radial order ($o=1$) leads to a better representation of low angular momenta and thus is favoured in this context.
 
-\subsubsection{Conclusion on Boundary Conditions}
-\begin{itemize}
-  \item Dirichlet BC: very slowly converging with box-size, radial function very poorly estimated for small boxes.
-       But good convergence properties, eigenstates of angular momentum.
-  \item CAP: algorithmic scheme to find single best energy, but not straight-forward to find some clear scheme if many solutions (have) to be taken into account.
-  \item infinite elements: from theory point best conditions but show chaotic behaviour due to almost-degeneracy in analytical subspace No algorithmic procedure known to find best parameters.
-\end{itemize}
-Results in the non-intuitive conclusion that less accuracy leads to better results.
+\subsection{Conclusion on Boundary Conditions}
+The study of different system-parameters presented in the previous sections has revealed several properties of the finite element setup.
+An important conclusion of these tests is that a higher density of eigenenergies, which is considered as an indication for a more exact representation of the wave function, in general leads to the appearance af larger angular momenta and, at some point, to strong strong coupling of different angular momenta.
+Such a relation is expected for the box-size since a large angular momentum is accompanied by a larger radius, whereas the strong dependence on the number of spheres shown in Figure \ref{fig:InfNum} was not clear in the beginning.
+
+Hence, these studies show that a systematic setup of reasonable parameters is non-trivial and needs to ... the compromise between a dense spectrum and reasonable radial dependence of the wave function on the one side low angular momenta and well-behaved solution on the other side.
+It is important to note the importance of the systematic character for such a setup since the computation of a single PES requires the computation of photoelectrons whose kinetic energy may vary over orders of magnitude and thus the box needs to be adapted to this.
 
 %\subsection{Hamiltonian dependence on wave vector}
 %Due to the inifinite elements, the Hamiltonian depends on the target momentum $k$ as can be seen in eq. (\ref{eq:SymmKinE}) and (\ref{eq:InFEMmatrix}).
 %The nature of this dependence of especial interest since it is a special characteristic of this formulation and another numerical parameter influencing the solutions.
-%\begin{wrapfigure}{r}{0.5\textwidth}
+%\begin{wrapfigure}{R}{0.5\textwidth}
 %\includegraphics[width=0.5\textwidth]{Figures/E_k_benchmark}
 %\caption{Energies of the solutions obtained for target energies varying in the $\mu\,E_h$-range.}
 %\label{fig:E_k_bm}
@@ -238,7 +249,7 @@ Concluding one can say that the procedures studied here yield meshes with simila
 In the FEM scheme used to compute the FEF, several parameters governing numerical and physical characteristics are used such as box-size, target energy and subspace used for solving the eigensystem.
 
 The size of the Krylov-subspace does not play a role for the quality of the solution as shown in Figure \ref{fig:E_nev} for the symmetric formulation with a power $p=\frac 12$ of the damping function $D$.
-\begin{wrapfigure}{r}{0.5\textwidth}
+\begin{wrapfigure}{R}{0.5\textwidth}
 \includegraphics[width=0.5\textwidth]{Figures/Root_E_nev.pdf}
 \caption{The energies of the 20 states that fit the target energy best, depending on the
 size of the Krylov-suspace, indicated by the colour.}
@@ -277,19 +288,27 @@ In the left panel, the intensity is the sum over intensities for $80$ FEFs respe
 Since the protocol developed in this work does not provide absolute cross sections, the results obtained here are scaled to fit the reference data best.
 Moreover, it was shown in chapter \ref{ch:bmSize} that the size of the FEM-region plays an important role for the nature of the obtained solutions but no conclusive scheme for a reasonable choice for the radius has been given so far.
 
-\section{Triatomic Linear Molecules}
-There are several studies on CO$_2$ \cite{CO2, CO2_highres, HighResLinear, DiffLinear}, CS$_2$ \cite{DiffLinear,HighResLinear}, COS \cite{DiffLinear,HighResLinear} and N$_2$O \cite{DiffLinear}
+%\section{Triatomic Linear Molecules}
+\section{CO$_2$}
+As a second test-system, CO$_2$ is a
+There are several studies on CO$_2$ \cite{CO2, CO2_highres, HighResLinear, DiffLinear},
+% CS$_2$ \cite{DiffLinear,HighResLinear}, COS \cite{DiffLinear,HighResLinear} and N$_2$O \cite{DiffLinear}
+%CS$_2$ is known to have strong correlation effects \cite{2phcederbaum}
+\begin{wrapfigure}{R}{0.6\textwidth}
+\includegraphics[width=0.6\textwidth]{Figures/CO2/Solutions}
+\caption{Free electron functions obtained with infinite elements (left) and with Dirichlet boundary conditions (right)}
+\label{fig:CO2_exs}
+\end{wrapfigure}
 
-CS$_2$ is known to have strong correlation effects \cite{2phcederbaum}
-\begin{wrapfigure}{l}{0.7\textwidth}
+\begin{wrapfigure}{L}{0.7\textwidth}
 \includegraphics[width=0.69\textwidth]{Figures/CO2_J0_2D_terrain}
 \caption{The functional $J(\alpha,\omega)$ described in eqation (\ref{eq:J_ao}) for CO$_2$}
 \label{fig:CO2-otrsh}
 \end{wrapfigure}
 
-Data of CO2: \cite{DiffLinear}.
-
 Cross-section profiles of CO$_2$ in \cite{stieltje}.
+
+Data of CO2: \cite{DiffLinear}.
 
 \section{water}
 The PES and threshold PES, where the kinetic energy of the photoelectron is kept constant instead of the energy of the photon, of water is experimentally well studied 

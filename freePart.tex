@@ -236,18 +236,18 @@ The radial basis function (RBF) technique is based on an arbitrary point distrib
 The ansatz functions $\varphi_i(\vec{r})$ used in this technique need to be spherically symmetric, \textit{i.e.} $\varphi_i(\vec{r})=\varphi_i(|\vec{r}|)$ and are placed at the grid points on a given domain.
 The RBF-scheme is used not only for solving differential equations but is also a usefull tool for interpolation of scattered data in arbitrary dimensions \cite{rbfInterpol} and surface reconstruction from scattered data \cite{rbfSurf}.
 
-Among the commonly used functions are, besides linear and cubic ones, multiquadratic ($\sqrt { r^2 + r_0^2 }$), inverse multiquadratic ($( r^2 + r_0^2)^{-\frac 12}$) and Gaussian ($ \exp(-\frac{r^2}{2r_0^2})$) functions are to be mentioned where $r_0$ is the radius, respectively \cite{rbfSE,rbfWave}.
+Among the commonly used functions are, besides linear and cubic ones, multiquadratic ($\sqrt { r^2 + r_0^2 }$), inverse multiquadratic ($( r^2 + r_0^2)^{-\frac 12}$) and Gau\ss ian ($ \exp(-\frac{r^2}{2r_0^2})$) functions are to be mentioned where $r_0$ is the radius, respectively \cite{rbfSE,rbfWave}.
 
 If the parameter $r_0$ is chosen reasonably, the scheme is numerically stable and fast convergeing \cite{rbfSE}, but the choise of $r_0$ can be non-trivial especially for highly non-regular grids where a good quality of of the representation between two points with a large distance require a respectively large radius $r_0$ whereas too large radii can make the scheme numerically instable for close-lying points.
 Moreover the resulting system matrices are dense due to the global definition of the ansatz functions, making it compputationally expensive when large domains are considered.
 %Another advantage is the straight-forward implementation and generality of this method.
 %\begin{wrapfigure}{r}{0.6\textwidth}
 %   \includegraphics[width=0.6\textwidth]{Figures/RBF/RBFerror}
-%   \caption{A function (blue) represented in a RBF basis with Gaussian functions, centred at different distances compared to the broadening parameter $r_0$.}
+%   \caption{A function (blue) represented in a RBF basis with Gau\ss ian functions, centred at different distances compared to the broadening parameter $r_0$.}
 %   \label{fig:rbfError}
 %\end{wrapfigure}
 %An important disadvantage of the RBF scheme is that the space between two interpolation points is interpolated non-linearly and, depending on the distance of the two functions, the values are over- or underestimated.
-%This error is visualised in Figure \ref{fig:rbfError} for the case of a function that is one at both supporting points, represented by a Gaussian RBF basis.
+%This error is visualised in Figure \ref{fig:rbfError} for the case of a function that is one at both supporting points, represented by a Gau\ss ian RBF basis.
 %The intermediate values of the function depends strongly on the ratio of the broadening $r_0$ and the difference between the supporting points.
 %While this behaviour is not problematic for visual purposes, it may introduce a substructure which can lead to unintended behaviour of the solution.
 

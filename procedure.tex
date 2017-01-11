@@ -79,6 +79,7 @@ As the negative sign of the transition energy in the lower block indicates, lowe
 Since the matrix $\mat{B}$ contains usually only small elements, it is often set to zero which is refferred to as Tamm-Dancoff approximation and reduces the original equation to a hermitian equation of half dimensionality \cite{casida}.
 
 \subsection{OTRSH-scheme}
+\label{ch:otrsh}
 %One main issue concerned with the DFT-formalism is that the approximate exchange functional decays exponentially instead of $\frac 1r$ and $\frac{1}{r^4}$ for the exchange and correlation terms respectively \cite{Bokareva}. \textcolor{red}{But the Becke functional should have fixed this!?}
 One main issue concerned with the DFT-formalism is that the approximate exchange functional lead to wrong asymptotic behaviour of the electoron density.
 The local density approximation leads to an exponential decay instead of $\frac 1r$ and $\frac{1}{r^4}$ for the exchange and correlation terms respectively \cite{Bokareva} which is improved significantly with gradient-corrected functionals but usually still yields spuirous behaviour \cite{baerRSH}.
@@ -95,6 +96,7 @@ Using such a scheme, the degrees of freedom obtained are used to optimise a part
 \begin{equation}\label{eq:J_ao}
    J(\alpha_\text{opt},\omega_\text{opt})=\text{min}_{\alpha, \omega} \left\{ |E_N(\alpha,\omega)-E_{N-1}(\alpha,\omega)-\varepsilon_\text{HOMO}| \right\}
 \end{equation}
+where $E_N$ is the energy of the $N$-electron state and $\varepsilon_\text{HOMO}$ corresponds to the binding energy of the highest occupied molecular orbital (HOMO).
 or a similar one which can also account for lower-lying orbitals or the electron affinities which should resemble the binding energies of the lowest unoccupied molecular orbital (LUMO).
 
 Another quantity to optimise is the derivative discontinuity \cite{derdis,sanchez,Autschbach} that is based on the fact that the exchange-correlation energy should be a straight line when varying the number of electrons from $N$ to $N+1$.
@@ -262,3 +264,36 @@ Special mapping schemes are the constant radial mapping $r_i=a i$ which correspo
 \end{figure}
 
 Since some of the spherical schemes described above allow only for certain numbers of points each, here, the best approximation is used respectively.
+
+\section{Combination of the OTRSH-scheme with Intensity Calculations}
+The use of TDDFT with an OTRSH-scheme as described in section \ref{ch:otrsh} in combination with computed intensities using the Dyson formalism is, to the best of my knowledge, a novelty in this work.
+In this section, the advantages of these methods are presented using benzene as example system.
+The left panel in Figure \ref{fig:Benzotrsh} shows the functional \eq{eq:J_ao} for benzene.
+This behaviour is prototypical for the error in Koopmans' theorem when varying the parameters $\alpha$ and $\omega$.
+As the Figure \ref{fig:Benzotrsh} illustrates, leads the imposition of Koopmans' theorem not to a unique set of parameters.
+Instead, a larger constant exact exchange $\alpha$ can be compensated by a smaller $\omega$, \textit{i.e.} the non-constant contributions are added for a larger radius.
+\begin{figure}
+\includegraphics[width=0.5\textwidth]{Figures/Benzene/benzene2D}
+\includegraphics[width=0.5\textwidth]{Figures/Benzene/benzene_S_stab_ion_cut_all.pdf}
+\caption{lowest eigenvalue of the stability matrix of benzene as function of $\alpha$ and $\omega$. Largest stability and minimal $J(\alpha, \omega)$ yield different solutions.}
+\label{fig:Benzotrsh}
+\end{figure}
+Another important quantity is the stability matrix which corresponds \textcolor{red}{in TDA!?} to the matrix $\mat{A}$ in the Casida equation (\ref{eq:casida}).
+Its smallest eigenvalue corresponds to the transition from the HOMO to LUMO and should be, as such, postitive.
+In contrast to the behaviour of the $J$-functional \eq{eq:J_ao}, the lowest eigenvalue of the stability matrix has no such prototypical dependence on $\alpha$ and $\omega$ as the comparison of the right panel in Figure \ref{fig:Benzotrsh} with Figure \ref{fig:SulphurStab} shows where the respective HOMO-LUMO gap for the S$_8$-molecule is shown.
+Further, the choice of a particular set of parameters from the minimal parabola of the right panel of Figure \ref{fig:Benzotrsh} has a strong influence on the excitation energies and leads even to negative excitaiton energies for some molecules.
+Here, as a second criterion for the optimal parameters, the derivative discontinuity is chosen.
+\textcolor{blue}{figure}
+\textcolor{green}{How to indicate that the optimisation and cration of figures was not done by me?}
+The parameters resulting from this are $\alpha=0.00$ and $\omega=0.32$.
+
+To indicate the consequences of the OTRSH procedure, in Figure \ref{fig:blypPES} the photoelectron spectrum of benzene as predicted with the optimised functional and the BLYP functional, where no exact exchange is used, is presented and compared to experiment.
+
+\begin{wrapfigure}{L}{0.5\textwidth}
+\includegraphics[width=0.5\textwidth]{Figures/Benzene/Benzene}
+\caption{Photoelectron spectra of benzene at different levels of theory.
+In the upper panel the spectra obtained with the Dyson orbital formalism (Dyson) and using the Koopmans' approach (DOS) are compared, the experimental reference is shown in the lower panel \cite{BenzExp}.}
+\label{fig:benzPES}
+\end{wrapfigure}
+
+Mention results of S$_8$ in supplement.
