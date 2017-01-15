@@ -107,12 +107,9 @@ Tho goal of this thesis is to find a systematic way to setup the finite element 
 %Moreover, the molecular electrostatic potential is to be obtained in the region of interest, requirering some modification in the code of \prog{NWChem} and a three-dimensional interpolation scheme that can handle nonuniform data.
 %Finally, to obtain the dipole matrix elements, the DO has to be projected onto the space of finite elements.
 %Therfore the explicit function is obtained by evaluating the basis functions at given quadrature points.
-\textcolor{red}{
-This procedure will be tested on different model systems.
-\begin{itemize}
-   \item Lithium: light atomic system, many experimental and experimental reference data available, the \prog{ezDyson} calculations are expected to give a good approximation.
-   \item CO$_2$: linear easy molecule with some reference data available, used to test some further properties 
-   \item Benzene (?): More complex molecule with reference data, well investigated
-   \item Some other system(s) for which \prog{ezDyson} gives poor results (?)
-\end{itemize}
-}
+The developed protocol is applied to seval systems.
+To show the properties of the respective setup and compare different schemes suggested, atomic hydrogen is used for which an analytic solution, namely the Coulomb waves, is known.
+Further tests are applied to lithium, \textcolor{red}{doing .... and Cross section}.
+As a simplet test-system for a molecular case  carbondioxide is chosen for which several experimental as well as theoretical reference-data are available, \textcolor{red}{studying the PES and croos section}.
+For this system, the usual approach to represent the FEF as a Coulomb wave is expected to be not valid.
+Finally, as a representative for larger and more complex molecules, here benzene is chosen which is a well-studied system.

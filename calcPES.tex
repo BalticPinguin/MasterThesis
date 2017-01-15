@@ -31,7 +31,7 @@ The same holds for the quantum chemical methods available to treat the system.
         \begin{tabular}{c} R-Matrix \cite{Li-R,Li-R1,Burke,r-mat,R-mol1}\\ DO \cite{planeWave,DO_TDDFT} \\Green's Function \cite{GreenBayse,2phcederbaum} \\ Koopmans'\cite{dos,dos2,koopmansDFT} \end{tabular} &
         \begin{tabular}{c}up to \\biomolecules \cite{bioPES}, \\ solid state \cite{Solid2,Leckey1992} \end{tabular}& 
         \begin{tabular}{c} steady-state, \\ angle-res. PES \\time-res. PES \end{tabular}& 
-        \begin{tabular}{c} RASSCF \cite{MAgg,GrellKuehn}, \\ TD-DFT \end{tabular} \\
+        \begin{tabular}{c} CI\cite{ci1} \\ RASSCF \cite{MAgg,GrellKuehn,asscf1,asscf2}, \\ TD-DFT \end{tabular} \\
 \hline
 \end{tabular} \end{tiny}
 \caption{Overview of time- and frequency-domain methods and theyr typical applications.\\
@@ -328,14 +328,15 @@ To reduce the large amount of integrals therein, the strong orthogonality approx
 of the FEF with all bound states vanishes.
 This is strictly valid if $|\Phi_{i,j}\rangle$ and $|\Psi^\text{el}\rangle$ would correspond to the same Hamiltonian.
 But in most cases the relaxation of the orbital $|\Phi_{i,j}\rangle$ is small, leading to a small but non-zero overlap with the FEF \cite{saPonzi,GrellKuehn}.
-Applying the strong orthogonality condition leads to the drop out of the second sum in eq. \ref{eq:fullDO} and the transition dipole moment simplifies to
+Applying the strong orthogonality condition leads to the drop out of the second sum in \eq{eq:fullDO} and the transition dipole moment simplifies to
 \begin{align} \label{eq:sigma_do}
 \vec{D}_k&= \sum_p (-1)^P \langle \Phi_{i,P(1)}  |\Phi_{k,1} \rangle
             \hdots  \langle \Phi_{i,P(N-1)}|\Phi_{k,N-1} \rangle
                    \langle \Phi_{i,P(N)} |\hat{\vec{d}}_j |\Psi_k^\text{el}\rangle \nonumber \\
     &= \langle \Psi_k^\text{DO}| \hat{\vec{d}}_j| \Psi_k^\text{el}\rangle
 \end{align}
-which corresponds to the definition of the TDDO in eq. (\ref{eq:TDDO}) for $t=0$ as mentioned above.
+\textcolor{blue}{?? At the moment, there is no equation of the DO to reference. Write it differently?}
+which corresponds to the definition of the TDDO in \eq{eq:TDDO} for $t=0$ as mentioned above.
 The expression for the PES cross-section in the DO formalism simplifies to
 %Though the cross section simplifies from the $N$ electron expression (\ref{eq:sigma}) to 
 \begin{equation} \label{eq:DO_pes}

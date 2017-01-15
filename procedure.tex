@@ -1,62 +1,78 @@
 \label{ch:proced}
-After describing different approaches to compute PESs in chapter \ref{ch:calcPES} and pointing out why the DO formalism combined with a finite element method for the computation of the photoelectron function is well-suited for our needs, in this chapter the protocol as being used to obtain the PESs is be presented.
+The method applied here is a combination of three concepts described in chapter \ref{ch:calcPES}.
+It is based on the time-independent DO formalism where the electronic structure is computed by means of the OTRSH density functional.
+The FEF is obtained by the finite/infinite element method as described in chapter \ref{ch:fem}.
+This combination represents a novelty of this work, sinse the DO approach has not yet been used together with OTRSH TDDFT, which is most suited among different functionals for PES calculations.
+The last but most important is the application of the finite and infinite element methods to obtain FEFs.
+To the best of my knowledge this method is used to solve such quantum-mechanical problem for the first time.
 
-In the first section the computation of the wave functions of initial (unionised) and final (ionised) states as well as the genaral procedure used to compute the DOs is described.
-Thereafter, in section \ref{sec:grid} the setup of the finite element system that is used to compute the free electron function as well as the dipole matrix element are explained which is implemented in the program \prog{FreeWilly} \cite{FreeWilly} in the framework of this thesis.
+In the first section of this chapter, the computation of the wave functions of initial (unionised) and final (ionised) states as well as the genaral procedure used to compute the DOs is described.
+Thereafter, in section \ref{sec:grid} the setup of the finite/infinite element system that is used to compute the free electron function as well as the dipole matrix element are explained which is implemented in the program \prog{FreeWilly} \cite{FreeWilly} in the framework of this thesis.
 
 \section{Bound State Functions}
-The DO formalism as it is described in \ref{ch:do} can be used with any self-consistent field method which can predict excited state energies and wave functions.
-In this work,  density functional theory (DFT) is used for ground state calculations and its time dependent counterpart TDDFT to compute excited state energies.
-The DFT formalism which is introduced in the sections \ref{ch:dft} and \ref{ch:tddft} has shown to be accurate and numerically cheap.
+The DO formalism as it is described in section \ref{ch:do} can be used with any electronic structure method which can predict excited state energies and wave functions such as configuration interaction \cite{ci1}, generalised active space configuration interaction \cite{bauch1}, equation-of-motion coupled cluster \cite{CAPccEOM,eomCCdo}, complete and restricted self consistent field \cite{MAgg,GrellKuehn,asscf1,asscf2} or TDDFT as given in Table \ref{tab:PEScat}.
+In this work, density functional theory (DFT) is used for ground state calculations and its time-dependent counterpart TDDFT to compute excited state energies.
+The DFT formalism which is briefly introduced in the sections \ref{ch:dft} and \ref{ch:tddft} has shown to be accurate and numerically cheap.
 %In this work the calculations are done using a locally modified version of the program package \prog{NWChem} \cite{nwchem} where a more verbose output enables the reconstruction of all molecular orbitals and thus the computation of the DOs.
 
 \subsection{Ground State Density}
 \label{ch:dft}
-The DFT is formally based on the Hohenberg-Kohn theorems \cite{HohenbergKohn} which state that the ground-state electron density determines the potential in the SE and with this also the wave-function.
-Moreover, the second Hohenberg-Kohn theorem states that the energy of the ground state can be found variationally from the density.
+The DFT is formally based on the Hohenberg-Kohn theorems \cite{HohenbergKohn} which state that the ground-state electron density $\rho(\vec{r})$ determines the potential in the SE and with this also the wave function.
+Moreover, the energy of the ground state can be found variationally.
 Thus, the electron density contains all information needed and the computation of the $N$-electron wave function can be omitted.
-Since the Hohenberg-Kohn theorems do not point out a way how to determine the electron density without knowing the wave-function, usually the Kohn-Sham scheme \cite{KohnSham} is used where the electrons are described as non-interacting particles in a respective pseudo-potential that is constructed such that the electron density of these Kohn-Sham orbitals corresponds to the real electron density.
+Since the Hohenberg-Kohn theorems do not point out a way how to determine the electron density without knowing the wave function, usually the Kohn-Sham scheme \cite{KohnSham} is used.
+In this framework, the electrons are described as non-interacting particles in a respective pseudo-potential that is constructed such that the Kohn-Sham density coincides with the real ones.
 Since the particles do not interact with each other, the Kohn-Sham orbitals $\Psi_j(\vec{r})$ can be obtaind from the one-particle SE
 \begin{equation}
-\left( -\frac 12  \nabla^2 + V_\text{eff}(\vec{r}) \right) \Psi_j(\vec{r})=\epsilon_j \Psi_j(\vec{r})
+\left( -\frac 12  \nabla^2 + V_\text{eff}(\vec{r}) \right) \Psi_j(\vec{r})=\epsilon_j \Psi_j(\vec{r}),
 \end{equation}
-where $\epsilon_j$ is the binding energy of the respective Kohn-Sham orbital and the effective potential 
-\begin{equation}
+where $\epsilon_j$ is the energy of the respective Kohn-Sham orbital $\Psi(\vec{r})$ and the effective potential 
+\begin{equation} \label{eq:dftPot}
 V_\text{eff}(\vec{r})=V_\text{ext}(\vec{r})+ \int \frac{\rho(\vec{r}')}{|\vec{r}-\vec{r}'|} d\vec{r}' + V_\text{xc}(\vec{r})
 \end{equation}
-can be separated into the external potential $V_\text{ext}(\vec{r})$, which consists of the attractive nuclear ESP and external fields, the electrostatic interaction of the particles where $\rho(\vec{r})=\sum_{i\neq j} |\Psi_i|^2$ and the exchange-correlation potential $V_\text{xc}(\vec{r})$ which contains the complexity of the electronic interaction \cite{baerRSH}.
-The exchange correlation potential $V_\text{xc}(\vec{r})$ contains, besides contributions from exchange and correlation, also the error of kinetic energy in the Kohn-Sham scheme to account for the fact that the Kohn-Sham wave-functions differ from the real orbitals and thus have another kinetic energy as well \cite{Holthausen}.
+can be separated into the external potential $V_\text{ext}(\vec{r})$, which consists of the attractive nuclear ESP and external fields, the electrostatic interaction of the particles whith a charge density $\rho(\vec{r})=\sum |\Psi_i|^2$ and the exchange-correlation potential $V_\text{xc}(\vec{r})$ which contains the complexity of the interelectronic interaction \cite{baerRSH}.
+The exchange correlation potential $V_\text{xc}(\vec{r})$ contains, besides contributions from exchange and correlation, also correction for the error of kinetic energy present due to the fact that the Kohn-Sham wave functions differ from the real orbitals \cite{Holthausen}.
 
-Assuming that the Kohn-Sham orbitals coincide with the physical orbitals, the exchange potential acts on an orbital $\Psi_i(\vec{r})$ as
+The exact exchange-correlation potential $V_\text{xc}(\vec{r})$ is not known, giving rise to different variants of approximate functionals, each suited for particular problems and applications.
+However, usually the exchange-correlation is split into an exchange and a correlation functional for which separate approximations are used.
+The exact exchange potential acting on an orbital $\Psi_i(\vec{r})$ has the form
 \begin{equation} \label{eq:HF_exch}
-V_{x;j}(\vec{r})\Psi_i(\vec{r}) =\int \frac{\Psi_j^\dagger(\vec{r}') \Psi_i(\vec{r}')}{\left|\vec{r}-\vec{r'}\right|} d\vec{r}' \Psi_j(\vec{r})
+V_{x;j}(\vec{r})\Psi_i(\vec{r}) =-\int \frac{\Psi_j^\dagger(\vec{r}') \Psi_i(\vec{r}')}{\left|\vec{r}-\vec{r'}\right|} d\vec{r}' \Psi_j(\vec{r})
 \end{equation}
-and thus is non-local \cite{Holthausen}. % the ``exact'' exchange energy thus corresponds the term $E_{x}=\sum_{i<j}\int \Psi_i^\dagger(\vec{r}) V_{x;j}(\vec{r}) \Psi_i(\vec{r}) d\vec{r}$  respectively.
-In DFT usually the exchange energy is approximated as a local functional of the density and its derivative, leading to the so-called local density approximation and gradient corrected functionals \cite{baerRSH}.
+and thus is non-local \cite{Holthausen}.
+The term exact indicates here that, using the exchange potential \eq{eq:HF_exch}, the self-interaction error of the Coulomb interaction (\textit{i.e} the second term in equation \eq{eq:dftPot}) cancels out completely.
+%The term exact exchange is under %energy thus corresponds the term $E_{x}=\sum_{i<j}\int \Psi_i^\dagger(\vec{r}) V_{x;j}(\vec{r}) \Psi_i(\vec{r}) d\vec{r}$  respectively.
+In DFT, usually the exchange energy is approximated as a local functional of the density and its derivative, leading to the so-called local density approximation and gradient corrected functionals \cite{baerRSH}.
 The Becke \cite{blyp} exchange-functional used in this work has the form
 \begin{equation} \label{eq:blypXC}
 E_x=\frac 32 \left(\frac{3}{4\pi}\right)^\frac 13 \sum_\sigma \int \rho_\sigma(\vec{r})^\frac 43 d^3\vec{r} 
--\beta \sum_\sigma \int \rho(\vec{r})^\frac 43 \frac{x_\sigma(\vec{r})^2}{1+6\beta x_\sigma \text{sinh}^{-1}( x_\sigma (\vec{r}))} d^3\vec{r}
+-\beta \sum_\sigma \int \rho_\sigma(\vec{r})^\frac 43 \frac{x_\sigma(\vec{r})^2}{1+6\beta x_\sigma \text{sinh}^{-1}( x_\sigma (\vec{r}))} d^3\vec{r},
 \end{equation}
-where the first summand corresponds to the local density approximation and the second is a semi-empirical gradient correction, $\sigma$ denotes the spin polarisations and $x_\sigma(\vec{r})=\frac{|\nabla \rho_\sigma(\vec{r})|}{\rho_\sigma^\frac 43}$. 
+where the first summand corresponds to the local density approximation and the second is a semi-empirical gradient correction, $\sigma$ denotes the spin orientations and $x_\sigma(\vec{r})=\nicefrac{|\nabla \rho_\sigma(\vec{r})|}{\rho_\sigma^\frac 43}$. 
 The gradient correction in this functional is constructed such that the asymptotic behaviour of the exchange energy and electron density follow
-\begin{align}
+\begin{align} \label{eq:dftAsympt}
   \lim_{r\rightarrow\infty} E_x^\sigma(\vec{r}) & =-\frac{1}{|\vec{r}|} \\
   \lim_{r\rightarrow\infty} \rho(\vec{r}) & =e^{-a_\sigma |\vec{r}|}
 \end{align}
 with $a_\sigma$ is a constant related to the ionisation potential of the system under study \cite{blyp}.
-The prefactor of the gradient correction, $\beta$, was determined by fitting to several atomic noble-gas systems and is set to be $\beta=0.0042$ in atomic units \cite{blyp}.
+The prefactor of the gradient correction, $\beta$, was determined by fitting to several atomic noble-gas systems and is set to be $\beta=0.0042$ a. u. \cite{blyp}.
+However, this parameter is not universal and errors in the asymtotic behaviour \eq{eq:dftAsympt} can occur for general systems.
 
 %Finally, the correlation energy is defined as the difference between the sum of the previously discussed terms and the correct energy.
 The correlation potential finally is defined as the functional derivative of the correlation energy with respect to the electron density $V_c(\vec{r})=\frac{\partial E_c[\rho]}{\partial\rho(\vec{r})}$.
-In the case of the
-The LYP-correlation energy functional is based on the Colle-Salvetti formula which estimates the correlation energy in the Hartree-Fock approach and introduces two parameters that are set by fitting to experimental data \cite{lyp}.
+In the case of the LYP-correlation energy functional applied here, the correlation energy is estimated based on the Hartree-Fock approach and fitted to experimental data using two parameters using various closed and open shell systems \cite{lyp}.
 
 \subsection{Properties of Excited States}
 \label{ch:tddft}
-The DFT is not only a well-established method to obtain ground-state properties of many different kinds of systems, but it has also a time-dependent counterpart, formally based on the Runge-Gro\ss\, theorem \cite{RungeGross}.
-Commonly, when referring to TDDFT, respective the linear-response scheme is meant \cite{dreuw}.
-It is a first order perturbation expansion and can be used to obtain the energies and occupation numbers of excited states using the so-called Casida-equation \cite{casida}
+Since the gound-state density fully specifies the system's Hamiltonian, it contains information on the excited staets which can be extracted from the response of the density to the periodic external fields via the time-dependent DFT (TDDFT) which is based on the Runge-Gro\ss\, theorem \cite{RungeGross}.
+Using the configuration interaction approach, an excited state wave function $|\Psi^\text{exc}\rangle$ is written as
+\begin{equation} \label{eq:excCI}
+|\Psi^\text{exc}\rangle=\sum_{ia} c_{ia} |\Psi_i^a\rangle
+\end{equation}
+where $\Psi_i^a\rangle$ are SDs in which the $i$-th occupied orbital is replaced by the virtual orbital $a$ and $c_{ia}$ are coefficients whose absolute squares sum up to one.
+Commonly, when referring to TDDFT, the respective linear-response scheme is meant \cite{dreuw}.
+
+It is a first order perturbation expansion and can be used to obtain the energies and wave functions of excited states using the so-called Casida-equation \cite{casida}
 \begin{equation} \label{eq:casida}
 \begin{bmatrix} \mat{A} & \mat{B} \\ \mat{B}^\dagger & \mat{A}^\dagger\end{bmatrix}
 \begin{bmatrix} \vec{X} \\ \vec{Y} \end{bmatrix} =
@@ -69,133 +85,188 @@ where the matrix elements are
 \int \int d\vec{r} d\vec{r}'\frac{ \Psi_i(\vec{r}) \Psi_a(\vec{r})  \Psi_j(\vec{r}') \Psi_b(\vec{r}')- 
 \Psi_i(\vec{r}) \Psi_j(\vec{r}) \Psi_a(\vec{r}') \Psi_b(\vec{r}')}{|\vec{r}-\vec{r}'|} ,\\
 \mat{B}_{ia,jb}& = \int \int d\vec{r} d\vec{r}'\frac{\Psi_i(\vec{r}) \Psi_a(\vec{r})  \Psi_b(\vec{r}') \Psi_j(\vec{r}')- 
-\Psi_i(\vec{r}) \Psi_b(\vec{r})  \Psi_a(\vec{r}') \Psi_j(\vec{r}')}{|\vec{r}-\vec{r}'|}
+\Psi_i(\vec{r}) \Psi_b(\vec{r})  \Psi_a(\vec{r}') \Psi_j(\vec{r}')}{|\vec{r}-\vec{r}'|}.
 \end{align}
-where $i,j$ denote occupied and $a,b$ virtual states and $\mat{1}$ is the unity matrix, $\varepsilon_\alpha$ are (Kohn-Sham) orbital binding energies of the Kohn-Sham orbitals $\Psi_\alpha(\vec{r})$.
+Here $i,j$ denote occupied and $a,b$ virtual states and $\mat{1}$ is the unity matrix, $\varepsilon_\alpha$ are the energies of the Kohn-Sham orbitals $\Psi_\alpha(\vec{r})$.
 The indices $i,j$ and $a,b$ denote occupied and virtual orbitals with binding energy $\varepsilon_i, \varepsilon_a$ respectively \cite{dreuw}.
-The Casida equation (\ref{eq:casida}) is an non-hermitian eigenvalue problem whose eigenvalues $\omega$ correspond to the transition energies and the eigenvectors denote the transition coefficients.
+The Casida equation (\ref{eq:casida}) is an non-hermitian eigenvalue problem whose eigenvalues $\omega$ correspond to the transition energies and the eigenvectors contain the transition coefficients $c_{ia}$ from \eq{eq:excCI}.
 The different blocks in equation (\ref{eq:casida}) have different physical interpretation.
-As the negative sign of the transition energy in the lower block indicates, lower half of the eigenvector, denoted as $\vec{Y}$, corresponds to negative excitation energies $\varepsilon_i$ and can be assigned to de-excitations from virtual orbitals which makes no physical sense if the reference state is a ground state \cite{dreuw}.
-Since the matrix $\mat{B}$ contains usually only small elements, it is often set to zero which is refferred to as Tamm-Dancoff approximation and reduces the original equation to a hermitian equation of half dimensionality \cite{casida}.
+Because of the negative sign of the transition energy counterpart of the eigenvector $\vec{Y}$ corresponds to negative excitation energies and can be assigned to de-excitations from virtual orbitals.
+Thus makes no physical sense if the reference state is a ground state \cite{dreuw} however for the excited states corresponds to orbital relaxation.
+Since the matrix $\mat{B}$ contains usually only small elements, it is often set to zero which is refferred to as Tamm-Dancoff approximation and reduces the original equation to a hermitian equation of half dimensionality with only small loss in accuracy \cite{casida}.
 
 \subsection{OTRSH-scheme}
 \label{ch:otrsh}
 %One main issue concerned with the DFT-formalism is that the approximate exchange functional decays exponentially instead of $\frac 1r$ and $\frac{1}{r^4}$ for the exchange and correlation terms respectively \cite{Bokareva}. \textcolor{red}{But the Becke functional should have fixed this!?}
-One main issue concerned with the DFT-formalism is that the approximate exchange functional lead to wrong asymptotic behaviour of the electoron density.
+One main disadvantage of the DFT-formalism is that the approximate exchange functional lead to wrong asymptotic behaviour of the electoron density.
 The local density approximation leads to an exponential decay instead of $\frac 1r$ and $\frac{1}{r^4}$ for the exchange and correlation terms respectively \cite{Bokareva} which is improved significantly with gradient-corrected functionals but usually still yields spuirous behaviour \cite{baerRSH}.
-This wrong behaviour affects the obtained wave functions and thus the orbital energies \cite{OT-RSH}.
+This issue is known as self-interaction error because the approximate exchange potentials do not eliminate the interaction of an electron with itself at large interaction distances.
+This is opposit to the exact exchange potential \eq{eq:HF_exch}, where such elimination exists.
+This wrong behaviour affects the obtained wave functions and thus the orbital energies and implicitly influences othe system properties \cite{OT-RSH}.
 
-To reduce this error, so-called range-separated hybrid (RSH) functionals are used, in which the DFT-exchange term as \textit{e.g.} the Becke functional (\ref{eq:blypXC}) is used for small interelectronic distances only, while at larger distances, where correlation effects are not that important, the Hartree-Fock exact-exchange (\ref{eq:HF_exch}) is used \cite{LC-tddft}.
-The interchange between the schemes is done by the scheme
+To reduce this error, so-called range-separated hybrid functionals are used, in which the DFT-exchange term as, \textit{e.g.}, the Becke functional (\ref{eq:blypXC}) is used for small interelectronic distances only, while at larger distances, where correlation effects are not that important, the Hartree-Fock exact-exchange (\ref{eq:HF_exch}) is used \cite{LC-tddft}.
+The interchange between the exact and approximate exchange functionals is done by some smooth function, for instance
 \begin{equation}
-   \frac 1r = \underbrace{\frac{\alpha +\beta erf(\omega r)}{r}}_{\text{exact exchange}} +\underbrace{\frac{1-\alpha-\beta erf(\omega r)}{r}}_{\text{DFT exchange}}
+   \frac 1r = \underbrace{\frac{\alpha +\beta \text{erf}(\omega r)}{r}}_{\text{exact exchange}} +\underbrace{\frac{1-\alpha-\beta \text{erf}(\omega r)}{r}}_{\text{DFT exchange}},
 \end{equation}
 where $\alpha+\beta=1$ and $\omega$ are parameters to be chosen.
-Besides taking the standard parameters that are fitted to a set of testing-systems, ab-initio schemes for chosing $\alpha$ and $\omega$ are available which are referred to as optimally-tuned RSH (OTRSH) schemes.
-Using such a scheme, the degrees of freedom obtained are used to optimise a particular system-property such as Koopmans' theorem by minimising the functional \cite{Bokareva}
+These parameters are density- and thus system dependent.
+Besides taking the standard parameters that are fitted for a set of testing-systems, \textit{ab-initio} schemes for chosing $\alpha$ and $\omega$ are available which are referred to as optimally-tuned range-separated hybrid (OTRSH) density functionals.
+Using such an approach, the Koopmans' theorem can be ensured by minimising following functional with respect to $\alpha$ and $\omega$ \cite{Bokareva}
 \begin{equation}\label{eq:J_ao}
    J(\alpha_\text{opt},\omega_\text{opt})=\text{min}_{\alpha, \omega} \left\{ |E_N(\alpha,\omega)-E_{N-1}(\alpha,\omega)-\varepsilon_\text{HOMO}| \right\}
 \end{equation}
 where $E_N$ is the energy of the $N$-electron state and $\varepsilon_\text{HOMO}$ corresponds to the binding energy of the highest occupied molecular orbital (HOMO).
-or a similar one which can also account for lower-lying orbitals or the electron affinities which should resemble the binding energies of the lowest unoccupied molecular orbital (LUMO).
+Such a procedure improves the asymptotic behaviour of the density and twith this the orbital energies.
+The latter is important especially for the photoelectron spectra and usually improves the calculated ionisation potentials.
+This procedure is in general providing sevaral ($\alpha$,$\omega$) pairs.
 
-Another quantity to optimise is the derivative discontinuity \cite{derdis,sanchez,Autschbach} that is based on the fact that the exchange-correlation energy should be a straight line when varying the number of electrons from $N$ to $N+1$.
-The slope of that line corresponds to the binding energy of the respective electron and thus is discontinuous at integer numbers of electrons.
-The approximate exchange correlation functionals, however, usually do not fulfill this condition but the parameters $\alpha$ and $\beta$ can be tuned such that only small deviations can be observed \cite{Bokareva}.
+Another property to be ensured during the optimisation is the derivative discontinuity \cite{derdis,sanchez,Autschbach}.
+The exact exchange-correlation energy should be a straight line when varying the number of electrons from $N$ to $N-1$.
+The slope of that line corresponds to the binding energy of the respective electron that is removed and thus is discontinuous at integer numbers of electrons.
+The approximate exchange correlation functionals, however, usually do not fulfill this condition having curvelinear dependence of energy with a wrong derivative jump or no discontinuity at all.
+The criterion for $E_\text{xc}(N)$ to be a straight line is used additionally to choose the best pair ($\alpha$,$\omega$) for the particular system.
 
-For this optimization procedure the Gaussian package \prog{G09} \cite{g09} is used with the 6-31G(d) \cite{6-31g,6-31gd} basis set and the functional LC-BLYP \cite{lcblyp}. 
-The ground state DFT calculation, determination of geometries and the linear-response TDDFT calculations have been conducted with a locally modified version of \prog{NWChem} \cite{nwchem}, employing the basis set def2-tzvp \cite{def2tzvp} without symmetry restrictions.
-The Kohn-Sham orbitals (obtained by ground state DFT) and CI-coefficients (obtained by linear-response TDDFT which yields the configuration interaction singles expansion for a number of excited states) as well as the atomic overlap matrix are interfaced to the in-house software \prog{DYSON} \cite{MAgg} that computes the DOs.
-The integration of the transition dipole matrix elements in eq. (\ref{eq:sigma_do}) finally is performed using \prog{ezDyson} \cite{ezDyson}.
+In this work, for the optimization procedure the Gaussian package \prog{G09} \cite{g09} was used with the 6-31G(d) \cite{6-31g,6-31gd} basis set and the LC-BLYP exchange-correlation functional \cite{lcblyp}. 
+The ground state DFT calculation, optimisation of geometries has been conducted with a locally modified version of \prog{NWChem} \cite{nwchem}, employing the basis set def2-TZVP \cite{def2tzvp} without symmetry restrictions.
+
+The application of the functional \eq{eq:J_ao} to the benzene molecule for different parameters $\alpha$ and $\omega$ results in a deviation from Koopman's theorem as illustrated in the left panel in Figure \ref{fig:Benzotrsh}.
+This behaviour is prototypical for this functional when varying the parameters $\alpha$ and $\omega$.
+As the Figure \ref{fig:Benzotrsh} illustrates, leads the imposition of Koopmans' theorem not to a unique set of parameters.
+Instead, a larger constant exact exchange $\alpha$ can be compensated by a smaller $\omega$, \textit{i.e.} the non-constant contributions are added for a larger radius.
+\begin{figure}
+\includegraphics[width=0.5\textwidth]{Figures/Benzene/benzene2D}
+\includegraphics[width=0.5\textwidth]{Figures/Benzene/benzene_S_stab_ion_cut_all.pdf}
+\caption{lowest eigenvalue of the stability matrix of benzene as function of $\alpha$ and $\omega$. Largest stability and minimal $J(\alpha, \omega)$ yield different solutions.}
+\label{fig:Benzotrsh}
+\end{figure}
+Another important quantity is the stability matrix which corresponds \textcolor{red}{in TDA!?} to the matrix $\mat{A}$ in the Casida equation (\ref{eq:casida}).
+Its lowest eigenvalue corresponds to the transition from the HOMO to LUMO and should be, as such, postitive.
+In contrast to the behaviour of the $J$-functional \eq{eq:J_ao}, the lowest eigenvalue of the stability matrix has no such prototypical dependence on $\alpha$ and $\omega$ as the comparison of the right panel in Figure \ref{fig:Benzotrsh} with Figure \ref{fig:SulphurStab} shows where the respective HOMO-LUMO gap for the S$_8$-molecule is shown.
+Further, the choice of a particular set of parameters from the minimal parabola of the right panel of Figure \ref{fig:Benzotrsh} has a strong influence on the excitation energies and leads even to negative excitaiton energies for some molecules.
+Here, as a second criterion for the optimal parameters, the derivative discontinuity is chosen.
+\textcolor{blue}{figure}
+\textcolor{green}{How to indicate that the optimisation and cration of figures was not done by me?}
+The parameters resulting from this are $\alpha=0.00$ and $\omega=0.32$.
 
 \subsection{Obtaining the Electrostatic Potential and Dyson orbitals}
-\begin{wrapfigure}{l}{0.5\textwidth}
+\begin{wrapfigure}{L}{0.5\textwidth}
 \includegraphics[width=0.5\textwidth]{Figures/ESP}
-\caption{Double-logarithmic plot of the radial projection of the ESP of atomic Lithium}
+\caption{Double-logarithmic plot of the ground state ESP for Li$^+$ (red circles; $Z=3$), K$^+$ (blue circles; $Z=19$) and Xe$^+$ (green circles; $Z=54$) as a function of distance from the nucleus and its limiting cases at large ($1/r$) and small ($Z/r$) distances.}
 \label{fig:esp}
 \end{wrapfigure}
 %Considering a state as linear combination of CI-states is denoted as weak-coupling representation \cite{McCarthy}.
-The ESP used in this work is obtained with a modified version of \prog{NWChem} \cite{nwchem} where the points, at which this potential should be computed can be set by the user.
-Setting these points to the quadrature points of the integration scheme requires some extra effort but has the great advantage that no interpolation is required.
-However, \prog{NWChem} can compute the values only up to a minimum distance to the nuclei.
-The missing points are chosen as $Z/r$ where $Z$ is the charge and $r$ is the distance of the quadrature point to the closest nucleus which is a good approximation as Figure \ref{fig:esp} shows.
-An interpolation of the data on the complete domain in \prog{FreeWilly} \cite{FreeWilly} would require an interpolation-scheme for scattered data such as RBF interpolation \cite{rbfSE,rbfInterpol,rbfSurf}, inverse distance interpolation \cite{adapt_idw,idw} or similar methods \cite{CompInterp,idw_krieging,interpol}, but these methods give, if the parameters are not chosen accurately, spurious oscillations between the quadrature points and thus do not result in a smooth ESP.
+The ESP used in this work is obtained with a modified version of \prog{NWChem} \cite{nwchem} where the points, at which this potential should be computed can be specified by the user.
+Setting these points to the quadrature points of the integration scheme in the FEM calculations requires some extra effort but has the great advantage that no interpolation of the potential is required.
+However, \prog{NWChem} can compute the values only up to a finite minimum distance to the nuclei due to numerical reasons.
+The missing values are approximated as $Z/r$ where $Z$ is the respective nucleus charge and $r$ is the distance of the quadrature point to the closest nucleus.
+Figure \ref{fig:esp} shows the quality of such an interpolation comparing the calculated ESP for three singly ionised systems with the two limiting cases at large and small distances from the nucleus.
+It can be seen that the $\nicefrac{Z}{r}$ dependence approximates the ESP close to the nucleus very well.
+An interpolation of the data on the complete domain in \prog{FreeWilly} \cite{FreeWilly} requires an interpolation-scheme for scattered data such as RBF interpolation \cite{rbfSE,rbfInterpol,rbfSurf}, inverse distance interpolation \cite{adapt_idw,idw} or similar methods \cite{CompInterp,idw_krieging,interpol}.
+However, these methods were found to be sensitive to the parameters and do not result in a smooth ESP due to spurious oscillations between the quadrature points.
 
 The other external quantity needed to compute the intensities is the DO that is computed in the framework of this thesis with the in-house code \prog{DYSON} \cite{MAgg}.
-The wave functions of the initial and final states are computed with the \prog{NWChem}-code which is modified to produce more verbose output.
+The wave functions of the initial $|\Psi^N\rangle$ and final $|\Psi^{N-1}\rangle$ states are computed with the \prog{NWChem}-code which is modified to produce more verbose output to be able to reconstruct the molecular orbitals.
+As quantum-chemical method, here the previously described (TD)DFT method with the LC-BLYP \cite{lcBLYP} functional with OTRSH and the def2-TZVP \cite{def2tzvp} basis set are used.
 The respective data are extracted and reformatted with a self-written script \cite{nwc2dy}, creating the input for \prog{DYSON}.
 
-\section{Free electron function}
-The FEF is computed with a finite element scheme using the program \prog{FreeWilly} \cite{FreeWilly} developed in the framework of this thesis.
-It is based on the library \prog{Libmesh} \cite{libmesh} which itself uses several libraries for the required linear algebra and the mesh-setup.
+The Kohn-Sham orbitals (obtained by ground state DFT) and CI-coefficients (obtained by linear-response TDDFT which yields the configuration interaction singles expansion for a number of excited states) as well as the atomic overlap matrix are interfaced to the in-house software \prog{DYSON} \cite{MAgg} (G.Grell) that computes the DOs.
+Throughout this work, the initial state is chosen to be the ground state of the respective neutral $N$-electron system that is represented with one slater determinant $|\Psi_i^N\rangle$ whereas the final state can be the ground or excited state of the ion, having the general CI-expansion \eq{eq:excCI}.
+\textcolor{blue}{how about notation: Now I have two different $i$: which to change? General change in notation?}
+Thus, the DO $|\Psi^\text{DO}\rangle$ \eq{eq:sigma_do} \textcolor{red}{?? need other eq. for reference!?} can be written as
+\begin{equation} \label{eq:doCI}
+|\Psi^\text{DO}\rangle=\sum_{ia} c_{ja} \langle \Psi_i^N| \Psi_{ja}^{N-1} \rangle.
+\end{equation}
+Knowing the overlap matrix of the atomic orbitals, the overlap integral \eq{eq:doCI} is reduced to a summation of the transition coefficients $c_{ja}$ \cite{MAgg} which are obtained as eigenvectors of the Casida equation \eq{eq:casida}.
+
+\section{Free Electron Function}
+\label{sec:grid}
+The main goal of this thesis is the development of a FEF representation using a finite element scheme that is implemented the program \prog{FreeWilly} \cite{FreeWilly} in the framework of this thesis.
+It is based on the library \prog{Libmesh} \cite{libmesh} which itself uses several libraries for the required linear algebra \cite{petsc, slepc1,eigen} and the mesh-setup \cite{tetgen,qhull}.
 As discussed in section \ref{ch:fem}, the most crucial step in a FEM simulation is the setup of the grid.
-The \prog{FreeWilly}-code supports supports several closely related setup-schemes of which the most important are described in the following.
+The \prog{FreeWilly}-code implements several closely related schemes, with are described in section \ref{ch:GridSetup.}.
+Morover, for comparison purposes here plane wave functions written in a truncated Coulomb basis are used to estimate the PES intensities in the DO formalism.
+This method has shown to yield good agreement with experiment for various molecules \cite{ezDyson,GrellKuehn,DO_TDDFT}.
+
+\subsection{Coulomb Waves}
+An established representation of the FEF in the Dyson formalism is the expansion of a plane wave in Coulomb wave functions \cite{ezDyson,do_modCoul,DO_TDDFT}.
+Such an approach is used here for comparison with the results obtained using a photoelectron function as computed with an finite element/infinite element method.
+The results using a Coulomb wave as FEF presented here are obtained making use of the \prog{ezDyson} v. 3.0 \cite{ezDyson} program in which integration of the dipole transition moment \eq{eq:sigma_do} is performed using a uniform cuboidic grid.
+The particular parameters for these grids are chosen such that they are converged to avoid a significant influence due to integration errors.
+In particular, for the atomic lithium here a cubic box with a diameter of $4\,$\AA\, and $160$ grid points is chosen.
+For carbondioxide, the grid was choosen to be $8\,$\AA\,  along the molecular axis and $8\,$\AA,\ with $360$ and $200$ grid points respectively.
+The grid for benzene has a height (orthogonal to the molecular plane) of $8\,$\AA\, and a diameter of $12$\AA\, in both directions of the molecular plane with $380$ points in each direction.
+To reduce the computational effort, moreover, all transitions for which the norm of the corresponding DO is below \textcolor{red}{$...$ Where do I find this number?} are neglected.
 
 \subsection{Setup of the Grid}
-\label{sec:grid}
+\label{ch:GridSetup}
 %The most crucial part in a FEM simulation is the mesh being used. 
-In the program \prog{FreeWilly} the finite elements is obtained from a set of points via Delaunay triangulation %TODO (see \ref{app:delaunay} for details) 
-using the library \prog{tetgen} \cite{tetgen}.
+In the program \prog{FreeWilly}, the finite elements are constructed using a set of points via Delaunay triangulation %TODO (see \ref{app:delaunay} for details) 
+with the library \prog{tetgen} \cite{tetgen}.
 The distribution of these points is responsible for the quality of the obtained solution via many parameters in a non-trivial way.
-It is expected that the most important of these parameters are
-\begin{description}
-   \item[The molecular geometry] Close to the cores it should be denser, at larger distances a coarser grid is possible.
-   \item[The kinetic energy] of the photo electron which gives the maximum distance between two points
-   \item[The largest angular momentum of the Dyson orbital] determines the angular momentum of the photoelectron to be resembled.
-\end{description}
+%It is expected that the most important of these parameters are
+While choosing these parameters one should account for:
+\begin{itemize}
+   \item \textbf{The molecular geometry} The grid point density should be large close to the atomic nuclei and coarser at larger distances.
+   \item \textbf{The kinetic energy} (wavelength of the outgoing wave) of the photoelectron which determines the maximum distance between two grid points
+   \item \textbf{The largest angular momentum of the Dyson orbital} determines the largest angular momentum of the photoelectron to be resembled assuming that the dipole selection rules $\Delta l=\pm 1$ hold.
+   This is in general not strictly true.
+\end{itemize}
 
-To account for these properties in the best way, here a similar scheme to that suggested by Son and Chu \cite{Son_Chu} is utilised.
-In this scheme, the molecular region is composed of spheres with different radii, centred at the nuclei each and whose overlapping regions are cut off.
+To account for these properties in the best way, here two algorithms are used, based on a scheme suggested by Son and Chu \cite{Son_Chu} but using different functions for the distribution of points.
+In this scheme, the molecular region is composed of spheres with different radii, centred at the nuclei and whose overlapping regions belonging to different atoms are cut off.
+Thus, the setup of a point distribution is subdivided into three parameters to be found: The radii of the individual spheres, the distribution of points on these spheres and the number of points per sphere.
 %In this work the point-distribution is chosen similarly to the grid used by Son and Chu \cite{Son_Chu} which is based on spherical distributions around the atoms whose overlapping regions are cut off.
-To yield a reasonable mesh, the radii of these spheres need to be larger than the bond lengths to avoid holes or interatomic gaps in the molecule, \textit{e.g.} between different ligands.
-Using such a scheme, the global grid is determined by the size of the largest sphere $r_\text{max}$, the number $N$ of spheres being used for each atom as well as the radial distribution of the size of spheres and angular distributions of points on each sphere, respectively.
 
-For the radial distribution of $N$ spheres, Son and Chu \cite{Son_Chu0} suggested the radial distribution
+To yield a reasonable mesh, the maximal radii $r_\text{max}$ of these spheres need to be larger than the bond lengths to avoid interatomic gaps in molecules.
+Using such a scheme, the global grid is determined by the size of the largest sphere $r_\text{max}$, the number $N$ of spheres being used for each atom as well as the distribution of the radii of spheres and angular distributions of points on each sphere, respectively.
+For the radii of $N$ spheres, Son and Chu \cite{Son_Chu0} suggested the following scheme
 \begin{equation} \label{eq:son_map}
 r_i=\frac{iq}{N-i+\frac{qN}{r_\text{max}}} \qquad i=1,\hdots ,N 
 \end{equation}
 where $q$ is a parameter that determines the distance between the most inner spheres.
-Using this function, the smallest spheres ($i<<N$) are scaled linearly with distances $r_\text{max}/N$ whereas the distance of the largest spheres depends non-trivially on the parameters but can become very large if $q$ is small whereas large $q$ lead to almost uniform distribution of spheres.
+Using this function, the smallest spheres ($i<<N$) are scaled linearly, having distances $r_\text{max}/N$ between the closest spheres whereas the radii of the largest spheres depends non-trivially on the parameters but can become very large if $q$ is small.
+In the limit of infinitely large $q$, \eq{eq:son_map} corresponds to a uniform distribution of spheres.
 
-To obtain better control of the distance between the inner spheres and the maximum distance which needs to be consiberably smaller than the wave length, in this work the formula
+To obtain better control of the distances between the inner spheres and the maximum distance which needs to be consiberably smaller than the wave length, the formula
 \begin{equation} \label{eq:tm_map}
-r_i=\frac{iq}{\left( \frac Ni \right)^p \left(\frac{Nq}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N 
+r_i=\frac{iq}{\left( \frac Ni \right)^s \left(\frac{Nq}{r_\text{max}}-1\right) +1} \qquad i=1,\hdots ,N 
 \end{equation}
-is suggested which has two degrees of freedom $q$ and $p\geq 1$ where the condition $N>\frac{r_\text{max}}{q}$ needs to be fulfilled to ensure positive radii.
-Here $q$ is the asymptotic distance between two spheres whereas the distance of inner spheres can be tuned by the power $p+1$ so that the inner spheres can be tuned to become very dense.
+is suggested in this work.
+It has two degrees of freedom $q$ and $s\geq 1$, where the condition $N>\frac{r_\text{max}}{q}$ needs to be fulfilled to ensure positive radii.
+Here $q$ is the asymptotic distance between two spheres whereas the distance of inner spheres can be tuned by the power $s+1$ so that the inner spheres become very dense.
 %Thereby it is important to mention that in this scheme (in contrast to the above one) the (asymptotic for $r\rightarrow \infty$) maximum distance between two spheres is $l$ and hence could be physically chosen to $l\approx \frac \lambda 2$.
 
-While the distribution of spheres follows, at least on a qualitative level, a clear scheme since it should always resemble the local kinetic energy, the distribution of points on the surface of each sphere more complicated.
-Here, a regular distribution is a good choise, but on the non-linear topology of the sphere, regularity is in general more challenging.
-While so-called geodesic grids are popular in earth sciences \cite{geodesic1,geodesic2,geodes_charge}, their construction allows only for exponentially growing mesh-sizes.
-Another common approach is to use quadrature points of integration rules of a given order which lead to Lebedev-grids \cite{lebedev,lebedev2} and spherical t-designs \cite{t-design1, t-design2} that are found more often in quantum chemical contexts \cite{LebQC1,LebQC2,lebDFT,lebDFT2} and will be used in this thesis.
-Further methods involve the search of extrem such as minimisation of the Riesz s-energy, and other geometric properties \cite{fliegeMaier,womersley,wom2,wom3} or a set of qualitatively lower but computationally much easier schemes such as the spherical fibonacci mapping \cite{fibonacci,fibonacci2}.
+%While the distribution of spheres follows, at least on a qualitative level, a clear scheme since it should always resemble the local kinetic energy, the distribution of points on the surface of each sphere more complicated.
+%Here, a regular distribution is a good choice, but on the non-linear topology of the sphere, regularity is in general more challenging.
+In addition to a radial distribution that resembles the radial structure of the wave function, also a proper angular distribution of the points is required.
+The problem of distributing points regularly on a sphere is non-trivial.
+Depending on the measure being used, several schemes are proposed.
+A popular choice in earth sciences are so-called geodesic grids \cite{geodesic1,geodesic2,geodes_charge}, but their construction allows only for exponentially growing mesh-sizes and thus they are not of interest here.
+Instead, in the implemented protocol several point-sets of stemming from quadrature rules of numerical integration schemes of a given order on a sphere.
+The order in these schemes corresponds to the largest spherical harmonic that can be exactly integrated, leading to Lebedev-grids \cite{lebedev,lebedev2} and spherical t-designs \cite{t-design1, t-design2}.
+These distributions are found more often in quantum-chemical contexts \cite{LebQC1,LebQC2,lebDFT,lebDFT2} and will be used in this thesis.
+Further, several point-sets implemented in \prog{FreeWilly} represent point distributions corresponding to extrema of certain quantities such as the minimum of the Riesz s-energy\cite{fliegeMaier} or other geometric properties \cite{womersley,wom2,wom3}.
+The computation of the above-mentioned point-sets is very demanding to compute and thus are hard-coded in the current implementation.
+For comparison, finally also the spherical Fibonacci mapping \cite{fibonacci,fibonacci2} is implemented.
+It yields a less regular point-distribution but is computationally much easier to obtain and, in contrast to the distributions discribed above, can be obtained for any number of points.
 \begin{figure}
    %\includegraphics[width=0.5\textwidth]{water1}
    %\includegraphics[width=0.5\textwidth]{water2}
    %\caption{Example of a mesh for the water-geometry. It consists of $5$ spheres with constant number of points per sphere. The overlapping regions are cut off. Left: cut through the nuclear plane. 
    %\textcolor{red}{add figure with distribution: tm}}
    \includegraphics[width=\textwidth]{Figures/CO2_grid}
-   \caption{Examples of point-distributions for a CO$_2$-molecules with $r_\text{max}=3\,$a.u. and $18$ spheres, in the upper row the full mesh, below cuts through the molecular plane.
-   left: constant number of points, radial scheme (\ref{eq:son_map}) with $q=0.7$; centre: radial scheme (\ref{eq:son_map}) with number of points according to (\ref{eq:son_num}) with $q=0.7$; right: radial distribution (\ref{eq:tm_map}) with $q=0.7$, $p=2$ and number of points per sphere (\ref{eq:tm_num})}
+   \caption{Examples of point-distributions for a CO$_2$-molecule with $r_\text{max}=3\,$a.u. and $N=18$ spheres, in the upper row the full mesh and in the lower row the cuts through the molecular plane are presented.
+   left: constant number of points $M$ per sphere, radial scheme \eq{eq:son_map} with $q=0.7$; centre: radial scheme \eq{eq:son_map} with number of points according to \eq{eq:son_num} with $q=0.7$; right: radial distribution from \eq{eq:tm_map} with $q=0.7$, $s=2$ and number of points per sphere according to \eq{eq:tm_num}}
    \label{fig:molmesh}
 \end{figure}
-
-Since in finite element theory the sphere neither needs to be really round nor is there any global functional defined on it,
-the complicated distributions described above may be not even needed. 
-An other approach therefore is to use an algorithm that gives just a more or less uniform distribution.
-
+However, since in finite element theory the sphere neither needs to be really round nor is there any global functional defined on it, the quality of a particular distribution might be not critical here.
 %Some explanations are given here:\\ %https://www.maths.unsw.edu.au/about/distributing-points-sphere
 %Approach used for climate models: so-called geodesic grids: subdivision of polyhedra, projected onto the sphere\cite{geodesic1, geodesic2}, see also
 %http://kiwi.atmos.colostate.edu/BUGS/geodesic/
 %http://kiwi.atmos.colostate.edu/BUGS/pdf/ZM-grid.pdf
 %http://kiwi.atmos.colostate.edu/BUGS/pdf/conservation.pdf
 %http://kiwi.atmos.colostate.edu/BUGS/pdf/ccsr.pdf
-
-The above mentioned techniques show the large variety of different approaches and it is not very clear which one will meet our needs best.
-Moreover, here the problem is not only two dimensional but the whole sphere (not only its surface) needs to be subdivided. 
-Hence, besides the question of a radial density of different spherical surfaces, also the number of points per sphere as function of the radial distance 
-needs to be considered.
 
 %Whether the approach of subdividing the atomic meshes into radial and angular parts as opposed to another volume tessellation can be questioned and may turn out to be inefficient.
 %Application of Geodesic grid in calculating surface charges: \cite{geodes_charge}, also mentioning Connolly algorithm (refs 26, 29 therein).
@@ -238,62 +309,53 @@ needs to be considered.
 %
 %The second scheme has a divergence around $Nq=r_\text{max}$. 
 %It can be shown that the condition $N\leq \frac rl $ is enough here to stabilise it.
-
-Besides the tricky question about this mapping, also the number of points per sphere depending on the radial distance needs to be considered. 
-In \cite{Son_Chu0} this is chosen to be constant without further discussion but of course there are several possible design criteria as well.
-Besides a constant number, also a constant spherical density (hence $N\propto r^2$) are possible; However, it might be sensible to follow a similar idea than in the radial mapping: Being fine close to the nuclei and get coarser with increasing distance.
-In particular, I followed the design rule of keeping the space between points in radial direction similar to space between points in angular distribution.
-Hence, $d_\text{spheric}=\sqrt{\frac{4\pi r_i^2}{N_i}}\approx r_i-r_{i-1}$.
+Finally, not only the scheme used to distribute the points on the spheres, but also the number of points to be distributed is of importance.
+In \cite{Son_Chu0} the number of points $M$ for each sphere is chosen to be a constant parameter.
+Application of such a scheme is shown in Figure \ref{fig:molmesh} in the left panel.
+However, it can be seen that this leads to unbalanced distances between radial and spherical neighbours.
+%Besides a constant number, also a constant spherical density (hence $M\propto r^2$) is possible.
+%However, it might be sensible to follow a similar idea than in the radial mapping: Being fine close to the nuclei and get coarser with increasing distance.
+To obtain a more regular mesh, for which the radial distances between points are comparable to the distances along the sphere, here for both radial distributions, \eq{eq:son_map} and \eq{eq:tm_map}, the criterion $d_\text{spheric}=\sqrt{\frac{4\pi r_i^2}{M_i}}\approx r_i-r_{i-1}$ where $d_\text{spheric}$ is the average distance between two points on the sphere $i$.
 For the above described radial schemes, this results in 
 \begin{equation}\label{eq:tm_num}
-N_i= \frac{4\pi}{ \left(1-\frac{i-1 }{i}\frac{N-i+\frac{lN}{r_\text{max}}}{N-i+1+\frac{lN}{r_\text{max}}}\right)^2 }
+M_i= \frac{4\pi}{ \left(1-\frac{i-1 }{i}\frac{N-i+\frac{lN}{r_\text{max}}}{N-i+1+\frac{lN}{r_\text{max}}}\right)^2 }
 \end{equation}
-for the first scheme and 
+for the first scheme, denoted as \textit{son} in the following, and 
 \begin{equation} \label{eq:son_num}
-N_i= \frac{4\pi}{\left(1-\frac{i-1 }{i}\frac{ (\frac{N}{i})^p \left(\frac{lN}{r_\text{max}}-1\right)+1}{ (\frac{N}{i-1})^p\left( \frac{Nl}{r_\text{max}} -1 \right) +1 } \right)^2 }
+M_i= \frac{4\pi}{\left(1-\frac{i-1 }{i}\frac{ (\frac{N}{i})^p \left(\frac{lN}{r_\text{max}}-1\right)+1}{ (\frac{N}{i-1})^p\left( \frac{Nl}{r_\text{max}} -1 \right) +1 } \right)^2 }
 \end{equation}
-for the latter.
+for the radial mapping \eq{eq:tm_map} which will be referred to as \textit{tm} in the following sections.
+Since some of the spherical schemes described above allow only for certain numbers of points each, here, the best approximation is used respectively.
+%Special mapping schemes are the constant radial mapping $r_i=a i$ which corresponds to a constant spherical grid density $N_i=4\pi a^2 i^2$ and an exponential map $r_i=q^i r_0$ which would require a constant number of spherical grid points $N_i=\frac{4\pi q^2}{(1-q)^2}$ according to the rule derived above.
 
-The respective radii and number of points per sphere are shown in Figure \ref{fig:maps}.\\
-Special mapping schemes are the constant radial mapping $r_i=a i$ which corresponds to a constant spherical grid density $N_i=4\pi a^2 i^2$ and an exponential map $r_i=q^i r_0$ which would require a constant number of spherical grid points $N_i=\frac{4\pi q^2}{(1-q)^2}$ according to the rule derived above.
-
-\begin{figure}
+Using this procedure, the molecular mesh is determined by the molecular geometry the largest radius $r_\text{max}$, the radial distribution (\textit{son} or \textit{tm} with parameters $s$ and $q$) and the spherical point distribution.
+Importantly, the number of points per sphere is fixed and is illustrated in the Figure \ref{fig:maps} b) for a given set of parameters.
+\begin{figure}[h]
 \includegraphics[width=\textwidth]{Data/radial_mapping}
-\caption{Comparison of the radius (left) and number of points (right) of the different spheres ($N=15$, $r_\text{max}=5$ and $q=2$) for the different radial schemes (\ref{eq:son_map}) and (\ref{eq:tm_map}).}
+\caption{Comparison of the radius (left) and number of points (right) of the $i$. sphere using $N=15$, $r_\text{max}=5$ and $q=2$.
+The radial scheme son corresponds to \eq{eq:son_map} and  tm to \eq{eq:tm_map}.
+For the number of points per sphere, the \eq{eq:son_num} and \eq{eq:tm_num} are used, respectively.}
 \label{fig:maps}
 \end{figure}
+Figure \ref{fig:maps} a) shows the size of the radii of the individual spheres which follow in all three cases a similar scheme.
+It is important to note therein that the parameter $q$ has a different interpretation in the different radial schemes and thus a direct comparison of the son and tm-schemes is not possible.
+In contrast to the distribution of radii, the number of points $M$ on sphere number $i$ is qualitatively different for the different radial distributions as Figure \ref{fig:maps} illustrates. 
+Here, especially the decay of $M$ for the largest spheres in the son-scheme should be noted which is an indication that this function is not well-suited for the representation of a FEF.
 
-Since some of the spherical schemes described above allow only for certain numbers of points each, here, the best approximation is used respectively.
-
-\section{Combination of the OTRSH-scheme with Intensity Calculations}
-The use of TDDFT with an OTRSH-scheme as described in section \ref{ch:otrsh} in combination with computed intensities using the Dyson formalism is, to the best of my knowledge, a novelty in this work.
-In this section, the advantages of these methods are presented using benzene as example system.
-The left panel in Figure \ref{fig:Benzotrsh} shows the functional \eq{eq:J_ao} for benzene.
-This behaviour is prototypical for the error in Koopmans' theorem when varying the parameters $\alpha$ and $\omega$.
-As the Figure \ref{fig:Benzotrsh} illustrates, leads the imposition of Koopmans' theorem not to a unique set of parameters.
-Instead, a larger constant exact exchange $\alpha$ can be compensated by a smaller $\omega$, \textit{i.e.} the non-constant contributions are added for a larger radius.
-\begin{figure}
-\includegraphics[width=0.5\textwidth]{Figures/Benzene/benzene2D}
-\includegraphics[width=0.5\textwidth]{Figures/Benzene/benzene_S_stab_ion_cut_all.pdf}
-\caption{lowest eigenvalue of the stability matrix of benzene as function of $\alpha$ and $\omega$. Largest stability and minimal $J(\alpha, \omega)$ yield different solutions.}
-\label{fig:Benzotrsh}
-\end{figure}
-Another important quantity is the stability matrix which corresponds \textcolor{red}{in TDA!?} to the matrix $\mat{A}$ in the Casida equation (\ref{eq:casida}).
-Its smallest eigenvalue corresponds to the transition from the HOMO to LUMO and should be, as such, postitive.
-In contrast to the behaviour of the $J$-functional \eq{eq:J_ao}, the lowest eigenvalue of the stability matrix has no such prototypical dependence on $\alpha$ and $\omega$ as the comparison of the right panel in Figure \ref{fig:Benzotrsh} with Figure \ref{fig:SulphurStab} shows where the respective HOMO-LUMO gap for the S$_8$-molecule is shown.
-Further, the choice of a particular set of parameters from the minimal parabola of the right panel of Figure \ref{fig:Benzotrsh} has a strong influence on the excitation energies and leads even to negative excitaiton energies for some molecules.
-Here, as a second criterion for the optimal parameters, the derivative discontinuity is chosen.
-\textcolor{blue}{figure}
-\textcolor{green}{How to indicate that the optimisation and cration of figures was not done by me?}
-The parameters resulting from this are $\alpha=0.00$ and $\omega=0.32$.
-
-To indicate the consequences of the OTRSH procedure, in Figure \ref{fig:blypPES} the photoelectron spectrum of benzene as predicted with the optimised functional and the BLYP functional, where no exact exchange is used, is presented and compared to experiment.
-
-\begin{wrapfigure}{L}{0.5\textwidth}
-\includegraphics[width=0.5\textwidth]{Figures/Benzene/Benzene}
-\caption{Photoelectron spectra of benzene at different levels of theory.
-In the upper panel the spectra obtained with the Dyson orbital formalism (Dyson) and using the Koopmans' approach (DOS) are compared, the experimental reference is shown in the lower panel \cite{BenzExp}.}
-\label{fig:benzPES}
+Numerical tests on these schemes show, however, that the different schemes introduced above lead to finite element meshes of similar quality (see section \ref{app:CompSetup}).
+The tests presented in the following are done on a single atom using a box-size of $r_\text{max}=7\,$bohr and $N=20$ spheres.
+As radial distribution, the tm-mapping \eq{eq:tm_map} is used for the schemes denoted as \textit{const} and \textit{tm} whereas \eq{eq:son_map}) map is used for the scheme \textit{son}.
+The number of points per sphere is $M_i=74$ for all spheres for the \textit{const} scheme and according to \eq{eq:tm_num} and \eq{eq:son_num} for the others, respectively.
+The parameters for the radial mapping are chosen as $q=1.8$ and $s=2.6$.
+In Figure \ref{fig:SchemHist}, the distribution of the ratio of the longest edge to the height of the smallest side is shown, similar graphs for further quantities indicating the quality of the tetrahedra are given in \ref{appFig:SchemHist} in supplement and show a very similar behaviour.
+Thus, the quality of the generated tetrahedra is very similar for the three schemes which is, in parts, due to the modifications applied by \prog{tetgen} but can be moreover explained by the adaptive number of gridpoints per sphere according to \eq{eq:tm_num} and \eq{eq:son_num} which ensures some regularity of the point distribution.
+\begin{wrapfigure}{R}{0.5\textwidth}
+\includegraphics[width=0.49\textwidth]{Figures/Radi_hist.pdf}
+\caption{Distribution of aspect ratio (longest edge length divided by the smallest side height).
+   Be aware that the ranges of the different bins differ.}
+\label{fig:SchemHist}
 \end{wrapfigure}
-
-Mention results of S$_8$ in supplement.
+In this work, unless specified, the tm-scheme is used in the following since it provides more control about the distances between the outer region and thus is better suited for the description of FEFs.
+Similar studies are done for the properties of the solutions obtained using the different spherical grids introduced above which are shown in section \ref{appCompSetup}.
+However, the results show only minor differences between the different schemes.
+In this work unless otherwise noted, the Lebedev scheme is used which provided a higher density of states (DOS) than the other schemes in this test.

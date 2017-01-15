@@ -2,10 +2,10 @@
 In the previous chapters, many different methods that can be used to compute PESs numerically are described and in chapter \ref{ch:proced} the method used within this work is described in more detail.
 In this chapter some results are shown and explained.
 
-Since the method developed in this work combines several techniques that have not been used together so far and several conceptual questions need to be clarified before computing actual PESs, is section \ref{ch:BCbench} two BCs are compared in their influence on the wave-function. In section \ref{sec:NumConve} further benchmarking calculations on some numerical parameters are shown.
-For simplicity, these calculations were performed using a Lithium atom as test system.
+Since the method developed in this work combines several techniques that have not been used together so far and several conceptual questions need to be clarified before computing actual PESs, is section \ref{ch:BCbench} two BCs are compared in their influence on the wave-function. %In section \ref{sec:NumConve} further benchmarking calculations on some numerical parameters are shown.
+For simplicity, these calculations were performed using a lithium atom as test system.
 
-In section \ref{ch:resLI} further results for atomic Lithium are presented, showing several conceptual ... .
+In section \ref{ch:resLI} further results for atomic lithium are presented, showing several conceptual ... .
 
 %There is a paper\cite{vibPES} with vibronically resolved PES from experiment.\\
 %PES of N2 with 'angular resolution' (latter not directly) \cite{PESN2}.
@@ -77,13 +77,21 @@ Moreover, for example the comparison of the Figures \ref{fig:dbcRad} e) and f) s
 \label{sec:iBCbench}
 In section \ref{ch:InfEl}, several formulations of infinite elements are presented.
 
+\begin{figure}%{R}{0.5\textwidth}
+\begin{subfigure}{0.5\textwidth}
+   \includegraphics[width=\textwidth]{Figures/BC/plane_fin}
+   \caption{2D-cut of a solution with infinite elemnts using a spherical finite element region indicated by the red circle with a radius of $r=6\,$bohr and $N=11$ spheres.}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+   \includegraphics[width=\textwidth]{Figures/RBF/P-Wave}
+   \includegraphics[width=\textwidth]{Figures/RBF/p_wave}
+   \caption{$r_\text{max}=12.39$, $N=18$, scheme: tm, $s=2.5$, $q=1.2$}
+   \label{fig:cutInf}
+\end{subfigure}
+%\caption{}
+\end{figure}
 which require some investigation to get an understanding of the properties of the numerical setup described so far.
 Among these questions is the formulation of infinite elements, discussed in section \ref{ch:InfEl} of which the most important ones are studied in section \ref{ch:bmFormul}.
-\begin{wrapfigure}{L}{0.5\textwidth}
-\includegraphics[width=0.5\textwidth]{Figures/BC/plane_fin}
-\caption{2D-cut of a solution with infinite elemnts using a spherical finite element region indicated by the red circle with a radius of $r=6\,$bohr and $N=11$ spheres.}
-\label{fig:cutInf}
-\end{wrapfigure}
 In Figure \ref{fig:cutInf}, a 2D-cut of a solution obtained with infinite elements for the Hydrogen atom is shown, the red circle indicates the region of finite elements.
 The features shown in Figure \ref{fig:cutInf} are prototypic for the properties that are found for the infinite elements here.
 It is clearly visible from the graph that the infinite region resembles the asymtotic behaviour, showing the expected regular oscillations of an outgoing wave.
@@ -93,7 +101,7 @@ However, the angular momentum is quite large, leading to only small contribution
 \subsubsection{Comparison of Formulations}
 \label{ch:bmFormul}
 Before having a closer look at the convergence of different parameters, first the formulation of infinite elements to be used later is investigated.
-Since the unconjugated Burnett-formulation was not very successful \cite{dreyer}, the conjugated formulations of Burnett and Astley-Leis both have interesting features to use for quantum mechanical problems.
+Since the unconjugated Bur\-nett-formulation was not very successful \cite{dreyer}, the conjugated formulations of Burnett and Astley-Leis both have interesting features to use for quantum mechanical problems.
 Since the conjugated Burnett elements lead to infinitely large matrix elements, here the Astley-Leis elements (\ref{eq:ALelem}) are compared with the symmetrised form (\ref{eq:ALsymm}) using different powers $p$.
 Moreover, to study the influence of the damping function in the Astley-Leis formulation (\ref{eq:ALelem}) in more detail, also a test function space similar to eq. (\ref{eq:ALelem}) but using the squared damping function $D(r)^2$ instead of $D(r)$.
 
@@ -101,7 +109,7 @@ The 50 real solutions whose energy is closest to the target value of $15.44\,$eV
 For the unsymmetric formulations only the real part is shown which is assigned to the physical energy of the respective state.
 \begin{figure}
 \includegraphics[width=\textwidth]{Figures/IFem_form_spectra}
-\caption{The first 50 eigenvalues obtained with the original Astley-Leis formulation (imaginary part not shown) and with the symmetrised form (\ref{eq:ALsymm}).}
+\caption{The first 50 eigenvalues obtained with the original Astley-Leis formulation (imaginary part not shown) and with the symmetrised form \eq{eq:ALsymm}.}
 \label{fig:IFEMform_spect}
 \end{figure}
 The results shown in Figure \ref{fig:IFEMform_spect} show clearly that the obtained density of states decreases with the power $p$ and converges for $p\approx \frac 18$ for the given parameters (the radial mapping scheme (\ref{eq:tm_map}) is used with $N=25$, $l=0.5$, $p=2.5$ and $r_\text{max}=7\,$bohr.).
@@ -110,6 +118,7 @@ The dependence of the obtained spectrum of the Hamiltonian on the power of the d
 The dependence converges for $p=1/8$, see also Figure \ref{fig:powerSpect} in supplement.
 Moreover, even for small powers $p\approx 10^{-4}$, no numerical instabilities are observable so that there is some freedom in this parameter and it does not need to be optimised for different systems individually.
 The observations made on the convergence-properties using the spectrum in Figure \ref{fig:IFEMform_spect} are supported by the projections of the solutions on spherical waves of which some are shown in Figure \ref{fig:IFEMform_project}.
+
 \begin{figure}
 \includegraphics[width=\textwidth]{Figures/Ifem_forms}
 \caption{Decomposition of the first 30 solutions into spherical waves with angular momenta up to $l=7$.
@@ -129,11 +138,13 @@ This value is far in the convergence region of Figure \ref{fig:IFEMform_project}
 %More important than the subspace used numerically is obviously the size of the sphere used for the FEM description.
 Similarly to the Dirichlet BCs discussed in section \ref{sec:DBCbench}, also for infinite element the size of the finite element region has a strong influence on the solution, even if the dependency is weaker as can be seen in Figure \ref{fig:InfBoxs} where the energy of the energies closest to the target value is plotted for different box sizes.
 However, the energy-dependence on the box-size is much weaker than in the case of Dirichlet BCs as the comparison with the $\frac{1}{r^3}$-curve in Figure \ref{fig:InfBoxs} and \ref{fig:dbcRad} (a) shows.
-\begin{wrapfigure}{L}{0.6\textwidth}
+\begin{figure}
+%\begin{wrapfigure}{L}{0.6\textwidth}
 \includegraphics[width=0.6\textwidth]{Figures/BC/BoxsInfEL}
 \caption{Double-logarithmic plot of the error in energy for different radii of the finite element region.}
 \label{fig:InfBoxs}
-\end{wrapfigure}
+%\end{wrapfigure}
+\end{figure}
 Moreover, the error in energy is in general much lower with infinite elements which is a further indicate for the higher accuracy of infinite elements compared to the Dirichlet boundaries.
 On the other side, also the angular momenta of the solutions are larger than those occurring with Dirichlet BC at the same box-size.
 \begin{figure}
@@ -187,135 +198,128 @@ Such a relation is expected for the box-size since a large angular momentum is a
 Hence, these studies show that a systematic setup of reasonable parameters is non-trivial and needs to ... the compromise between a dense spectrum and reasonable radial dependence of the wave function on the one side low angular momenta and well-behaved solution on the other side.
 It is important to note the importance of the systematic character for such a setup since the computation of a single PES requires the computation of photoelectrons whose kinetic energy may vary over orders of magnitude and thus the box needs to be adapted to this.
 
-%\subsection{Hamiltonian dependence on wave vector}
-%Due to the inifinite elements, the Hamiltonian depends on the target momentum $k$ as can be seen in eq. (\ref{eq:SymmKinE}) and (\ref{eq:InFEMmatrix}).
-%The nature of this dependence of especial interest since it is a special characteristic of this formulation and another numerical parameter influencing the solutions.
-%\begin{wrapfigure}{R}{0.5\textwidth}
-%\includegraphics[width=0.5\textwidth]{Figures/E_k_benchmark}
-%\caption{Energies of the solutions obtained for target energies varying in the $\mu\,E_h$-range.}
-%\label{fig:E_k_bm}
-%\end{wrapfigure}
-%The obtained energies of the solutions vary strongly when changing the target momentum $k$ as the Figure \ref{fig:E_k_bm} illustrates.
-%In the figure, the target energy is varied between $0.566451\,$a. u. and $0.066551\,$a. u. and lead to strongly changing eigenenergies.
-%This strong dependence on $k$ is also observed when projecting the obtained FEFs onto spherical waves (\ref{eq:spherWave}) which is not shown here.
+\textcolor{red}{\section{Numerical Benchmarks and Stability Tests}}
 
-\section{Numerical Benchmarks and Stability Tests}
-\subsection{Mesh-Construction and Quality}
-\label{sec:NumConve}
-In section \ref{sec:grid} several parameters for the setup of the grid were discussed whose numerical properties are te compared and evaluated in this section.
-Here, three different schemes for distributing the concentric spheres are presented for the Lithium atom, each with a maximum radius $r_\text{max}=7\,$bohr and $N=20$ spheres.
-In the scheme denoted in Table \ref{tab:RadScheme} and Figure \ref{fig:SchemHist} (left) as ``const'', the spheres are placed according to eq. (\ref{eq:tm_map}) with $N_i=74$ points on each sphere.
-The scheme denoted as tm also uses eq. (\ref{eq:tm_map}) for the size of respective spheres but adapts the number of points per sphere according to (\ref{eq:tm_num}).
-The last scheme tested here uses the radial mapping suggested by Son and Chu \cite{Son_Chu0} (\ref{eq:son_map}) and the number of points per sphere (\ref{eq:son_num}).
-The parameters for the radial mapping are chosen as $l=1.8$ and $p=2.6$ and for the distribution of points on the spheres the Lebedev-scheme \cite{lebedev} is used, respectively.
-\begin{table}
-\begin{tabular}{|c|c|c|c|}
-\hline
-scheme & runtime [s] & DOS$^{a)}$ [$(m E_h)^{-1}$] & number of nodes\\
-\hline
-const   &  438   &    7    &   3255 \\
-tm      &  825   &    13   &   5132 \\
-son     &  891   &    4    &   6368 \\
-\hline
-\end{tabular}
-\caption{The runtime, density of states and number of nodes used for the different radial mapping schemes that are described in the text.\\
-$^{a)}$: density of states, averaged over 23 states}
-\label{tab:RadScheme}
-\end{table}
-Some characteristic properties of the respective results are shown in Table \ref{tab:RadScheme}.
-The runtime given in this table is only a rough estimation but seem to scale directly proportional to the number of nodes.
-Seemingly the radial mapping scheme (\ref{eq:tm_map}) in combination with the angular density (\ref{eq:tm_num}) seems to be advantageous compared to the others even though it should be noted that this may be different for other parameters and that the density of states in these calculations is not uniform so that an average over more or fewer states can influence the results qualitatively.
-However, the results may be very sensitive with respect to the change of parameters such as box-size and the parameter $l$, respectively.
-Moreover, during the creation of tetrahedra from the given point-sets a quality-check is done by the respective library \cite{tetgen} which adds or removes points to ensure well-shaped tetrahedra which may, however, alter the distributions considerably.
-These corrections of the point-set may be also responsible for the very similar distribution of the properties of the different tetrahedra.
-In Figure \ref{fig:SchemHist} (left), the distribution of the ratio of the longest edge to the height of the smallest side is shown.
-Here no significant differences between the schemes under investigation can be seen.
+\section{Energy-dependence of the Cross-Section}
+\label{sec:cs}
+The relative heights of different features in PESs are dependent on the energy of the incoming photons.
+This dependence is small if the kinetic energy of the outgoing electron is high, but for low kinetic energies, \textit{i.e.} below $\approx 10\,$eV, the reproduction of the correct energy-dependence is important for a theoretical method to be able to predict the intensities in the PESs reliably.
+In the DO formalism, this dependency is accounted for via the dipole moment integral of the photoelectron with the DO in \eq{eq:sigma_do}.
+The main influence of this integral is the fact that the oscillations in the FEF become faster with increasing kinetic energy and thus, the overlap with the DO, which usually has only few nodes, decreases.
+The slope of the decay with increasing photon energy thus contains information about the size of the DO because for a broad and unstructurised DO, the oscillations cancel most contributions out whereas a strongly localised DO is less sensitive to the wavelength.
+%Moreover, a more complicated dependence of the intensity of a peak on kinetic energy including maxima indicates 
+Thus, the dependence of the intensity of a peak on the photon energy contains information on the nature of the transition.
+Hence, it is another important property that is studied in several experimental and theoretical works \cite{LiNaRef1,LiCS,stieltje}.
+In this work, the cross section of the valence-transition of lithium as well as \textcolor{blue}{four!?} transitions of CO$_2$ are studied.
 
-The angular distribution of points seems to be only of minor importance.
-As shown in the Figures \ref{fig:SchemHist} and \ref{appFig:SchemHist} in supplement, the statistics are very similar and also the obtained density of states is very comparable.
-However, the angular distribution can play a larger role when considering non-spherical systems.
-In this work unless otherwise noted, the Lebedev scheme is used which provided the highest density of states (DOS) in this test.
-The impression of very similar properties of the meshes generated by different schemes is also supported by the statistics of further parameters of the tetrahedra, see Figure \ref{appFig:SchemHist}.
-\begin{figure}
-\includegraphics[width=0.49\textwidth]{Figures/Radi_hist.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/Sph_hist.pdf}
-\caption{Distribution of aspect ratio (longest edge length divided by the smallest side height).
-   Be aware that the ranges of the different bins differ.}
-\label{fig:SchemHist}
-\end{figure}
-Concluding one can say that the procedures studied here yield meshes with similar quality.
-
-\subsection{Numerical Convergence}
-In the FEM scheme used to compute the FEF, several parameters governing numerical and physical characteristics are used such as box-size, target energy and subspace used for solving the eigensystem.
-
-The size of the Krylov-subspace does not play a role for the quality of the solution as shown in Figure \ref{fig:E_nev} for the symmetric formulation with a power $p=\frac 12$ of the damping function $D$.
-\begin{wrapfigure}{R}{0.5\textwidth}
-\includegraphics[width=0.5\textwidth]{Figures/Root_E_nev.pdf}
-\caption{The energies of the 20 states that fit the target energy best, depending on the
-size of the Krylov-suspace, indicated by the colour.}
-\label{fig:E_nev}
-\end{wrapfigure}
-Such a good behaviour can, however, only be observed for the symmetric case because in case of the non-hermitian formulation the ordering of the eigenvalues can not be done unambiguously.
-
-\section{atomic Lithium}
-\label{ch:resLI}
-As the smallest system that has multiple electrons in its anionic state as well, Lithium is a good test object that has theoretical as well as experimental reference data available, \cite{Li-R,Li-R1, LiNaRef1} even though its appearance in a work on `complex molecules' might surprise.
-However, its photoelectron spectrum consists, except for a single valence peak, only of the core electron spectrum.
-In this region the estimated binding energies are often not that good as those obtained for valence orbitals and, moreover, two out of four main peaks of the spectrum arise due to dipole-transitions in the bound part and thus are not accounted for due to the neglect of the conjugated Dyson orbital in eq. (\ref{eq:fullDO}) \cite{saPonzi}.
-%The appearance of $2p$-states are accessed by a dipole-transition in the bound part and can not be described within the theory applied here due to the neglect of the conjugate DO term in equation (\ref{eq:fullDO}) \cite{saPonzi}.
-%Experiment from Moore, cited in \cite{LiNaRef1}; original not found.
-%Experiment 2 from \cite{LiSonntag}.
-%
-%\begin{wrapfigure}{l}{0.7\textwidth}
-%\includegraphics[width=0.69\textwidth]{Figures/Lithium/Lithium_J0_2D_terrain_path_spline_cut}
-%\caption{The functional $J(\alpha,\omega)$ described in eqation (\ref{eq:J_ao}) for Lithium}
-%\label{fig:Lith-otrsh}
-%\end{wrapfigure}
-
-However, the well-separated single valence peak allows a more detailed study of the photon energy dependence of the intensity of a single peak as shown in Figure \ref{fig:Li-CS} where experimental values are compared with several theoretical models.
-% TODO: this figure in supplement to show comparison with other theoretical results?
-%\begin{wrapfigure}{l}{0.7\textwidth}
-%\includegraphics[width=0.69\textwidth]{Figures/Lithium/Li_crossSect}
-%\caption{Cross section of the Lithium atom as function of the photon energy \cite{LiCS}.}
-%\label{fig:Lith-cs}
-%\end{wrapfigure}
+In Figure \ref{fig:Li-CS}, the intensity of the valence transition of lithium (binding energy of $E_b=0.2067\,$) is shown as a function of the photon energy.
+Since the kinetic energy (and thus the wavelength) of the particle spans over a very broad range, the setup for the computation of the FEF needs to be adapted to the particular kinetic energy.
+As the studies in section \ref{ch:BCbench} showed, is the box-size very critical to the properties of the solution.
+It may not be too small to ensure a reasonable error in energy, but should not be too large to have considerable contributions of low angular momenta that is crucial for the computation of intensities.
 \begin{figure}
 \includegraphics[width=\textwidth]{Figures/Lithium/CrossSect2}
-\caption{The photoelectron cross section of the Lithium atom as a function of the photon energy obtained with Dirichlet BCs (DBCs) and with infinite elements (inf), compared to experiment  \cite{LiCS}.
-In the left panel, the intensity is the sum over intensities for $80$ FEFs respectively, in the right panel the intensities of single functions are shown.}
+\caption{The photoelectron cross section of the lithium atom as a function of the photon energy obtained the FEM (Dirichlet BCs (DBC) and infinite elements (inf)) and the Coulomb wave expansion (Coulomb), compared to experiment \cite{LiCS}.
+Left panel: The intensity is computed as sum over the intensities of $80$ FEFs;
+Right panel: The intensities of single FEFs are shown.
+%\textcolor{red}{Add: Coulomb-wave, other theoretical reference (?).
+%moreover, I would show the respective DO (s-wave) and in case od DBC, inf the FEF of the most intense transitions.}
+%\textcolor{blue}{Add scale for kinetic energy (wavelength!?) on top. Change photon energy to kinetic energy -> only right graph?}
+Top panel: contour plots of the FEFs with the largest contributions. Left: with Dirichlet BC, right: with infinite elements. The respective transitions are marked with a circle in the plot.
+}
 \label{fig:Li-CS}
 \end{figure}
-Since the protocol developed in this work does not provide absolute cross sections, the results obtained here are scaled to fit the reference data best.
-Moreover, it was shown in chapter \ref{ch:bmSize} that the size of the FEM-region plays an important role for the nature of the obtained solutions but no conclusive scheme for a reasonable choice for the radius has been given so far.
+To account for this, for the calculations presented in Figure \ref{fig:Li-CS}, the box-size was choosen to be $0.8\lambda$ in case of Dirichlet BC and $0.5\lambda$ for infinite elments, where $\lambda$ is the asymptotic wavelength (\textit{i.e.} reached outside the influence of the Coulomb potential) of the respective target energy.
+The box-size smaller than $\lambda$ in case of Dirichlet BCs is too small for a reasonable error in energy but show, since the wavelength is considerably smaller in the presence of a Coulomb potential, still some radial nodes.
+For all setups, $N=18$ spheres and the radial mapping scheme \textit{tm}, \eq{eq:tm_map}, with the parameters $q=2.5$ and $s=1.2$ was used, respectively.
+For the infinite elements the radial polynomial is truncated after the first order to suppress higher angular momenta.
 
-%\section{Triatomic Linear Molecules}
-\section{CO$_2$}
-As a second test-system, CO$_2$ is a
-There are several studies on CO$_2$ \cite{CO2, CO2_highres, HighResLinear, DiffLinear},
-% CS$_2$ \cite{DiffLinear,HighResLinear}, COS \cite{DiffLinear,HighResLinear} and N$_2$O \cite{DiffLinear}
-%CS$_2$ is known to have strong correlation effects \cite{2phcederbaum}
-\begin{wrapfigure}{R}{0.6\textwidth}
-\includegraphics[width=0.6\textwidth]{Figures/CO2/Solutions}
-\caption{Free electron functions obtained with infinite elements (left) and with Dirichlet boundary conditions (right)}
-\label{fig:CO2_exs}
-\end{wrapfigure}
+The intensities obtained with the finite element scheme are presented in two different ways in Figure \ref{fig:Li-CS}.
+In the left panel, the $80$ energetically closest intensities are summed up whereas in the right panel the individual intensities are shown.
+The theoretical results are scaled to be in good agreement with the experimental data.
+For the results obtained with the Dirichlet BCs, the summed intensities (left panel of Figure \ref{fig:Li-CS}) show a systematic but qualitatively wrong behaviour which can be explained by the box which is considerably too small to ensure the correct shape of the wave-function.
+However, the intensities of the single transitions (right panel of Figure \ref{fig:Li-CS}) have a different progression.
+%Since their energetic position corresponds to their actual kinetic energy, it can be seen that the solutions obtained are in general energetically too low so that no transitions above $0.6\,$E$_\text{h}$ occur.
+The qualitative difference between these schemes can be explained by the fact that in the right pannel at lower kinetic energies many transitions contribute with a considerable intensity whereas at higher kintetic energies only few solutions contribute.
+Moreover, the transitions can be strongly reordered between the graphs since deviations between the target energy and eigenenergy of up to $0.11\,$Hartree occur.
 
-\begin{wrapfigure}{L}{0.7\textwidth}
-\includegraphics[width=0.69\textwidth]{Figures/CO2_J0_2D_terrain}
-\caption{The functional $J(\alpha,\omega)$ described in eqation (\ref{eq:J_ao}) for CO$_2$}
-\label{fig:CO2-otrsh}
-\end{wrapfigure}
+The results obtained with infinite elements show a less systematic behaviour: Among the hundreds of solutions computed, only three contribute significantly to the cross section.
+The scaling factor of the transitions shown in the right panel of Figure \ref{fig:Li-CS} are $0.7$ for the soltions obtained with the Dirichlet BC and $0.4$ for those computed with infinite elements, thus their relative scale is in the same order of magnitude.
+These results show that, even for a small computational domain as it is used here, only a poor agreement with the experiment is achievable.
+In case of Dirichlet BCs, the bad agreement with the experimental data can be explained by the size of the box which restricts the solution to low angular momenta but introduces a large error in the shape of the wave function and thus influences the dipole matrix elements considerably.
+A study with a more reasonable radius of $r_\text{max}=3.5\lambda$ was conducted as well and is shown in Figure \ref{subfig:LiCS}.
+However, even though the eigenenergies are denser and the wave function are more flexible, only few transitions with considerable intensity were obtained.
+Another important question concerns the normalisation of the wave function.
 
-Cross-section profiles of CO$_2$ in \cite{stieltje}.
+In the case of infinite elements, too few transitions contributing to the intensity are obtained for an analysis of their kinetic-energy dependence.
+However, this shows that even for such a small box, the angular momentum is in general too high to give considerable contributions, at least for $s$-type DOs.
 
-Data of CO2: \cite{DiffLinear}.
+\textcolor{green}{
+\begin{itemize}
+   \item Explain, why a systematic setup over such a wide range of kinetic energies is not possible for the given scheme. This problem can be seen esp. for DBC comparing left and right of \ref{fig:Li-CS}.\\
+    This should be already the main reason for the unsystematic results!?
+\end{itemize}
+}
 
-\section{water}
-The PES and threshold PES, where the kinetic energy of the photoelectron is kept constant instead of the energy of the photon, of water is experimentally well studied 
-for different photon energies.
-As example, in Ref. \cite{waterTPE} the PES of water and several TPES of water and heavy water are investigated with high resolution.\\
-Similar high accuracy is achieved in Ref. \cite{waterHePES} where the PES of H$_2$O$^+$ and D$_2$O$^+$ are studied with a He1 source, radiating at $537\,$Angs.\\
-Further PES are available at higher photon energies:
-In \cite{water1200}, photons at energies of $1200\,$eV are used.
-A further study of Winter \textit{et. al.} measured spectra at $60$, $75$ $80$, $100$ and $120\,$eV in gas and liquid phase \cite{winterWater}.\\
-These studies are of interest here since they yield a variety of different test-cases on a single system that can be used to prove the method being used to be valid.
+\textcolor[rgb]{1,0.7,0}{
+   The intensities obtained with the Coulomb wave function are, similar to the results obtained with the FEM and Dirichlet BC, in poor agreement with the experimental data.
+   Since the ESP of lithium is very close to that of hydrogen, this is surprising.
+   Moreover, the shape makes no sense at all.
+}
+
+\textcolor{blue}{
+For the computation of the overlap integral, only the finite region is taken into account since outside of it the DO vanishes and thus the outer region would not lead to further contributions.
+In this region usually, the wave function is normalised to one which is, especially in the case of Dirichlet boundary conditions, the usual normalisation.
+However, if the intensities obtained with different box-sizes are to be compared, two wave functions that coincide in the central region but are computed on differently large regions would result in different intensities.
+To account for this, here the wave functions are normalised to the volume, \textit{i.e.}
+\begin{equation}
+\int_V \left|\Psi_n (\vec{r})\right|^2d\vec{r}=\int d\vec{r}=V
+\end{equation}
+where $V$ is the volume of the finite element region.}
+
+\begin{figure}
+\includegraphics[width=0.5\textwidth]{Figures/CO2/pi_gCS.pdf}
+\includegraphics[width=0.5\textwidth]{Figures/CO2/sigma_g.pdf}
+\caption{deine Mudda}
+\label{fig:sigmagCS}
+%\label{fig:pigCS}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=0.75\textwidth]{Figures/CO2/Cronverge}
+\caption{Convergence of intensities for the $\pi_g$-transition of CO$_2$.}
+\label{cronverge}
+\end{figure}
+
+\begin{figure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Figures/CO2/pi_gRef}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Figures/CO2/pi_uRef}
+\end{subfigure}
+\caption{I am not sure if this is the correct dependence!!!!}
+\label{fig:piRef}
+\end{figure}
+
+\section{Photoelectron spectra}
+\textcolor{red}{First show spectra for CO$_2$.}
+Figure \ref{fig:benzPES} shows the PES of benzene obtained with this setup using a grid of height (orthogonal to the molecular plane) of $8\,$\AA\, and a diameter of $12$\AA\, in both directions of the molecular plane with $380$ points in each direction.
+%\begin{wrapfigure}{L}{0.5\textwidth}
+\begin{figure}
+   \includegraphics[width=0.5\textwidth]{Figures/Benzene/Benzene}
+   \caption{Photoelectron spectra of benzene at different levels of theory.
+   In the upper panel the spectra obtained with the Dyson orbital formalism (Dyson) and using the Koopmans' approach (DOS) are compared, the experimental reference is shown in the lower panel \cite{BenzExp}.}
+   \label{fig:benzPES}
+\end{figure}
+%\end{wrapfigure}
+The expansion of Coulomb waves includes the terms up to an angular momentum of $l=10$.
+The second spectrum shown in 
+To indicate the consequences of the OTRSH procedure, in Figure \ref{fig:blypPES} the PES of benzene as predicted with the optimised functional and the B3LYP functional are shown.
+For this system, the agreement is good, for other systems the differences are much larger as the example of S$_8$ in the supplement shows.
+\begin{figure}
+   \includegraphics[width=0.8\textwidth]{Figures/CO2/CO2_spect}
+   \caption{I forgot about this degeneracy!!!!!!!}
+\end{figure}
+\textcolor{red}{
+OTRSH is known no be not very good for linear molecules --> is there some reason for this?
+}

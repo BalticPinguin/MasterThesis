@@ -9,27 +9,27 @@ set ylabel offset 1.0, 0.0
 set format y "%3.1f"
 set key spacing 0.60
 factorial(n)= n>1? factorial(n-1)*n : n==1 ? 1 : 0
-f(a,b,c,n)=n>0 ? a/b*f(a+1,b+1,c,n-1) : 1
-F_1(a,b,c)= 1+f(a,b,c,1)*c+f(a,b,c,2)*c*c/2+\
-              f(a,b,c,3 )*c**3 /factorial(3 )+f(a,b,c,4 )*c**4 /factorial(4)+\
-              f(a,b,c,5 )*c**5 /factorial(5 )+f(a,b,c,6 )*c**6 /factorial(6 )+\
-              f(a,b,c,7 )*c**7 /factorial(7 )+f(a,b,c,8 )*c**8 /factorial(8 )+\
-              f(a,b,c,9 )*c**9 /factorial(9 )+f(a,b,c,10)*c**10/factorial(10)+\
-              f(a,b,c,11)*c**11/factorial(11)+f(a,b,c,12)*c**12/factorial(12)+\
-              f(a,b,c,13)*c**13/factorial(13)+f(a,b,c,14)*c**14/factorial(14)+\
-              f(a,b,c,15)*c**15/factorial(15)+f(a,b,c,16)*c**16/factorial(16)+\
-              f(a,b,c,17)*c**17/factorial(17)+f(a,b,c,18)*c**18/factorial(18)+\
-              f(a,b,c,19)*c**19/factorial(19)+f(a,b,c,20)*c**20/factorial(20)+\
-              f(a,b,c,21)*c**21/factorial(21)+f(a,b,c,22)*c**22/factorial(22)+\
-              f(a,b,c,23)*c**23/factorial(23)+f(a,b,c,24)*c**24/factorial(24)+\
-              f(a,b,c,25)*c**25/factorial(25)+f(a,b,c,26)*c**26/factorial(26)+\
-              f(a,b,c,27)*c**27/factorial(27)+f(a,b,c,28)*c**28/factorial(28)+\
-              f(a,b,c,29)*c**29/factorial(29)+f(a,b,c,30)*c**30/factorial(30)+\
-              f(a,b,c,31)*c**31/factorial(31)+f(a,b,c,32)*c**32/factorial(32)+\
-              f(a,b,c,33)*c**33/factorial(33)+f(a,b,c,34)*c**34/factorial(34)+\
-              f(a,b,c,35)*c**35/factorial(35)+f(a,b,c,36)*c**36/factorial(36)+\
-              f(a,b,c,37)*c**37/factorial(37)+f(a,b,c,38)*c**38/factorial(38)+\
-              f(a,b,c,39)*c**39/factorial(39)+f(a,b,c,40)*c**40/factorial(40)
+f(a,b,n)=n>0 ? a/b*f(a+1,b+1,n-1) : 1
+F_1(a,b,c)= 1+f(a,b,1)*c+f(a,b,c,2)*c*c/2+\
+              f(a,b,3 )*c**3 /factorial(3 )+f(a,b,4 )*c**4 /factorial(4)+\
+              f(a,b,5 )*c**5 /factorial(5 )+f(a,b,6 )*c**6 /factorial(6 )+\
+              f(a,b,7 )*c**7 /factorial(7 )+f(a,b,8 )*c**8 /factorial(8 )+\
+              f(a,b,9 )*c**9 /factorial(9 )+f(a,b,10)*c**10/factorial(10)+\
+              f(a,b,11)*c**11/factorial(11)+f(a,b,12)*c**12/factorial(12)+\
+              f(a,b,13)*c**13/factorial(13)+f(a,b,14)*c**14/factorial(14)+\
+              f(a,b,15)*c**15/factorial(15)+f(a,b,16)*c**16/factorial(16)+\
+              f(a,b,17)*c**17/factorial(17)+f(a,b,18)*c**18/factorial(18)+\
+              f(a,b,19)*c**19/factorial(19)+f(a,b,20)*c**20/factorial(20)+\
+              f(a,b,21)*c**21/factorial(21)+f(a,b,22)*c**22/factorial(22)+\
+              f(a,b,23)*c**23/factorial(23)+f(a,b,24)*c**24/factorial(24)+\
+              f(a,b,25)*c**25/factorial(25)+f(a,b,26)*c**26/factorial(26)+\
+              f(a,b,27)*c**27/factorial(27)+f(a,b,28)*c**28/factorial(28)+\
+              f(a,b,29)*c**29/factorial(29)+f(a,b,30)*c**30/factorial(30)+\
+              f(a,b,31)*c**31/factorial(31)+f(a,b,32)*c**32/factorial(32)+\
+              f(a,b,33)*c**33/factorial(33)+f(a,b,34)*c**34/factorial(34)+\
+              f(a,b,35)*c**35/factorial(35)+f(a,b,36)*c**36/factorial(36)+\
+              f(a,b,37)*c**37/factorial(37)+f(a,b,38)*c**38/factorial(38)+\
+              f(a,b,39)*c**39/factorial(39)+f(a,b,40)*c**40/factorial(40)
 
 set term pdf size 30,16 font "Amiri, 60"
 set output "RadialPart.pdf" 
