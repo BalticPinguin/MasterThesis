@@ -1,29 +1,30 @@
 \label{ch:res}
-In the previous chapters, many different methods that can be used to compute PESs numerically are described and in chapter \ref{ch:proced} the method used within this work is described in more detail.
-In this chapter some results are shown and explained.
-
-Since the method developed in this work combines several techniques that have not been used together so far and several conceptual questions need to be clarified before computing actual PESs, is section \ref{ch:BCbench} two BCs are compared in their influence on the wave-function. %In section \ref{sec:NumConve} further benchmarking calculations on some numerical parameters are shown.
-For simplicity, these calculations were performed using a lithium atom as test system.
-
-In section \ref{ch:resLI} further results for atomic lithium are presented, showing several conceptual ... .
-
-%There is a paper\cite{vibPES} with vibronically resolved PES from experiment.\\
-%PES of N2 with 'angular resolution' (latter not directly) \cite{PESN2}.
-%purine and pyrimidine: comparison to Green's function methods via the \cite{PottsHolland}-paper.
-%For AlO$^-$ there is a paper with 2 spectra with one and two transitions each, having vibrational
-%structure\cite{AlO}.
-%Atomic Systems have some experimental data as well: For Xe and Kr the spectra at photon energies of 150$\,$eV are shown in reference \cite{KrXe}.
-%A combined theoretical and experimental study on CH$_2$F$_2$ is in ref. \cite{ch2f2}. Here, theory is quite bad and experiment is also angular resolved, thus may be interesting.
+%In the previous chapters, many different methods that can be used to compute PESs numerically are described and in chapter \ref{ch:proced} the method used within this work is described in more detail.
+%In this chapter some results are shown and explained.
+Since the method developed in this work combines several techniques that have not been used together so far and quantum-mechanical continuum-function are not treated with the infinite elements technique so far, several conceptual questions need to be clarified before computing actual PESs.
+In section \ref{ch:BCbench}, infinite elements are compared with Dirichlet BCs and their respective influence on the properties of the wave function is studied. %In section \ref{sec:NumConve} further benchmarking calculations on some numerical parameters are shown.
+These calculations are performed using atomic lithium and hydrogen as test system.
+Especially the case of hydrogen is of interest here since analytic solutions to compare with are available.
+Thereafter, in section \ref{sec:cs}, the energy-dependence of the cross section for the valence transition of lithium as well as several transitions of carbondioxide are studied, comparing several theoretical approaches with experimental data.
+Moreover, the PESs of CO$_2$ and benzene as computed with several theoretical approaches are shown.
 
 \section{Comparison of Boundary Conditions}
 \label{ch:BCbench}
-In section \ref{ch:BC}, many BCs which give rise to diverse properties for the solution are briefly described.
-Detailed comparisons of some of these BCs are studied in various works \cite{babuska,artBC,capComp,absRev,nrBCrev} for several systems.
-For simplicity, here only two BCs are studied in more detail.
-First, in section \ref{sec:DBCbench} several properties of the grids introduced in section \ref{sec:grid} are studied with Dirichlet boundaries which are particularly easy to set up and understand in their physical consequences.
-In section \ref{sec:iBCbench}, several properties of the mesh with infinite elements are investigated.
-Since it turns out that the solutions obtained with infinite elements are very sensitive to the parameters, this study is performed more extensively.
-For simplicity, the tests shown here are on atomic systems using, unless specified otherwise, an analytic Coulomb potential with charge $1$, corresponding to the ionised hydrogen atom.
+In section \ref{ch:BC}, several BCs which give rise to different properties for the solution have been briefly overvied.
+Detailed studies on absorbing BCs, non-reflecting BCs as well as complex absorbing potentials can be found in literature \cite{babuska,artBC,capComp,absRev,nrBCrev}.
+In this work, Dirichlet boundaries and infinite elements are studied in more detail and the properties of the respective results are compared.
+Even though the validity of Dirichlet BCs is questionable for unbound problems, they are easy to apply and their physical consequences provide quite straightforward interpretation of the results.
+Thus, they provide a good comparison for the study of infinite elements, whose properties are not studied in this context yet.
+The infinite elements are the main objective of this work.
+Since they provide a reasonable description for outgoing particles, they allow for a small simulation region, even if the wavelength is very large.
+Moreover, they have the correct asymptotic behaviour and hence are expected to produce a good representation of continuum solutions.
+In section \ref{sec:DBCbench}, systematic tests are made, studying the dependence of the eigenenergies as well as the properties of the wave function on the parameters of the numerical grid used.
+Thereafter, in section \ref{sec:iBCbench}, further tests with infinite elements show the influence of these boundary conditions on the solution.
+%First, in section \ref{sec:DBCbench} several properties of the grids introduced in section \ref{sec:grid} are studied with Dirichlet boundaries which are particularly easy to set up and understand in their physical consequences provide straightforward interpretation of the results.
+%In section \ref{sec:iBCbench}, several properties of the mesh with infinite elements are investigated.
+Since it turns out that the solutions obtained with infinite elements are very sensitive to the parameters of mesh and simulation box, this study is performed more extensively.
+%For simplicity, the tests shown here are on atomic systems using, unless specified otherwise, an analytic Coulomb potential with charge $1$, corresponding to the ionised hydrogen atom.
+
 
 \subsection{Dirichlet Boundary Condition}
 \label{sec:DBCbench}
@@ -36,36 +37,58 @@ Dirichlet boundaries are conceptually the easiest BCs but are known to have a la
 %\end{wrapfigure}
 \begin{figure}
 \includegraphics[width=\textwidth]{Figures/BC/DirichletBC}
-\caption{Several properties of the solutions obtained with Dirichlet BCs using different box sizes:\\
-a) double-logarithmic plot of the error in energy of the energetically closest solutions in dependence on the radius
-b) radial part of $d$-wave functions obtained with different box-sizes( $r=4$, blue line and $r=10$, red line); Coulomb wave (yellow line) for comparison.
-c) and d) plot of the error in energy for radii of $4\,$bohr, and $10\,$bohr,\ varying the number of spheres in the box
-e) and f) show the partial wave coefficient (\ref{eq:PartWaveCoeff}) of different angular momenta of the respective solutions with $r=4$ and $N=16$ (left) as well as $r=10$ and $N=38$, respectively.}
+\caption{Results obtained with Dirichlet BCs using different box sizes:
+a) double-logarithmic plot from the deviation in energy for the solutions closest to the target energy $E_\text{target}=0.566\,$Hartree as a function of the radius of the simulation box;
+b) real part of $d$-wave functions obtained with different boxes ($r_\text{max}=4\,$bohr and number of spheres $N=18$, blue line and $r_\text{max}=10\,$bohr and $N=38$ spheres, red line); Coulomb wave (yellow line) is also presented for comparison;
+c) and d) show the deviation in energy for box radii of $4\,$ and $10\,$bohr,\ varying the number of spheres (radial grid density, see \eq{eq:tm_map}) in the box;
+e) and f) show the partial wave contributions \eq{eq:PartWaveCoeff} having different angular momenta for the the respective solutions with $r_\text{max}=4$ and $N=16$ (left) as well as $r_\text{max}=10$ and $N=38$, respectively.}
 \label{fig:dbcRad}
 \end{figure}
-Moreover, its requirement for the solutions to vanish at the boundaries results in an artificial discretisation of the radial solution similar to that of bound states which leads to a banded spectrum with a size-dependent energy gap between two states with same angular momentum.
-Moreover, these boundaries enforce the real and imaginary part of the solution to be identical up to symmetry operations (such as rotations and reflections for spherical systems) which does not hold for continuum waves such as Coulomb waves as can be seen in Figure \ref{fig:RadFun} and plane waves that have a constant phase shift.
+Moreover, its requirement for the solutions to vanish at the boundaries results in an artificial discretisation of the spectrum similar to that of bound states.
+This leads to a banded spectrum, with the energy gap between two states being dependent on the simulation box size.
+%Moreover, these boundaries enforce the real and imaginary part of the solution to be identical up to a scaling operations (such as rotations and reflections for spherical systems) which does not hold for continuum waves such as Coulomb waves as can be seen in Figure \ref{fig:RadFun} and plane waves that have a constant phase shift.
 
-These properties are found in various tests conducted to find reasonable parameters for application to more complex systems.
-In Figure \ref{fig:dbcRad} a), the error in the energy of $20$ solutions is shown for different radii.
-The comparison with the red line that represents a cubic decay, shows that the error is inverse proportional to the volume of the box which is a well-known result for particles in a box with infinite potential walls. 
+%These properties are found in various tests conducted to find reasonable parameters for application to more complex systems.
+To understand the general properties of solutions for Dirichlet BC and to formulate requirements to the mesh quality, the method has been first tested on the hydrogen-like system with $\nicefrac{1}{r}$ ESP.
+To do so, the radius of the simulation box $r_\text{max}$ and the number of spheres, $N$, see \eq{eq:tm_map} has been varied to get convergent results.
+In Figure \ref{fig:dbcRad} a), the deviation in the energy of $15$ solutions is shown for different $r_\text{max}$ (see \eq{eq:tm_map}), the number of spheres is kept constant at $N=20$.
+The comparison with the red line that represents a $\nicefrac{\text{const}}{r^3}$ dependence, shows that the error is inverse proportional to the volume of the box which is a well-known result for particles in a box with infinite potential walls. 
 The number of spheres is kept constant at $N=20$.
-The influence of the number of spheres on the energies is shown in the panels c) and d) of Figure \ref{fig:dbcRad}.
+The influence of radial grid density on the energies is shown in the panels c) and d) of Figure \ref{fig:dbcRad} where the number of spheres is varied for two different box-sizes, $r_\text{max}=4$ and $r_\text{max}=10\,$bohr, respectively.
 In these figures several branches of solutions can be seen that correspond to different angular momenta.
-For smaller radii ($r=4$, panel c)), these branches are well-separated but become closer and finally interfere with each other at larger radii ($r=10$, panel d)) where also strong coupling of angular momenta can occur.
-Following the expectations, the energies of the respective branches decay when the number of degrees of freedom is increased.
-The lowest panels in Figure \ref{fig:dbcRad} show the contributions from plane wave functions with respective kinetic energy and different angular momentum where the partial wave coefficient is defined as
-\begin{equation} \label{eq:PartWaveCoeff}
-|\langle \Psi_\text{num} | \Psi_{\vec{k}}^\text{Sph}\rangle |^2
-\end{equation}
-where $|\Psi_{vec{k}}^\text{Sph}\rangle$ is the spherical wave (\ref{eq:spherWave}) and $|\Psi_\text{num}\rangle$ denotes the respective numerically obtained solution.
-For numerical reasons, here the comparison is done against the spherical waves and not against Coulomb waves.
-In Figure \ref{fig:dbcRad} b), two solutions with $l=2$ along one axis are shown (the fifth one for $r=4$ and the first one for $r=10$) for two different box-sizes and compared to the Coulomb wave.
+For smaller radii ($r_\text{max}=4\,$bohr, panel c)), these branches are well-separated but become closer and interfere with each other at larger radii ($r_\text{max}=10\,$bohr, panel d)).
+Following the expectations, the energies of the respective branches decay when the number of grid points.
+At $N=18$ for $r_\text{max}=4\,$bohr the results converge and do not change much with further increase of $N$.
+However, for $r_\text{max}=10\,$bohr the convergence is much slower and cannot be reached for $N<60$.
+In principle, the continuum spectrum should have infinite degeneracy containing FEFs corresponding to arbitrary angular momenta and since larger boxes provide higher density of states it may be considered desirable to take as large simulation boxes as possible.
+This in general also agrees with the common logic for quantum mechanical calculations.
+However, the density of states is not the only important quantity: The PES intensities beinge the main objective in the present work are calculated using the DO.
+Due to the aufbau principle, usually the atomic states with quite low angular momentum are populated.
+\textit{E.g.} in molecules and atoms consisting of second period elements one can expect only $s$ and $p$ atomic functionals to be populated in the lowest excited electronic states. 
+Thus, one can expect that FEFs only up to $l=2$ could contribute to PES intensities if the dipole selection rules hold.
+That is why to reproduce reliable intensities, the computational scheme should favour solutions with low angular momentum.
 
-However, the density of solutions is not the only important quantity: To obtain reasonable intensities, the respective angular momentum is more important to obtain reasonable results.
-Respective tests show that for a given energy of the photoelectron of $E=0.566\,$ Hartree the obtained solutions have a well-defined angular momentum only for small boxes where the critical radius is in the order of $r_\text{max}=10\,$bohr.
-For larger meshes, the states have large contributions from different angular momenta and are very sensitive to different parameters such as the number of spheres $N_i$ and the parameters $p$ and $q$ of the distributions of the spheres (\ref{eq:tm_map}) and (\ref{eq:son_map}) respectively.
-Moreover, for example the comparison of the Figures \ref{fig:dbcRad} e) and f) shows that solutions on larger meshes tend to have higher angular momenta which is an important argument in favour of smaller boxes since for most atomic systems angular momenta larger than $4$ are not of interest.
+The panels e) and f) of Figure \ref{fig:dbcRad} show the projections of the solutions to the spherical wave functions with respective kinetic energy and different angular momentum, where the partial wave contribution is defined as
+\begin{equation} \label{eq:PartWaveCoeff}
+\sum_m|\langle \Psi_\text{n} | \Psi_{\vec{k},l,m}^\text{Sph}\rangle |^2.
+\end{equation}
+Here $|\Psi_{\vec{k},l,m}^\text{Sph}\rangle$ is the spherical wave \eq{eq:spherWave} with angular momentum $l$ and its projection onto the quantisation axis $m$ and $|\Psi_\text{n}\rangle$ denotes the respective numerically obtained solution.
+The comparison is done against the spherical waves and not against Coulomb waves, since confluent hypergeometric functions are difficult to converge for larger $r$ and they are much more computationally demanding.
+
+The testcalculations have shown that for the given energy of the photoelectron of $E=0.566\,$ Hartree the obtained solutions have a well-defined angular momentum only for small boxes where the critical radius is in the order of $r_\text{max}=10\,$bohr.
+For larger computational domains, the states are mixed and have large contributions from much higher angular momenta and are very sensitive to different parameters such as the number of spheres $N_i$ and the parameters $s$ and $q$ in  \eqs{eq:tm_map} and (\ref{eq:son_map}) respectively.
+Moreover, for example the comparison of the Figures \ref{fig:dbcRad} e) and f) shows that solutions with larger boxes tend to have higher angular momenta which is an important argument in favour of smaller boxes since for most atomic systems angular momenta larger than $4$ are not of interest for practical calculations.
+This tendencey can be understood when considering the radial SE \cite{Lifshitz}
+\begin{equation}
+\frac{\partial^2}{\partial r^2} R(r) + \left(2\left(E-V(r)\right) -\frac{l(l+1)}{r^2}\right) R(r)=0
+\end{equation}
+where $R(r)$ is the radial solution and $E-V(r)$ is identified as kinetic energy.
+Thus, given a particular kinetic energy, the radial oscillations are reduced by a larger angular momentum.
+This leads to the interpretation that a particle can `distribute' its kinetic energy between the radial (outgoing) and spherical contributions.
+In turn, however, needs a wave with large angular momentum more space and thus these solutions are suppressed in smaller computational domains.
+
+In Figure \ref{fig:dbcRad} b), two solutions with $l=2$ along one axis are shown (the fifth one for $r=4$ and the first one for $r=10$ which are shown in \ref{fig:dbcRad} e) and f) as well) for two different box-sizes and compared to the Coulomb wave, being the exact solution for the $-\nicefrac{1}{r}$ potential.
+As one can see, depends the reproducability of the radial structure strongly on the size of the box.
 
 %\subsection{Complex Absorbing Potential}
 %Using a CAP as described in section \ref{ch:cap}, two additional degrees of freedom comared to the Dirichlet BCs arise: the strength $\eta$ of the artificial potential (\ref{eq:cap}) and the offset $r_0$ where it starts, the latter has the only restriction to be larger than the radius of the DO.
@@ -75,7 +98,9 @@ Moreover, for example the comparison of the Figures \ref{fig:dbcRad} e) and f) s
 
 \subsection{Infinite Elements}
 \label{sec:iBCbench}
-In section \ref{ch:InfEl}, several formulations of infinite elements are presented.
+The method making use of infinite elements has more different parameters which can be crucial for the stability of the solution than the Dirichlet BC.
+Investigations of these dependences is the subject of the present section.
+
 
 \begin{figure}%{R}{0.5\textwidth}
 \begin{subfigure}{0.5\textwidth}
@@ -90,8 +115,6 @@ In section \ref{ch:InfEl}, several formulations of infinite elements are present
 \end{subfigure}
 %\caption{}
 \end{figure}
-which require some investigation to get an understanding of the properties of the numerical setup described so far.
-Among these questions is the formulation of infinite elements, discussed in section \ref{ch:InfEl} of which the most important ones are studied in section \ref{ch:bmFormul}.
 In Figure \ref{fig:cutInf}, a 2D-cut of a solution obtained with infinite elements for the Hydrogen atom is shown, the red circle indicates the region of finite elements.
 The features shown in Figure \ref{fig:cutInf} are prototypic for the properties that are found for the infinite elements here.
 It is clearly visible from the graph that the infinite region resembles the asymtotic behaviour, showing the expected regular oscillations of an outgoing wave.
@@ -276,13 +299,35 @@ To account for this, here the wave functions are normalised to the volume, \text
 \end{equation}
 where $V$ is the volume of the finite element region.}
 
+\textcolor{red}{
+For the second testing-system, here first the PES as a whole should be discussed.
+\begin{itemize}
+   \item assign transitions
+   \item The first IP is reproduced well, due to OTRSH-scheme used.
+   \item The positions of the other bands are strentched
+   \item A considerable part of the features not reproduced, since vibronic progression is not studied here;
+   \item SA and DOS are similar (!?) integration changes heights -> improves agreement with experiment.
+\end{itemize}
+}
+
+For the first two transitions, that correspond to degenerate DOs with $\pi$-character respectively, here also the cross section dependence on the photon energy is studied.
+In Figure \ref{fig:CO2CS}, the energy-dependence of the first two transitions shown in Figure \textcolor{red}{that showing the PES} is shown as obtained with various theoretical methods.
 \begin{figure}
-\includegraphics[width=0.5\textwidth]{Figures/CO2/pi_gCS.pdf}
-\includegraphics[width=0.5\textwidth]{Figures/CO2/sigma_g.pdf}
-\caption{deine Mudda}
-\label{fig:sigmagCS}
-%\label{fig:pigCS}
+\includegraphics[width=\textwidth]{Figures/CO2/CrossSect}
+\caption{\textcolor{red}{Add labels!}}
+\label{fig:CO2CS}
 \end{figure}
+Comparing the results obtained with the multiple scattering method \textcolor{green}{citation} and the Stieltjes imaging approach \cite{stieltje}, a reasonable agreement is achieved.
+Both approaches reproduce the main behaviour of the function.
+However, for small kinetic energies, both methods do not reproduce the experimental data that well.
+The larger problems in case of the $\pi_g$-transition (Figure \ref{fig:CO2CS}) can be explained by the higher binding energy of $...$ and thus lower kinetic energy compared to the $\pi_u$-transition whose cross section is shown in Figure \ref{fig:CO2CS}.
+\begin{itemize}
+   \item Qualitative agreement in case of Stieltje, Mult. Scattering and also Coulomb
+   \item The good quality of Coulomb is surprising
+   \item The general trend can be seen in case of the $\pi_g$-transition 
+   \item The $pi_u$-transition has completely wrong behaviour
+  \item in both cases not systematic.
+\end{itemize}
 
 \begin{figure}
 \includegraphics[width=0.75\textwidth]{Figures/CO2/Cronverge}
@@ -290,18 +335,6 @@ where $V$ is the volume of the finite element region.}
 \label{cronverge}
 \end{figure}
 
-\begin{figure}
-\begin{subfigure}{0.5\textwidth}
-\includegraphics[width=\textwidth]{Figures/CO2/pi_gRef}
-\end{subfigure}
-\begin{subfigure}{0.5\textwidth}
-\includegraphics[width=\textwidth]{Figures/CO2/pi_uRef}
-\end{subfigure}
-\caption{I am not sure if this is the correct dependence!!!!}
-\label{fig:piRef}
-\end{figure}
-
-\section{Photoelectron spectra}
 \textcolor{red}{First show spectra for CO$_2$.}
 Figure \ref{fig:benzPES} shows the PES of benzene obtained with this setup using a grid of height (orthogonal to the molecular plane) of $8\,$\AA\, and a diameter of $12$\AA\, in both directions of the molecular plane with $380$ points in each direction.
 %\begin{wrapfigure}{L}{0.5\textwidth}
