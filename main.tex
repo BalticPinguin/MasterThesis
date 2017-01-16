@@ -35,11 +35,8 @@
 \newcommand{\hsp}{\hspace{20pt}}
 \titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter\hsp\textcolor{gray75}{$|$}\hsp}{0pt}{\Huge\bfseries}
 \addbibresource{main.bib}
-\author{Tobias M\"ohle}
+\author{Tobias M"ohle}
 \date{\today }
-%\title{(In)Finite Element Method for representing free electrons in Molecular potentials and its application in 
-%Photoelectron spectroscopy}
-%\title{Finite Element Method for Predicting Photoelectron Spectra of Complex Molecules in a Wide Range of Kinetic Energies}
 \title{Finite Element Approach to Photoemission of Complex Molecules}
 \linespread{1.1}
 \begin{document}
@@ -53,16 +50,54 @@
 \newcommand{\prog}[1]{\texttt{#1}}
 \newcommand{\eq}[1]{eq.(\ref{#1})}
 \newcommand{\eqs}[1]{eqs.(\ref{#1})}
-\widowpenalty=1000000 %avoid hurenkind    ->
-\clubpenalty=1000000 %avoid Schusterjunge ->
-%\setlength{\parskip}{3ex plus 2ex minus 2ex}
-\frontmatter
-\maketitle
+\widowpenalty=1 %avoid hurenkind    ->
+\clubpenalty=1 %avoid Schusterjunge ->
+%\maketitle
+\begin{titlepage}
+   \begin{center} 
+   \vspace{30mm}
+   \includegraphics[width=0.6\textwidth]{UNI-Logo_Siegel_4c_RZ}
+   \vspace{10mm}
+
+   {\Huge
+   \uppercase{ Finite Element Approach to Photoemission of Complex Molecules}}
+
+   \vspace{25mm}
+   \textbf{Tobias M\"ohle}
+   
+   \vfill
+
+   \includegraphics[width=0.6\textwidth]{institutslogo_neu}
+   \vspace{5mm}
+
+   Master Thesis\\
+   submitted to the Institute of Physics \\
+   Faculty of Mathematics and Natural Sciences \\
+   of the University of Rostock 
+   
+   \vspace{15mm}
+   
+   \end{center}
+
+   by Tobias M\"ohle, born on 7th January, 1991 in Hamburg\\
+   
+   \vspace{15mm}
+   
+   1. Referee: Prof. Dr. Oliver K\"uhn, University of Rostock
+
+   2. Referee and Supervisor: Dr. Sergey I. Bokarev, University of Rostock
+
+   \vspace{7mm}
+   Rostock, 17. Jan. 2017
+   \vspace{7mm}
+\end{titlepage}
 %\pagenumbering{roman}
-\tableofcontents
-\newpage
+\frontmatter
 \input{notation}
+\newpage
+\tableofcontents
 \mainmatter
+
 \chapter{Introduction} % introduction
 \input{intro}
 
@@ -85,6 +120,16 @@
 \chapter{Resumee}
 \input{conclusion}
 
+%\renewcaptionname{english}{\abstractname}{Acknowledgement}
+%\begin{abstract}
+\newpage
+\section*{Acknowledgement}
+1.: Sergey\\
+2.: Gilbert\\
+3.: Olga\\
+4.: K\"uhn
+%\end{abstract}
+
 %\nocite{*}
 \small{
 \printbibliography
@@ -104,7 +149,12 @@
 \input{appResults}
 
 %\input{appTriangul}
+\newpage
+\section*{Selbst\"andigkeitserklaerung}
+Ich versichere hiermit an Eides statt, dass ich di vorliegende Arbeit selbstst\"andig und ohne fremde Hilfe verfasst habe, keine au\ss er den von mir angegebenen Hilfsmitteln und Quellen dazu verwendet habe und die den benutzten Werken inhaltlich und w\"ortlich entnommenen Stellen als solche kenntlich gemacht habe.
 
+\vspace{20mm}
+\hfill Rostock, \date
 %\printindex
 \backmatter
 \end{document}
