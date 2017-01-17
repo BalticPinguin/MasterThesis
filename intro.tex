@@ -1,18 +1,18 @@
 %The study of molecular and intermolecular structures and dynamics yield important insights about composition and alignment of materials as well as processes governing its properties.
 %However, investigations on a molecular scale are limited mainly to spectroscopic methods where the system properties are obtained indirectly by measureing the interaction of the system under study with light, electron beams or other quantum particles.
 %This yields a large variety of of spectroscopic methods that can be categorised by means of the incoming and outgoing particles.
-Steady state as well as time-resolved photoelectron spec\-tros\-co\-py has become a widely used tool to study the composition of gases and liquids \cite{winterWater,liquid1,XrayDynamics,hafied}, structure of solids \cite{solid1} as well as mechanisms of chemical reactions such as electron transfer \cite{XrayDynamics}.
-The process addressed by photoelectron spec\-tros\-co\-py is the absorption of a high-energy photon (usually in the ultra-violet to hard X-ray range) by an $N$-electron system which leads to the release of an electron whose kinetic energy is measured.
-This process is sketched in Figure \ref{fig:PESscheme}, where the bound states are depicted by horizontal bars and the states of the outgoing electron are represented by the gradient-filled rectangle, indicating that its energy is continuous.
-The kinetic energy of the photoelectron together with the incoming photon energy yields information on the energy of $|\Psi^N \rangle$ and $|\Psi^{N-1} \rangle$ states due to the energy conservation principle.
-
-One of the main reasons for the success of this particular type of spectroscopy is that these spectra are very sensitive to small changes in the chemical environment and hence yield information not only about the chemical structure of molecules but also about intermolecular interactions as for example solvation effects \cite{winterWater, solution1,solution2, solution3, solution4}.
 \begin{wrapfigure}{r}{0.62\textwidth}
    \includegraphics[width=0.61\textwidth]{Figures/PESscheme.eps}
    \caption{Schematic representation of a photoelectron transition : an incoming photon with energy $h\nu$ ionises the $N$-electron system, transferring it into a free electron in a continuum state and a system of $N-1$ bound electrons.
    The horizontal bars denote bound states, the gradient-filled rectangle depicts the continuum of states of the outgoing electron.}
    \label{fig:PESscheme}
 \end{wrapfigure}
+Steady state as well as time-resolved photoelectron spec\-tros\-co\-py has become a widely used tool to study the composition of gases and liquids \cite{winterWater,liquid1,XrayDynamics,hafied}, structure of solids \cite{solid1} as well as mechanisms of chemical reactions such as electron transfer \cite{XrayDynamics}.
+The process addressed by photoelectron spec\-tros\-co\-py is the absorption of a high-energy photon (usually in the ultra-violet to hard X-ray range) by an $N$-electron system which leads to the release of an electron whose kinetic energy is measured.
+This process is sketched in Figure \ref{fig:PESscheme}, where the bound states are depicted by horizontal bars and the states of the outgoing electron are represented by the gradient-filled rectangle, indicating that its energy is continuous.
+The kinetic energy of the photoelectron together with the incoming photon energy yields information on the energy of $|\Psi^N \rangle$ and $|\Psi^{N-1} \rangle$ states due to the energy conservation principle.
+
+One of the main reasons for the success of this particular type of spectroscopy is that these spectra are very sensitive to small changes in the chemical environment and hence yield information not only about the chemical structure of molecules but also about intermolecular interactions as for example solvation effects \cite{winterWater, solution1,solution2, solution3, solution4}.
 Furthermore, photoelectron spectroscopy provides a more direct access to the energy levels than optical absorption and emission spectroscopy since the transition energies are obtained with respect to the vacuum level and no ``dark'' states occur in general due to different selection rules.
 Finally, the ease of handling charged particles experimentally makes this method appealing, \textit{e.g.}, a good temporal resolution can be achieved by varying the path in the time-of-flight spectrometer.
 Thus, besides its capabilities in steady-state spectroscopy, photoelectron spectra (PES) have become the standard tool in attosecond physics due to the naturally high energy of the ultrashort pulses which ionise the systems under investigation \cite{as1, as2, as3, as4, as5, as6}.
@@ -109,9 +109,10 @@ Furthermore, it has an automated procedure to adaptively refine or coarsen the e
 %Moreover, the molecular electrostatic potential is to be obtained in the region of interest, requirering some modification in the code of \prog{NWChem} and a three-dimensional interpolation scheme that can handle nonuniform data.
 %Finally, to obtain the dipole matrix elements, the DO has to be projected onto the space of finite elements.
 %Therfore the explicit function is obtained by evaluating the basis functions at given quadrature points.
-The developed protocol is applied to valence PES of two atomic (hydrogen and lithium) and two molecular (carbon dioxide and benzene) systems.
+The developed protocol is applied to valence PES of two atomic (hydrogen and lithium) and to several molecular system which are carbon dioxide, water, a sulphur cluster and benzene.
 %To show the properties of the respective setup and compare different schemes suggested, atomic hydrogen is used for which an analytic solution, namely the Coulomb waves, is known.
 %Further tests are applied to lithium, \textcolor{red}{doing .... and Cross section}.
 %As a simplet test-system for a molecular case  carbondioxide is chosen for which several experimental as well as theoretical reference-data are available, \textcolor{red}{studying the PES and croos section}.
 %For this system, the usual approach to represent the FEF as a Coulomb wave is expected to be not valid.
 %Finally, as a representative for larger and more complex molecules, here benzene is chosen which is a well-studied system.
+%TODO: mention other systems!

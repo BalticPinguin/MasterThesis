@@ -39,13 +39,13 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="958"
+     inkscape:window-width="1918"
      inkscape:window-height="1060"
      id="namedview4"
      showgrid="false"
      inkscape:zoom="0.19666667"
-     inkscape:cx="1231.185"
-     inkscape:cy="1860.603"
+     inkscape:cx="2246.737"
+     inkscape:cy="1595.4151"
      inkscape:window-x="900"
      inkscape:window-y="18"
      inkscape:window-maximized="0"
@@ -120,16 +120,16 @@
   <text
      xml:space="preserve"
      style="font-size:224.21492004px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-     x="990.18555"
-     y="2367.897"
+     x="967.63348"
+     y="2316.9331"
      id="text3772"
      sodipodi:linespacing="125%"
      transform="matrix(0.99378703,-0.01889559,0.00920999,1.0060767,0,0)"><tspan
        sodipodi:role="line"
        id="tspan3774"
-       x="990.18555"
-       y="2367.897"
-       style="-inkscape-font-specification:Amiri;font-family:Amiri;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:165.13732908px;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate">ω, bohr</tspan></text>
+       x="967.63348"
+       y="2316.9331"
+       style="font-size:165.1373291px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Amiri;-inkscape-font-specification:Amiri">ω [bohr   ]</tspan></text>
   <text
      xml:space="preserve"
      style="font-size:142.01750183px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -429,4 +429,14 @@
        y="915.52521"
        style="font-size:165.1373291px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Amiri;-inkscape-font-specification:Amiri"
        id="tspan3073">9e-2</tspan></text>
-</svg>
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot3046"
+     style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Amiri;font-style:normal;font-weight:normal;font-size:70px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:Amiri;font-stretch:normal;font-variant:normal"><flowRegion
+       id="flowRegion3048"><rect
+         id="rect3050"
+         width="1006.7797"
+         height="584.74573"
+         x="846.61017"
+         y="2211.8645" /></flowRegion><flowPara
+       id="flowPara3052"></flowPara></flowRoot></svg>

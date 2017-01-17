@@ -50,20 +50,22 @@
 \newcommand{\prog}[1]{\texttt{#1}}
 \newcommand{\eq}[1]{eq.(\ref{#1})}
 \newcommand{\eqs}[1]{eqs.(\ref{#1})}
-\widowpenalty=1 %avoid hurenkind    ->
-\clubpenalty=1 %avoid Schusterjunge ->
+\widowpenalty100000 %avoid hurenkind    ->
+\clubpenalty100000 %avoid Schusterjunge ->
+\displaywidowpenalty=100000
 %\maketitle
 \begin{titlepage}
    \begin{center} 
    \vspace{30mm}
    \includegraphics[width=0.6\textwidth]{UNI-Logo_Siegel_4c_RZ}
-   \vspace{10mm}
+   \vspace{20mm}
 
-   {\Huge
-   \uppercase{ Finite Element Approach to Photoemission of Complex Molecules}}
+   \begin{center} 
+   \Huge
+   \uppercase{ Finite Element Approach to Photoemission of Complex Molecules}
+   \end{center} 
 
    \vspace{25mm}
-   \textbf{Tobias M\"ohle}
    
    \vfill
 
@@ -117,17 +119,20 @@
 \chapter{Results and Discussion}
 \input{results}
 
-\chapter{Resumee}
+\chapter{Conclusions and Outlook}
 \input{conclusion}
 
 %\renewcaptionname{english}{\abstractname}{Acknowledgement}
 %\begin{abstract}
 \newpage
 \section*{Acknowledgement}
-1.: Sergey\\
-2.: Gilbert\\
-3.: Olga\\
-4.: K\"uhn
+Concluding, I would like to thank several people for their steady help that I highly appreciate.
+First to be named here is my supervisor Sergey I. Borkarev for always being available to answer questions and discuss results.
+Moreover, I want to acknewdge the contributions of Gilbert Grell who implemented one of the tools used in this work and patiently explained me the use of these tools and interpretation of the results.
+Furthermore, he was always open for discussions about the problems occurring in this work and came up some important ideas, incorporated in this work.
+
+Further thanks go to Olga Bokareva who implemented the tools I used for the OTRSH-schemes and contributed with her experience and solutions to this thesis as well; not to forget, her supply with cookies, cake and further food.
+Last but not least to be mentioned, I would like to thank Prof. O. K\"uhn for providing the possibility for me to write my thesis in his group.
 %\end{abstract}
 
 %\nocite{*}

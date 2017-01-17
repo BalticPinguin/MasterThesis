@@ -17,7 +17,7 @@ The states considered here have a spatial infinite extend as it is well-known fo
 \Psi^\text{plan}_{\vec{k}} (\vec{r})=\sqrt{\frac{|\vec{k}|}{(2\pi)^3}}e^{i\vec{kr}}
 \end{equation}
 with $\vec{k}$ being the wave-vector as well as for spherical waves. %whose radial part contains different powers of $\frac{\sin(kr)}{kr}$ \cite{Lifschitz}.
-Moreover, continuum wave functions are not square integrable and hence can not be normalised according to $\int \Psi_{\vec{k}}^\dagger(\vec{r})\Psi_{\vec{k}}(\vec{r}) d\vec{r}=1$ and thus the probability interpretation is invalid \cite{quirky}.
+Moreover, continuum wave functions are not square integrable and hence they cannot be normalised according to the usual scheme $\int \Psi_{\vec{k}}^\dagger(\vec{r})\Psi_{\vec{k}}(\vec{r}) d\vec{r}=1$ and thus the probability interpretation is invalid \cite{quirky}.
 Instead, these functions are sharp in a continuous variable (namely the momentum) and hence should rather be interpreted as probability densities, suggesting the normalisation 
 $\int \Psi^\dagger(\vec{r})\Psi(\vec{r'}) d\vec{r}=\delta(\vec{k}-\vec{k'})$ where $\delta(\vec{k})$ is the Dirac delta distribution \cite{quirky,ContOrb}.
 This property distinguishes the analytical FEF from those obtained with numerical methods that often have a finite support and are obtained from an approximate Hamiltonian matrix which has no continuous spectrum due to finiteness of its basis.
@@ -25,8 +25,9 @@ Especially the difference in the normalisation of wave functions and by this in 
 However, the Stieltjes imaging approach described in section \ref{ch:stieltjes} gives a formal verification for the use of square-integrable function for the approximation of a continuum state. %since it can be considered as $0$-th order moment expansion.
 Moreover, it provides a formalism to enhance the quality of spectra obtained with numerical methods.
 
-A further aspect of numerical treatment of continuum functions that is only sparsely discussed in literature concerns the question of the physical interpretation of the numerical solution \textcolor{red}{Can one expect some theory about it?}.
-When dealing with approximate continuum functions, it is often assumed that the analytic function of interest $|\Psi_\text{a}(\vec{k})\rangle$ is approximated by that particular numeric solution $|\Psi_\text{n}(\vec{k}')\rangle$ which is closest in energy to the desired one \cite{H2pDeCleva} \textcolor{red}{more sources: ideas?}.
+A further aspect of numerical treatment of continuum functions that is only sparsely discussed in literature concerns the question of the physical interpretation of the numerical solution.
+%\textcolor{red}{Can one expect some theory about it?}.
+When dealing with approximate continuum functions, it is often assumed that the analytic function of interest $|\Psi_\text{a}(\vec{k})\rangle$ is approximated by that particular numeric solution $|\Psi_\text{n}(\vec{k}')\rangle$ which is closest in energy to the desired one \cite{H2pDeCleva}. % \textcolor{red}{more sources: ideas?}.
 An alternative interpretation would be to assume that the numerical solution corresponds to an approximation to $|\Psi_\text{n}\rangle \approx \frac{1}{k^+-k^-} \int_{k^-}^{k^+}|\Psi_\text{a}(k) \rangle dk$ which would change its interpretation and normalisation.
 %
 %This rises the question, whether a numerically obtained free electron state corresponds most to the analytic state with the same kinetic energy, hence
@@ -116,7 +117,7 @@ Chosing the energetically best-fitting solution though might in principle result
 %They also discuss formulation as minimisation problem: More stable but they don't need it.
 %which will be later shown to be not the case here.
 
-\subsection{Stieltjes Imaging}
+\section{Stieltjes Imaging}
 \label{ch:stieltjes}
 The Stieltjes imaging \cite{stieltjesCeder,langhoff3,stieltjeLanczos,langhoff} provides an elegant way to use the numerially obtained FEFs of a discrete character lying above the ionisation threshold for PES calculations.% by using moment theory.
 To correct on the different character of the spectrum and the smaller extend of the numerically obtained solution, the Stieltjes imaging approach uses spectral moments \cite{langhoff2}
@@ -170,7 +171,7 @@ The key task in Stieltjes imaging is the transformation from the form (\ref{eq:I
 In practice, the Stieltjes imaging is very demanding if energetically narrow transitions occur since many terms in expression (\ref{eq:M_n_num}) are needed for convergence, making this method efficient mainly for low energy range \cite{H2pDeCleva}.
 %Another disadvantage that no asymtotic information about this scheme is reported \cite{H2pDeCleva}.
 
-\section{Finite Differences and Finite Volumes}
+\section{Finite Differences and Finite Volume Methods}
 \label{ch:FD}
 The most common and straightforward approach to solve differential equations such as the SE numerically is via the so-called finite difference (FD) scheme.
 Starting from the one-particle SE in atomic units
@@ -251,7 +252,7 @@ Moreover the resulting system matrices are dense due to the global definition of
 %The intermediate values of the function depends strongly on the ratio of the broadening $r_0$ and the difference between the supporting points.
 %While this behaviour is not problematic for visual purposes, it may introduce a substructure which can lead to unintended behaviour of the solution.
 
-\section{Finite Elements}
+\section{Finite Element Method}
 \label{ch:introFEM}
 In the FEM the differential equations to be solved are formulated in their weak form which is an integro-differential equation and can be understood as a generalisation of the differential equation \cite{femBraess}.
 Starting with the well-known (strong) form of the SE defined on a domain $ \Gamma$ in atomic units which are used here and in the following chapters

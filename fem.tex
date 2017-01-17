@@ -129,7 +129,7 @@ A more detailed discussion about the choices of grids is given in section \ref{s
 A more entangled method is used by Alizadegan \textit{et al.} \cite{fe_hf}. 
 They start with an initial guess for the wave function and create a grid whose distances are inverse proportional to the second gradient of the electron density
 \begin{equation}
-d \propto \left[ max\left\{\left|\frac{\partial^2 \rho}{\partial x^2}\right| ,
+d \propto \left[ \text{max}\left\{\left|\frac{\partial^2 \rho}{\partial x^2}\right| ,
                            \left|\frac{\partial^2 \rho}{\partial y^2}\right| ,
                            \left|\frac{\partial^2 \rho}{\partial z^2}\right| \right\} \right]^{-1}.
 \end{equation}
@@ -195,7 +195,7 @@ and
 \end{equation}
 whereby the outer function needs to satisfy the Sommerfeld condition \cite{sommerfeldCond} 
 \begin{equation} \label{eq:Sommer}
-\lim_{r\rightarrow\infty} r \left(\frac{\partial \Psi_2(r)}{\partial r} - ik \Psi_2  \right)\rightarrow 0
+\lim_{r\rightarrow\infty} r \left(\frac{\partial \Psi_2(r)}{\partial r} - \text{i}k \Psi_2  \right)\rightarrow 0
 \end{equation}
 along the radial direction $r=|\vec{r}|$ in three dimensions.
 The quantities $\Psi_1(\vec{r})$ and $\Psi_2(\vec{r})$ are moreover coupled by 
@@ -245,7 +245,7 @@ In the graph, $\Gamma$ denotes the outer surface of the finite element region an
 
 Over the decades several formulations of infinite elements were developed making the ansatz for the solution of the form
 \begin{equation} \label{eq:Infansatz}
- \Psi(\vec{r}) = \varphi(\vec{r}) e^{ik\mu(r)},
+ \Psi(\vec{r}) = \varphi(\vec{r}) e^{\text{i}k\mu(r)},
 \end{equation}
 where $\varphi(\vec{r})=f(r)\varphi_2(\vec{r}_\parallel)$ is a product of a transversal shape function $\varphi_2(\vec{r)}$ which depends only on coordinates $\vec{r}_\parallel$ parallel to the front face $\Gamma$ and a radial function depending only on the radial direction $r$.
 Further, $\mu(r)=r-r_0$ where $r_0$ is the distance from the origin of infinite elements to the surface of the FEM region.
@@ -261,7 +261,7 @@ However, assuming that the difference between the eigenvalues of \eq{eq:SEinf} a
 \subsubsection{Burnett Elements}
 In the original Burnett formulation, the test functions are given in the form
 \begin{equation} \label{eq:BUelem}
- \Phi(\vec{r}) = \varphi(\vec{r}) e^{-ik\mu(r)}.
+ \Phi(\vec{r}) = \varphi(\vec{r}) e^{-\text{i}k\mu(r)}.
 \end{equation}
 In the literature, usually the sign in the exponent is changed due to the use of another convention in the notation of the weak formulation \eq{eq:SEweak}.
 
@@ -287,13 +287,13 @@ Since the conjugated Burnett formulation seems to be not advantageous with the i
 Since the space of ansatz functions (\ref{eq:Infansatz}) corresponds to the multipole expansion of the outgoing waves, it should however not be modified.
 To obtain a formulation with finite integrals with it, Astley suggested to chose test functions of the shape
 \begin{equation} \label{eq:ALelem}
- \Phi(\vec{r}) = D(r)\varphi(\vec{r}) e^{ik\mu(r)},
+ \Phi(\vec{r}) = D(r)\varphi(\vec{r}) e^{\text{i}k\mu(r)},
 \end{equation}
 where in three dimensions $D(r)=\frac{1}{r^2}$ \cite{astley2}, leading to a non-symmetric Petrov-Galerkin scheme and a non-hermitian Hamiltonian.
 
 Similar to the conjugated Burnett formulation, the resulting eigensystem does not have the energy as its eigenvalues but the generalised eigenvalue problem (\ref{eq:SEmat}) formulated in chapter \ref{ch:introFEM} changes to the quadratic eigenproblem
 \begin{equation} \label{eq:SEinf}
-\mat{A}\vec{c} +ik \mat{B}\vec{c}- k^2 \mat{C}\vec{c} =0 
+\mat{A}\vec{c} +\text{i}k \mat{B}\vec{c}- k^2 \mat{C}\vec{c} =0 
 \end{equation}
 that is solved for the absolute value of the momentum $k=|\vec{k}|$.
 The respective matrix elements are
@@ -421,7 +421,7 @@ The matrix $\mat{V}_j$ is unitary with the rows $(\mat{V}_j)_i=\vec{v}_i$.
 After solving this dense but small problem, the original eigenvectors can be approximated as $\vec{x}_j=\mat{V}_j\vec{s}_j$ and $\lambda=\theta_j$.
 The obtained eigenpair is a good approximation to the actual one as long as the subspace $\mathcal{V}_j$ contains the respective solution or contains a vector which is at least close to it.
 
-\subsection{Stabilisation of Eigenproblems}
+\subsection{Regularisation of Eigenproblems}
 \label{ch:regular}
 Independent of the efficiency and robustness of the eigensolver in use, seeking solutions of the SE for free particles in continuum means that eigenenergies are very close to each other or even highly degenerate.
 Such dense-lying eigenvalues lead to numerical difficulties and especially the eigenvectors are known to be unreliable in this case.

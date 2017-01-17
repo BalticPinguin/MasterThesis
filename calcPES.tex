@@ -3,6 +3,28 @@
 The large variety of systems and effects studied with photoelectron spectroscopy led to the existence of diverse methods for theoretical modelling of the spectra \cite{PESbook, x-ray}.
 In this work, the focus is put on steady-state photoelectron spectra of molecular systems with a size up to some tens of atoms.
 As light source, here a classical ultra-violet or soft X-ray source with a discrete spectrum such as a gas discharge lamp or a laser is assumed where the strength of the applied electromagnetic field is weak and the kinetic energy of the outgoing electrons reaches at most tens of electronvolt but may become arbitrarily small.
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+                  & Time-domain   & Frequency-domain \\
+\hline
+Field Str.& \begin{tabular}{c} weak to \\ strong \end{tabular} & weak \\
+Method & \begin{tabular}{c} TDDO \cite{TD-do}\\ solving SE \\ Green's function \end{tabular} & 
+        \begin{tabular}{c} R-Matrix \cite{Li-R,Li-R1,Burke,r-mat,R-mol1}\\ DO \cite{planeWave,DO_TDDFT} \\Green's Function \cite{GreenBayse,2phcederbaum} \\ Koopmans'\cite{dos,dos2,koopmansDFT} \end{tabular} \\
+System Size & \begin{tabular}{c}atoms \cite{bauch1}, \\ diatomics \cite{bauch2,H2pDeCleva,saPonzi}\\ triatomics \cite{radau} \end{tabular} &
+        \begin{tabular}{c}up to \\biomolecules \cite{bioPES}, \\ solid state \cite{Solid2,Leckey1992} \end{tabular} \\
+Typical Problems  & \begin{tabular}{c}HHG \cite{hhg,zhangHHG,dromey_HHG}, \\Multiph. ionisation \\ attosec. dynam.\cite{as1,as2,as3,as4,as5,as6} \end{tabular} &
+        \begin{tabular}{c} steady-state, \\ angle-res. PES \\time-res. PES \end{tabular} \\ 
+QC$^{(a)}$ & \begin{tabular}{c}(TD)DFT, \\GASCI \cite{bauch1}, \\ EOM-CC \cite{CAPccEOM},\\ CASSCF \end{tabular}  &
+        \begin{tabular}{c} CI\cite{ci1} \\ RASSCF \cite{MAgg,GrellKuehn,asscf1,asscf2}, \\ TD-DFT \end{tabular} \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Overview of time- and frequency-domain methods and theyr typical applications.\\
+  \small{$^{(a)}$QC: quantum chemical; GASCI: generalised active space configuration interaction; CASSCF: complete active space self-consistent field; EOM-CC: equation of motion- coupled cluster; RASSCF: restricted active space self-consistent field}.}
+\label{tab:PEScat}
+\end{table} 
 
 A summary of methods that can be used to describe the most important scenarios arising in photoelectron spectroscopy is given in the Table \ref{tab:PEScat} and some of them are described in more detail in the following sections.
 The main classification of these methods can be done dividing them into time and frequency domain.
@@ -14,38 +36,34 @@ Moreover, the joint treatment of bound and continuum states demands a large and 
 On the other hand, in frequency-domain the nonlinear response properties are neglected so that strong-field effects such as multiphoton ionisation and high harmonic generation (HHG) can not be treated.
 Due to the different treatment of the system in both domains, they each have a set of methods that can be used and which are more or less specific to the domain as shown in the third column of Table \ref{tab:PEScat}.
 The same holds for the quantum chemical methods available to treat the system.
-\begin{table}
-\begin{tiny}\begin{tabular}{|c|c|c|c|c|c|}
-\hline
-                 & Field Str. & Method & System Size & Typical Problems &  QC$^{(a)}$ \\
-\hline
-\begin{tabular}{c}Time-\\ domain  \end{tabular}   &
-        \begin{tabular}{c} weak to \\ strong \end{tabular} & 
-        \begin{tabular}{c} TDDO \cite{TD-do}\\ SE \\ Green's function \end{tabular} &
-        \begin{tabular}{c}atoms \cite{bauch1}, \\ diatomics \cite{bauch2,H2pDeCleva,saPonzi}\\ triatomics \cite{radau} \end{tabular} & 
-        \begin{tabular}{c}HHG \cite{hhg,zhangHHG,dromey_HHG}, \\Multiph. ionisation \\ attosec. dynam.\cite{as1,as2,as3,as4,as5,as6} \end{tabular} &
-        \begin{tabular}{c}(TD)DFT, \\GASCI \cite{bauch1}, \\ EOM-CC \cite{CAPccEOM},\\ CASSCF \end{tabular} \\
-\hline
-\begin{tabular}{c}Frequency-\\ domain \end{tabular} & 
-        weak & 
-        \begin{tabular}{c} R-Matrix \cite{Li-R,Li-R1,Burke,r-mat,R-mol1}\\ DO \cite{planeWave,DO_TDDFT} \\Green's Function \cite{GreenBayse,2phcederbaum} \\ Koopmans'\cite{dos,dos2,koopmansDFT} \end{tabular} &
-        \begin{tabular}{c}up to \\biomolecules \cite{bioPES}, \\ solid state \cite{Solid2,Leckey1992} \end{tabular}& 
-        \begin{tabular}{c} steady-state, \\ angle-res. PES \\time-res. PES \end{tabular}& 
-        \begin{tabular}{c} CI\cite{ci1} \\ RASSCF \cite{MAgg,GrellKuehn,asscf1,asscf2}, \\ TD-DFT \end{tabular} \\
-\hline
-\end{tabular} \end{tiny}
-\caption{Overview of time- and frequency-domain methods and theyr typical applications.\\
-  \small{$^{(a)}$QC: quantum chemical; GASCI: generalised active space configuration interaction; CASSCF: complete active space self-consistent field; EOM-CC: equation of motion- coupled cluster; RASSCF: restricted active space self-consistent field}.}
-\label{tab:PEScat}
-\end{table} 
-%These nonlinear effects however usually do not play any role for classical light sources such as gas discharge or heat lamps and even most non-pulsed lasers.
-
-Besides the distinction according to the domain, the methods can be also categorised according to the partitioning of the system they use which is sketched in Figure \ref{fig:PEScat}.
-\begin{wrapfigure}{r}{0.7\textwidth}
+\begin{wrapfigure}{R}{0.7\textwidth}
    \includegraphics[width=0.7\textwidth]{Figures/Methods}
    \caption{Scheme of the system-representation used in the different methods.}
    \label{fig:PEScat}
 \end{wrapfigure}
+%\begin{table}
+%\begin{tiny}\begin{tabular}{|c|c|c|c|c|c|}
+%\hline
+%                 & Field Str. & Method & System Size & Typical Problems &  QC$^{(a)}$ \\
+%\hline
+%\begin{tabular}{c}Time-\\ domain  \end{tabular}   &
+%        \begin{tabular}{c} weak to \\ strong \end{tabular} & 
+%        \begin{tabular}{c} TDDO \cite{TD-do}\\ SE \\ Green's function \end{tabular} &
+%        \begin{tabular}{c}atoms \cite{bauch1}, \\ diatomics \cite{bauch2,H2pDeCleva,saPonzi}\\ triatomics \cite{radau} \end{tabular} & 
+%        \begin{tabular}{c}HHG \cite{hhg,zhangHHG,dromey_HHG}, \\Multiph. ionisation \\ attosec. dynam.\cite{as1,as2,as3,as4,as5,as6} \end{tabular} &
+%        \begin{tabular}{c}(TD)DFT, \\GASCI \cite{bauch1}, \\ EOM-CC \cite{CAPccEOM},\\ CASSCF \end{tabular} \\
+%\hline
+%\begin{tabular}{c}Frequency-\\ domain \end{tabular} & 
+%        weak & 
+%        \begin{tabular}{c} R-Matrix \cite{Li-R,Li-R1,Burke,r-mat,R-mol1}\\ DO \cite{planeWave,DO_TDDFT} \\Green's Function \cite{GreenBayse,2phcederbaum} \\ Koopmans'\cite{dos,dos2,koopmansDFT} \end{tabular} &
+%        \begin{tabular}{c}up to \\biomolecules \cite{bioPES}, \\ solid state \cite{Solid2,Leckey1992} \end{tabular}& 
+%        \begin{tabular}{c} steady-state, \\ angle-res. PES \\time-res. PES \end{tabular}& 
+%        \begin{tabular}{c} CI\cite{ci1} \\ RASSCF \cite{MAgg,GrellKuehn,asscf1,asscf2}, \\ TD-DFT \end{tabular} \\
+%\hline
+%\end{tabular} \end{tiny}
+%These nonlinear effects however usually do not play any role for classical light sources such as gas discharge or heat lamps and even most non-pulsed lasers.
+
+Besides the distinction according to the domain, the methods can be also categorised according to the partitioning of the system they use which is sketched in Figure \ref{fig:PEScat}.
 The simplest and crudest method is an approach derived from Koopman's theorem where only the ground state of the un\-ion\-ised state is considered which is visualised in Figure \ref{fig:PEScat} by the fact that the box for this method is only at the $N$-electron system.
 Similarly, also the Green's function approach treats only the initial state but accounts for electron relaxation and thus correlation effects during ionisation due to its quasi-particle picture.
 In the DO formalism, in contrast, the final state is treated explicitly, using a partitioning into the bound $N-1$-electron state $|\Psi^{N-1}\rangle$ and the FEF $|\Psi^\text{el}\rangle$.
@@ -65,7 +83,7 @@ First, in section \ref{ch:gf} the working equations of the Green's function appr
 Thereafter, in section \ref{ch:r-mat} several approaches both in time- and frequency-domain are described that use a unified descrption of the complete $N$-electron system.
 Finally the DO formalism is derived in more detail, since it is the method of choise in this work, in section \ref{ch:do}.
 
-\section{The Green's Function Approach}
+\section{Green's Function Approach}
 \label{ch:gf}
 From a formal point of view, the computation of photoelectron spectra using the Green's function approach is similar to the use of Koopmans' approach since in both methods only the ground state of the unionised system is considered.
 However, the level of theory achievable when using Green's functions is much higher.
@@ -335,7 +353,7 @@ Applying the strong orthogonality condition leads to the drop out of the second 
                    \langle \Phi_{i,P(N)} |\hat{\vec{d}}_j |\Psi_k^\text{el}\rangle \nonumber \\
     &= \langle \Psi_k^\text{DO}| \hat{\vec{d}}_j| \Psi_k^\text{el}\rangle
 \end{align}
-\textcolor{blue}{?? At the moment, there is no equation of the DO to reference. Write it differently?}
+%\textcolor{blue}{?? At the moment, there is no equation of the DO to reference. Write it differently?}
 which corresponds to the definition of the TDDO in \eq{eq:TDDO} for $t=0$ as mentioned above.
 The expression for the PES cross-section in the DO formalism simplifies to
 %Though the cross section simplifies from the $N$ electron expression (\ref{eq:sigma}) to 
